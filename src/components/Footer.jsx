@@ -109,7 +109,16 @@ const Footer = () => {
                             </li>
                             <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                                 <MapPin size={15} color="var(--accent-primary)" />
-                                <span>Bengaluru, India</span>
+                                <a 
+                                    href="https://www.google.com/maps/search/?api=1&query=Bengaluru%2C+India"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    style={{ color: 'inherit', transition: 'color 0.25s ease', textDecoration: 'none' }}
+                                    onMouseEnter={(e) => e.target.style.color = 'white'}
+                                    onMouseLeave={(e) => e.target.style.color = 'inherit'}
+                                >
+                                    Bengaluru, India
+                                </a>
                             </li>
                         </ul>
 
