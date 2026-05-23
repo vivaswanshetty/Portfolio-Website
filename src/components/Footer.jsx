@@ -1,8 +1,14 @@
 import React, { useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { Github, Linkedin, Mail, MapPin, ArrowUpRight, Instagram, Twitter } from 'lucide-react';
+import { Github, Linkedin, Mail, MapPin, ArrowUpRight, Instagram } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
+
+const XIcon = ({ size = 16, color = 'currentColor' }) => (
+    <svg viewBox="0 0 24 24" width={size} height={size} fill={color} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+    </svg>
+);
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -33,7 +39,7 @@ const Footer = () => {
         { icon: Github, href: contact.github, label: 'GitHub' },
         { icon: Linkedin, href: contact.linkedin, label: 'LinkedIn' },
         { icon: Instagram, href: contact.instagram, label: 'Instagram' },
-        { icon: Twitter, href: contact.x, label: 'X' }
+        { icon: XIcon, href: contact.x, label: 'X' }
     ];
 
     return (
