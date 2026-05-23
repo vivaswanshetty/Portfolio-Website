@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------------
 import elevatexImg from '../assets/elevatex.png';
 import conqueroneImg from '../assets/conquerone.png';
+import portfolioMockupImg from '../assets/portfolio_mockup.png';
 
 
 export const portfolioData = {
@@ -136,6 +137,21 @@ export const portfolioData = {
             impact: "Delivers structured training with live set progress haptics, streak milestones, voice cues, and MET calorie estimates. Real-time Firebase cloud integration syncs data dynamically while maintaining offline-first tracking capabilities.",
             link: "https://github.com/vivaswanshetty/ConquerONE",
             repo: "https://github.com/vivaswanshetty/ConquerONE"
+        },
+        {
+            title: "Developer Portfolio",
+            image: portfolioMockupImg,
+            problem: "A premium, minimalist developer portfolio website designed to showcase projects, skills, and resume with visual excellence. Configured with a responsive 3-column layout, custom Inter typography, a dynamic starfield background, and Vercel Analytics integration.",
+            tech: [
+                "React (Vite)",
+                "Framer Motion",
+                "Vanilla CSS",
+                "Vercel Analytics",
+                "lucide-react"
+            ],
+            impact: "Tracks site traffic live via Vercel Analytics and handles route refreshes smoothly without 404 errors through a customized vercel.json rewrite configuration.",
+            link: "/",
+            repo: "https://github.com/vivaswanshetty/Portfolio-Website"
         }
     ],
 
