@@ -10,7 +10,7 @@ A premium, minimalist, and responsive personal portfolio website showcasing engi
 
 * **Premium Typography**: Styled with **Inter** (featuring a tight `-0.035em` tracking for a minimal, editorial layout) and **Space Grotesk** (for technical elements).
 * **Ambient Interactivity**: Dynamic dark-mode theme utilizing iOS-style backdrop glassmorphism, glowing radial backdrops, and active starfield particle effects.
-* **Responsive 3-Column Profile Section**: Featuring an AI-cleaned portrait picture, a detailed biography, and interactive counting cards (tracking lines of code, caffeine, hours in flow, and bugs squashed).
+* **Responsive 3-Column Profile Section**:A portrait picture of me, a detailed biography, and interactive counting cards (tracking lines of code, caffeine, hours in flow, and bugs squashed).
 * **Multi-Repository Project Showcase**: Showcases full-stack software developments like **ElevateX** and **ConquerONE** with separate links for Web repositories, Mobile (React Native) repositories, and Live sites.
 * **Unified Data Structure**: Uses `src/data/portfolioData.js` as a single source of truth to change texts, links, education timelines, and projects instantly without altering React components.
 * **Performance Focused**: Snappy micro-animations powered by **Framer Motion** with custom delays mapped to viewport intersections.
