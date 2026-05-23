@@ -172,7 +172,9 @@ const Contact = () => {
                         </p>
 
                         <motion.a
-                            href={`mailto:${email}`}
+                            href={`https://mail.google.com/mail/?view=cm&fs=1&to=${email}`}
+                            target="_blank"
+                            rel="noreferrer"
                             className="btn btn-primary"
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.98 }}
