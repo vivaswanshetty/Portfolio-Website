@@ -1,0 +1,7 @@
+/* App-level reset — keep #root neutral so layout works correctly */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
