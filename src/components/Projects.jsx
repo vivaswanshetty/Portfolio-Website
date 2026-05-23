@@ -193,7 +193,15 @@ const Projects = () => {
                 />
             </motion.div>
 
-            <div className="grid grid-2" style={{ gap: '2.5rem' }}>
+            <div 
+                style={{ 
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 420px), 1fr))',
+                    gap: '2.5rem',
+                    maxWidth: '960px',
+                    margin: '0 auto'
+                }}
+            >
                 {projects.map((project, index) => (
                     <ProjectCard key={index} project={project} index={index} />
                 ))}
