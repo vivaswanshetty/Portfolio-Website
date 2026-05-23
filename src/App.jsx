@@ -15,6 +15,7 @@ import Footer from './components/Footer';
 import Starfield from './components/Starfield';
 import ScrollProgress from './components/ScrollProgress';
 import ScrollToTop from './components/ScrollToTop';
+import { Analytics } from '@vercel/analytics/react';
 
 const AnimatedRoutes = () => {
     const location = useLocation();
@@ -72,6 +73,7 @@ function App() {
             <ScrollToTop />
             <Starfield />
             <ScrollProgress />
+            <Analytics />
             <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
                 <Navbar />
                 <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
