@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
-import { Mail, Linkedin, Github, Send } from 'lucide-react';
+import { Mail, Linkedin, Github, Send, Instagram, Twitter } from 'lucide-react';
 
 const Contact = () => {
-    const { email, linkedin, github } = portfolioData.contact;
+    const { email, linkedin, github, instagram, x } = portfolioData.contact;
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -122,6 +122,30 @@ const Contact = () => {
                         >
                             <Github size={18} /> GitHub
                         </motion.a>
+                        {instagram && (
+                            <motion.a
+                                href={instagram}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="btn btn-outline"
+                                whileHover={{ scale: 1.05, y: -3 }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <Instagram size={18} /> Instagram
+                            </motion.a>
+                        )}
+                        {x && (
+                            <motion.a
+                                href={x}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="btn btn-outline"
+                                whileHover={{ scale: 1.05, y: -3 }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <Twitter size={18} /> X
+                            </motion.a>
+                        )}
                     </div>
                 </motion.div>
 

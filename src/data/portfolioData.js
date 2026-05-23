@@ -199,6 +199,8 @@ export const portfolioData = {
         email: "vivaswanprofessional@gmail.com",
         linkedin: "https://www.linkedin.com/in/vivaswanshetty",
         github: "https://github.com/vivaswanshetty",
+        instagram: "https://instagram.com/vivaswan.shetty",
+        x: "https://x.com/vivaswanshetty",
         phone: "+91 8073352003"
     }
 };

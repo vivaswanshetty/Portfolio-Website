@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { Github, Linkedin, Mail, MapPin, ArrowUpRight } from 'lucide-react';
+import { Github, Linkedin, Mail, MapPin, ArrowUpRight, Instagram, Twitter } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 
 const Footer = () => {
@@ -31,7 +31,9 @@ const Footer = () => {
 
     const socialLinks = [
         { icon: Github, href: contact.github, label: 'GitHub' },
-        { icon: Linkedin, href: contact.linkedin, label: 'LinkedIn' }
+        { icon: Linkedin, href: contact.linkedin, label: 'LinkedIn' },
+        { icon: Instagram, href: contact.instagram, label: 'Instagram' },
+        { icon: Twitter, href: contact.x, label: 'X' }
     ];
 
     return (
