@@ -105,7 +105,16 @@ const Footer = () => {
                         <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                             <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                                 <Mail size={15} color="var(--accent-primary)" />
-                                <span>{contact.email}</span>
+                                <a 
+                                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    style={{ color: 'inherit', transition: 'color 0.25s ease', textDecoration: 'none' }}
+                                    onMouseEnter={(e) => e.target.style.color = 'white'}
+                                    onMouseLeave={(e) => e.target.style.color = 'inherit'}
+                                >
+                                    {contact.email}
+                                </a>
                             </li>
                             <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                                 <MapPin size={15} color="var(--accent-primary)" />

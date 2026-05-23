@@ -303,7 +303,27 @@ const Resume = () => {
                                     >
                                         <ChevronRight size={18} color="var(--accent-secondary)" style={{ flexShrink: 0, marginTop: '2px' }} />
                                         <div>
-                                            <strong style={{ color: 'white' }}>{c.name}</strong> — <span style={{ fontSize: '0.85rem' }}>{c.issuer} ({c.year})</span>
+                                            {c.link ? (
+                                                <a 
+                                                    href={c.link} 
+                                                    target="_blank" 
+                                                    rel="noreferrer" 
+                                                    style={{ 
+                                                        color: 'white', 
+                                                        textDecoration: 'none', 
+                                                        fontWeight: 'bold', 
+                                                        transition: 'color 0.25s ease', 
+                                                        cursor: 'pointer' 
+                                                    }}
+                                                    onMouseEnter={(e) => e.target.style.color = 'var(--accent-secondary)'}
+                                                    onMouseLeave={(e) => e.target.style.color = 'white'}
+                                                >
+                                                    {c.name}
+                                                </a>
+                                            ) : (
+                                                <strong style={{ color: 'white' }}>{c.name}</strong>
+                                            )}
+                                            <span style={{ fontSize: '0.85rem' }}> — {c.issuer} ({c.year})</span>
                                         </div>
                                     </motion.li>
                                 ))}

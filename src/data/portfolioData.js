@@ -90,11 +90,11 @@ export const portfolioData = {
             "Created and deployed high-performance full-stack web and mobile apps"
         ],
         certifications: [
-            { name: "Red Hat Certified Architect (RHCA)", issuer: "Red Hat", year: "2025" },
-            { name: "Google UX Design Professional Certificate", issuer: "Coursera (Offered by Google)", year: "2024" },
-            { name: "Generative AI Certification", issuer: "Google for Education", year: "2026" },
-            { name: "Responsive Web Design Certification", issuer: "Infosys Springboard", year: "2025" },
-            { name: "C Programming Certification", issuer: "Great Learning", year: "2024" }
+            { name: "Red Hat Certified Architect (RHCA)", issuer: "Red Hat", year: "2025", link: "https://www.credly.com/badges/25f8c763-54ed-48b7-96da-a59564f5cc37" },
+            { name: "Google UX Design Professional Certificate", issuer: "Coursera (Offered by Google)", year: "2024", link: "https://www.coursera.org/account/accomplishments/verify/P2YULGTZLCKQ" },
+            { name: "Generative AI Certification", issuer: "Google for Education", year: "2026", link: "https://simpli.app.link/uwziGhZTW2b" },
+            { name: "Responsive Web Design Certification", issuer: "Infosys Springboard", year: "2025", link: "https://media.licdn.com/dms/image/v2/D562DAQG_kGnbVXMHcQ/profile-treasury-document-images_1920/B56Z4C.WYrIkAk-/1/1778166361059?e=1779321600&v=beta&t=OhK9tuxj_LOQ5c0WhbVXRZntY1-WnkRQl4_C1bhkYBI" },
+            { name: "C Programming Certification", issuer: "Great Learning", year: "2024", link: "https://www.mygreatlearning.com/certificate/KPDLYXCV" }
         ]
     },
 
