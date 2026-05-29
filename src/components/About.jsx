@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
-import portraitImg from '../assets/vivaswan_portrait.png';
+import portraitImg from '../assets/vivaswan_portrait.jpg';
 
 const AnimatedCounter = ({ value, duration = 2000 }) => {
     const [count, setCount] = useState(0);
