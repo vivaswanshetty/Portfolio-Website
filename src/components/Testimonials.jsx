@@ -16,7 +16,7 @@ const TestimonialCard = ({ testimonial, index }) => {
             transition={{ duration: 0.6, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
             className="card"
             style={{ padding: '2.5rem', position: 'relative', overflow: 'hidden' }}
-            whileHover={{ y: -5 }}
+            whileHover={{ y: -5, transition: { duration: 0.15, ease: 'easeOut' } }}
         >
             <motion.div
                 style={{

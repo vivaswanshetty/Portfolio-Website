@@ -635,7 +635,7 @@ p {
   padding: 1rem 2rem;
   border-radius: 9999px;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   font-family: var(--font-heading);
   letter-spacing: 0.02em;
   cursor: pointer;
@@ -680,7 +680,7 @@ p {
   border: 1px solid var(--glass-border);
   border-radius: 1rem;
   padding: 2.5rem;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(10px);
@@ -733,7 +733,7 @@ p {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
   opacity: 0;
-  transition: opacity 0.4s;
+  transition: opacity 0.2s;
 }
 
 .card:hover {

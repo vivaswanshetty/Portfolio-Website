@@ -26,7 +26,7 @@ const TimelineItem = ({ job, index, isLeft }) => {
                 <motion.div
                     className="card"
                     style={{ padding: '2rem' }}
-                    whileHover={{ y: -6 }}
+                    whileHover={{ y: -6, transition: { duration: 0.15, ease: 'easeOut' } }}
                 >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
                         <div style={{
@@ -89,7 +89,7 @@ const EducationCard = ({ edu, index }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            whileHover={{ y: -5 }}
+            whileHover={{ y: -5, transition: { duration: 0.15, ease: 'easeOut' } }}
         >
             <h3 style={{ fontSize: '1.1rem', marginBottom: '0.3rem' }}>{edu.degree}</h3>
             <p style={{ color: 'var(--accent-primary)', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 500 }}>{edu.institution}</p>

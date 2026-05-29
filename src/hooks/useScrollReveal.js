@@ -114,7 +114,7 @@ export const useTiltEffect = (maxTilt = 5) => {
         },
         style: {
             transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${isHovering ? 1.02 : 1})`,
-            transition: isHovering ? 'transform 0.1s ease-out' : 'transform 0.5s ease-out'
+            transition: isHovering ? 'transform 0.1s ease-out' : 'transform 0.18s ease-out'
         }
     };
 };

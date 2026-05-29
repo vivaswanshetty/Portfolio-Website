@@ -164,7 +164,7 @@ const Contact = () => {
                         position: 'relative',
                         overflow: 'hidden'
                     }}
-                    whileHover={{ y: -8 }}
+                    whileHover={{ y: -8, transition: { duration: 0.15, ease: 'easeOut' } }}
                 >
                     <motion.div
                         style={{
