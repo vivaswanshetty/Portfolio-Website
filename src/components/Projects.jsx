@@ -2,10 +2,12 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
 import { Github, ExternalLink } from 'lucide-react';
+import { useTiltEffect } from '../hooks/useScrollReveal';
 
 const ProjectCard = ({ project, index }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-80px' });
+    const tilt = useTiltEffect(6);
 
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -17,23 +19,25 @@ const ProjectCard = ({ project, index }) => {
     return (
         <motion.div
             ref={ref}
-            style={{ position: 'relative' }}
+            style={{ position: 'relative', y }}
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{
+                duration: 0.7,
+                delay: index * 0.15,
+                ease: [0.16, 1, 0.3, 1]
+            }}
         >
-            <motion.div
+            <div
+                ref={tilt.ref}
                 className="card project-card"
                 style={{
                     padding: 0,
                     overflow: 'hidden',
-                    y
+                    cursor: 'pointer',
+                    ...tilt.style
                 }}
-                initial={{ opacity: 0, y: 60 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
-                transition={{
-                    duration: 0.7,
-                    delay: index * 0.15,
-                    ease: [0.16, 1, 0.3, 1]
-                }}
-                whileHover={{ y: -10, transition: { duration: 0.3 } }}
+                {...tilt.handlers}
             >
                 {project.image && (
                     <div style={{
@@ -133,7 +137,7 @@ const ProjectCard = ({ project, index }) => {
 
                     <p style={{ marginBottom: '1.5rem', fontSize: '0.95rem', lineHeight: 1.7 }}>{project.problem}</p>
                 </div>
-            </motion.div>
+            </div>
         </motion.div>
     );
 };

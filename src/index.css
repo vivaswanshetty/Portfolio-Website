@@ -958,25 +958,106 @@ p {
   }
 }
 
+/* Resume Timeline Styles */
+.timeline-container {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.timeline-axis {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent-primary) 0%, rgba(59, 130, 246, 0.1) 100%);
+  transform: translateX(-50%);
+}
+
+.timeline-item-row {
+  display: flex;
+  position: relative;
+  padding-bottom: 3rem;
+}
+
+.timeline-item-row.left {
+  justify-content: flex-start;
+}
+
+.timeline-item-row.right {
+  justify-content: flex-end;
+}
+
+.timeline-card-wrapper {
+  width: min(45%, 420px);
+  position: relative;
+}
+
+.timeline-card-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--accent-primary), rgba(59, 130, 246, 0.1));
+}
+
+.timeline-item-row.left .timeline-card-wrapper::before {
+  right: -2px;
+}
+
+.timeline-item-row.right .timeline-card-wrapper::before {
+  left: -2px;
+}
+
+.timeline-dot {
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-color);
+  border: 3px solid var(--accent-primary);
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.timeline-item-row.left .timeline-dot {
+  right: -11px;
+}
+
+.timeline-item-row.right .timeline-dot {
+  left: -11px;
+}
+
 /* Resume timeline responsive — single column on mobile */
 @media (max-width: 768px) {
-  /* Override the alternating left/right timeline to full-width left-aligned */
-  .page-container [style*="justify-content: flex-end"],
-  .page-container [style*="justify-content: flex-start"] {
+  .timeline-axis {
+    left: 0 !important;
+    transform: none !important;
+  }
+
+  .timeline-item-row {
     justify-content: flex-start !important;
   }
 
-  .page-container [style*="width: min(45%"] {
+  .timeline-card-wrapper {
     width: 100% !important;
     padding-left: 1.5rem;
   }
 
-  /* Center the vertical timeline line */
-  .page-container [style*="left: 50%"][style*="width: 2px"] {
-    left: 0 !important;
-    transform: none !important;
+  .timeline-card-wrapper::before {
+    left: -2px !important;
+    right: auto !important;
+  }
+
+  .timeline-dot {
+    left: -11px !important;
+    right: auto !important;
   }
 }
+
 
 /* Upgraded Premium Footer Styles */
 .footer-grid {

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
 import portraitImg from '../assets/vivaswan_portrait.jpg';
+import { useTiltEffect } from '../hooks/useScrollReveal';
 
 const AnimatedCounter = ({ value, duration = 2000 }) => {
     const [count, setCount] = useState(0);
@@ -34,10 +35,41 @@ const AnimatedCounter = ({ value, duration = 2000 }) => {
     return <span ref={ref}>{count}{suffix}</span>;
 };
 
+const StatCard = ({ stat }) => {
+    const tilt = useTiltEffect(10);
+    return (
+        <Link to={stat.link} style={{ textDecoration: 'none' }}>
+            <div
+                ref={tilt.ref}
+                className="card"
+                style={{ 
+                    textAlign: 'center', 
+                    padding: '2rem', 
+                    cursor: 'pointer',
+                    ...tilt.style 
+                }}
+                {...tilt.handlers}
+            >
+                <h4 style={{
+                    fontSize: '2.5rem',
+                    color: 'var(--accent-primary)',
+                    marginBottom: '0.5rem',
+                    fontWeight: 800,
+                    letterSpacing: '-0.02em'
+                }}>
+                    <AnimatedCounter value={stat.value} />
+                </h4>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{stat.label}</span>
+            </div>
+        </Link>
+    );
+};
+
 const About = () => {
     const { title, description, highlights, stats } = portfolioData.about;
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-100px' });
+    const portraitTilt = useTiltEffect(10);
 
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -137,7 +169,8 @@ const About = () => {
                             pointerEvents: 'none'
                         }}
                     />
-                    <motion.div
+                    <div
+                        ref={portraitTilt.ref}
                         style={{
                             position: 'relative',
                             zIndex: 2,
@@ -148,15 +181,10 @@ const About = () => {
                             background: 'rgba(30, 41, 59, 0.25)',
                             border: '1px solid rgba(59, 130, 246, 0.2)',
                             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
-                            overflow: 'hidden'
+                            overflow: 'hidden',
+                            ...portraitTilt.style
                         }}
-                        whileHover={{
-                            y: -8,
-                            borderColor: 'var(--accent-primary)',
-                            boxShadow: '0 30px 60px rgba(59, 130, 246, 0.2), 0 0 40px rgba(59, 130, 246, 0.15)',
-                            transition: { duration: 0.12, ease: 'easeOut', delay: 0 }
-                        }}
-                        transition={{ duration: 0.12, ease: 'easeOut' }}
+                        {...portraitTilt.handlers}
                     >
                         <img
                             src={portraitImg}
@@ -169,7 +197,7 @@ const About = () => {
                                 objectFit: 'cover'
                             }}
                         />
-                    </motion.div>
+                    </div>
                 </motion.div>
 
                 <motion.div variants={itemVariants} style={{ position: 'relative' }}>
@@ -255,29 +283,7 @@ const About = () => {
                     />
 
                     {stats && stats.map((stat, idx) => (
-                        <Link key={idx} to={stat.link} style={{ textDecoration: 'none' }}>
-                            <motion.div
-                                className="card"
-                                style={{ textAlign: 'center', padding: '2rem' }}
-                                whileHover={{ 
-                                    y: -8, 
-                                    scale: 1.02,
-                                    transition: { duration: 0.12, ease: 'easeOut', delay: 0 }
-                                }}
-                                transition={{ duration: 0.12, ease: 'easeOut' }}
-                            >
-                                <h4 style={{
-                                    fontSize: '2.5rem',
-                                    color: 'var(--accent-primary)',
-                                    marginBottom: '0.5rem',
-                                    fontWeight: 800,
-                                    letterSpacing: '-0.02em'
-                                }}>
-                                    <AnimatedCounter value={stat.value} />
-                                </h4>
-                                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{stat.label}</span>
-                            </motion.div>
-                        </Link>
+                        <StatCard key={idx} stat={stat} />
                     ))}
                 </motion.div>
             </motion.div>

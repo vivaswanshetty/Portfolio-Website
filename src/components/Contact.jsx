@@ -206,11 +206,23 @@ const Contact = () => {
                             target="_blank"
                             rel="noreferrer"
                             className="btn btn-primary"
-                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileHover="hover"
                             whileTap={{ scale: 0.98 }}
-                            style={{ display: 'inline-flex' }}
+                            style={{ display: 'inline-flex', gap: '0.5rem' }}
                         >
-                            <Send size={18} /> {email}
+                            <motion.div
+                                variants={{
+                                    hover: { 
+                                        rotate: [0, -10, 15, 0],
+                                        x: [0, 4, -2, 0],
+                                        transition: { duration: 0.4 } 
+                                    }
+                                }}
+                                style={{ display: 'flex', alignItems: 'center' }}
+                            >
+                                <Send size={18} />
+                            </motion.div>
+                            {email}
                         </motion.a>
                     </div>
                 </motion.div>
@@ -224,7 +236,7 @@ const Contact = () => {
                     gap: '2rem'
                 }}
             >
-                {['A', 'B', 'O', 'U', 'T'].map((letter, i) => (
+                {['C', 'O', 'N', 'N', 'E', 'C', 'T'].map((letter, i) => (
                     <motion.span
                         key={i}
                         style={{

@@ -10,43 +10,16 @@ const TimelineItem = ({ job, index, isLeft }) => {
     return (
         <motion.div
             ref={ref}
-            style={{
-                display: 'flex',
-                justifyContent: isLeft ? 'flex-start' : 'flex-end',
-                position: 'relative',
-                paddingBottom: '3rem'
-            }}
+            className={`timeline-item-row ${isLeft ? 'left' : 'right'}`}
         >
             <motion.div
-                style={{
-                    width: 'min(45%, 420px)',
-                    position: 'relative'
-                }}
+                className="timeline-card-wrapper"
                 initial={{ opacity: 0, x: isLeft ? -30 : 30 }}
                 animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: isLeft ? -30 : 30 }}
                 transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             >
-                <div style={{
-                    position: 'absolute',
-                    top: '0',
-                    [isLeft ? 'right' : 'left']: '-2px',
-                    width: '2px',
-                    height: '100%',
-                    background: 'linear-gradient(180deg, var(--accent-primary), rgba(59, 130, 246, 0.1))'
-                }} />
-
                 <motion.div
-                    style={{
-                        position: 'absolute',
-                        [isLeft ? 'right' : 'left']: '-11px',
-                        top: '0',
-                        width: '20px',
-                        height: '20px',
-                        borderRadius: '50%',
-                        background: 'var(--bg-color)',
-                        border: '3px solid var(--accent-primary)',
-                        zIndex: 1
-                    }}
+                    className="timeline-dot"
                     whileHover={{ scale: 1.4, background: 'var(--accent-primary)' }}
                 />
 
@@ -177,18 +150,8 @@ const Resume = () => {
                 </motion.div>
             </motion.div>
 
-            <div style={{ position: 'relative', maxWidth: '1000px', margin: '0 auto' }}>
-                <motion.div
-                    style={{
-                        position: 'absolute',
-                        left: '50%',
-                        top: 0,
-                        bottom: 0,
-                        width: '2px',
-                        background: 'linear-gradient(180deg, var(--accent-primary) 0%, rgba(59, 130, 246, 0.1) 100%)',
-                        transform: 'translateX(-50%)'
-                    }}
-                />
+            <div className="timeline-container">
+                <motion.div className="timeline-axis" />
 
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     {experience.map((job, idx) => (

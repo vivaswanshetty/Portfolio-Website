@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowDown, Code, Palette, Database, Layers, Terminal, Globe, Zap, Star, Briefcase, User, Mail, ArrowRight, Sparkles, Rocket } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
+import { useTiltEffect } from '../hooks/useScrollReveal';
 
 const Hero = () => {
     const containerRef = useRef(null);
@@ -226,6 +227,49 @@ const Hero = () => {
     );
 };
 
+const FeatureCard = ({ feature, idx, isInView }) => {
+    const tilt = useTiltEffect(8);
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { 
+                opacity: 1, 
+                y: 0,
+                transition: { duration: 0.5, delay: idx * 0.1 }
+            } : {}}
+        >
+            <div
+                ref={tilt.ref}
+                style={{
+                    padding: '2rem',
+                    background: 'rgba(30, 41, 59, 0.3)',
+                    border: '1px solid rgba(59, 130, 246, 0.15)',
+                    borderRadius: '1rem',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    ...tilt.style
+                }}
+                {...tilt.handlers}
+            >
+                <div style={{
+                    width: '60px', height: '60px',
+                    background: `${feature.color}15`,
+                    borderRadius: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 1.5rem'
+                }}>
+                    <feature.icon size={28} color={feature.color} />
+                </div>
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '0.8rem' }}>{feature.title}</h3>
+                <p style={{ fontSize: '0.9rem', marginBottom: 0 }}>{feature.desc}</p>
+            </div>
+        </motion.div>
+    );
+};
+
 const FeaturedSection = () => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-50px' });
@@ -294,45 +338,55 @@ const FeaturedSection = () => {
                 gap: '1.5rem'
             }}>
                 {features.map((feature, idx) => (
-                    <motion.div
-                        key={idx}
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={isInView ? { 
-                            opacity: 1, 
-                            y: 0,
-                            transition: { duration: 0.5, delay: idx * 0.1 }
-                        } : {}}
-                        transition={{ duration: 0.12, ease: 'easeOut' }}
-                        style={{
-                            padding: '2rem',
-                            background: 'rgba(30, 41, 59, 0.3)',
-                            border: '1px solid rgba(59, 130, 246, 0.15)',
-                            borderRadius: '1rem',
-                            textAlign: 'center'
-                        }}
-                        whileHover={{ 
-                            y: -8, 
-                            borderColor: feature.color,
-                            transition: { duration: 0.12, ease: 'easeOut', delay: 0 }
-                        }}
-                    >
-                        <div style={{
-                            width: '60px', height: '60px',
-                            background: `${feature.color}15`,
-                            borderRadius: '16px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            margin: '0 auto 1.5rem'
-                        }}>
-                            <feature.icon size={28} color={feature.color} />
-                        </div>
-                        <h3 style={{ fontSize: '1.2rem', marginBottom: '0.8rem' }}>{feature.title}</h3>
-                        <p style={{ fontSize: '0.9rem', marginBottom: 0 }}>{feature.desc}</p>
-                    </motion.div>
+                    <FeatureCard key={idx} feature={feature} idx={idx} isInView={isInView} />
                 ))}
             </div>
         </section>
+    );
+};
+
+const QuickLinkCard = ({ link, idx, isInView }) => {
+    const tilt = useTiltEffect(8);
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isInView ? { 
+                opacity: 1, 
+                scale: 1,
+                transition: { duration: 0.4, delay: idx * 0.08 }
+            } : {}}
+        >
+            <div
+                ref={tilt.ref}
+                style={{
+                    ...tilt.style
+                }}
+                {...tilt.handlers}
+            >
+                <Link
+                    to={link.path}
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '0.8rem',
+                        padding: '1.8rem 1rem',
+                        background: 'rgba(30, 41, 59, 0.3)',
+                        border: '1px solid rgba(59, 130, 246, 0.15)',
+                        borderRadius: '1rem',
+                        textDecoration: 'none',
+                        color: 'white',
+                        transition: 'all 0.3s',
+                        width: '100%'
+                    }}
+                >
+                    <link.icon size={28} color="var(--accent-primary)" />
+                    <span style={{ fontWeight: 600, fontSize: '1rem' }}>{link.label}</span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{link.desc}</span>
+                </Link>
+            </div>
+        </motion.div>
     );
 };
 
@@ -373,41 +427,7 @@ const QuickLinks = () => {
                 gap: '1rem'
             }}>
                 {links.map((link, idx) => (
-                    <motion.div
-                        key={idx}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={isInView ? { 
-                            opacity: 1, 
-                            scale: 1,
-                            transition: { duration: 0.4, delay: idx * 0.08 }
-                        } : {}}
-                        transition={{ duration: 0.12, ease: 'easeOut' }}
-                        whileHover={{ 
-                            y: -6,
-                            transition: { duration: 0.12, ease: 'easeOut', delay: 0 }
-                        }}
-                    >
-                        <Link
-                            to={link.path}
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                gap: '0.8rem',
-                                padding: '1.8rem 1rem',
-                                background: 'rgba(30, 41, 59, 0.3)',
-                                border: '1px solid rgba(59, 130, 246, 0.15)',
-                                borderRadius: '1rem',
-                                textDecoration: 'none',
-                                color: 'white',
-                                transition: 'all 0.3s'
-                            }}
-                        >
-                            <link.icon size={28} color="var(--accent-primary)" />
-                            <span style={{ fontWeight: 600, fontSize: '1rem' }}>{link.label}</span>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{link.desc}</span>
-                        </Link>
-                    </motion.div>
+                    <QuickLinkCard key={idx} link={link} idx={idx} isInView={isInView} />
                 ))}
             </div>
         </section>
