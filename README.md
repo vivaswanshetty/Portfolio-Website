@@ -2,7 +2,7 @@
 
 A premium, minimalist, and responsive personal portfolio website showcasing engineering projects, academic milestones, skills, and work timeline. 
 
-🔗 **Live Link**: [elevatex-one.vercel.app](https://elevatex-one.vercel.app) *(or your deployed custom domain)*
+🔗 **Live Link**: https://portfolio-website-17.vercel.app
 
 ---
 
