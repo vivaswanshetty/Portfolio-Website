@@ -76,7 +76,31 @@ const ProjectDetail = () => {
     }, [selectedImage, screenshots]);
 
     return (
-        <div className="page-container case-study-page">
+        <div className="page-container case-study-page" style={{ position: 'relative' }}>
+            
+            {/* Atmospheric Background Ambient Glow from Cover Image */}
+            {project.image && (
+                <div 
+                    aria-hidden="true"
+                    style={{
+                        position: 'absolute',
+                        top: '40px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '100%',
+                        maxWidth: '900px',
+                        height: '380px',
+                        backgroundImage: `url(${project.image})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        filter: 'blur(95px)',
+                        opacity: 0.2,
+                        pointerEvents: 'none',
+                        zIndex: 0,
+                        borderRadius: '50%'
+                    }}
+                />
+            )}
             
             {/* Top Navigation Bar */}
             <motion.div 
@@ -84,6 +108,7 @@ const ProjectDetail = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 className="case-study-top-nav"
+                style={{ position: 'relative', zIndex: 2 }}
             >
                 <Link to="/projects" className="case-study-back-link">
                     <ArrowLeft size={16} /> Back to Projects
@@ -102,6 +127,7 @@ const ProjectDetail = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 className="case-study-hero"
+                style={{ position: 'relative', zIndex: 2 }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
                     <span className={`case-study-badge ${isMobileApp ? 'mobile' : 'web'}`}>
@@ -150,6 +176,44 @@ const ProjectDetail = () => {
                         </a>
                     )}
                 </div>
+
+                {/* Cinematic Hero Cover Showcase Banner */}
+                {project.image && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.97 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.7, delay: 0.15 }}
+                        className="case-study-cover-banner"
+                        onClick={() => setSelectedImage({
+                            src: project.image,
+                            title: `${project.title} Cover Artwork`,
+                            category: "Official Cover & Brand",
+                            note: `Official brand cover and visual identity artwork for ${project.title}. Click any controls or arrows to browse high-definition screenshots.`
+                        })}
+                        title="Click to view full-screen in Lightbox"
+                    >
+                        <div className="case-study-cover-header">
+                            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }} />
+                                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#eab308' }} />
+                                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#22c55e' }} />
+                            </div>
+                            <span className="case-study-cover-url">
+                                {project.slug}.app/official-cover
+                            </span>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <Maximize2 size={12} /> Expand
+                            </div>
+                        </div>
+                        <div className="case-study-cover-img-wrapper">
+                            <img 
+                                src={project.image} 
+                                alt={`${project.title} Official Cover`} 
+                                className="case-study-cover-img"
+                            />
+                        </div>
+                    </motion.div>
+                )}
 
                 {/* Quantitative Impact Metrics */}
                 {project.metrics && (
