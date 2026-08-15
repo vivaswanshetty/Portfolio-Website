@@ -8,13 +8,20 @@ import About from './components/About';
 import Resume from './components/Resume';
 import Projects from './components/Projects';
 import Skills from './components/Skills';
-
 import Contact from './components/Contact';
 import Testimonials from './components/Testimonials';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import Terms from './components/Terms';
+import NotFound from './components/NotFound';
 import Footer from './components/Footer';
 import Starfield from './components/Starfield';
 import ScrollProgress from './components/ScrollProgress';
 import ScrollToTop from './components/ScrollToTop';
+import CommandPalette from './components/CommandPalette';
+import SpotlightCursor from './components/SpotlightCursor';
+import CookieBanner from './components/CookieBanner';
+import { ToastProvider } from './context/ToastContext';
+import { ToastContainer } from './components/Toast';
 import { Analytics } from '@vercel/analytics/react';
 
 const AnimatedRoutes = () => {
@@ -29,7 +36,7 @@ const AnimatedRoutes = () => {
             opacity: 1,
             y: 0,
             transition: {
-                duration: 0.5,
+                duration: 0.45,
                 ease: [0.16, 1, 0.3, 1],
                 staggerChildren: 0.1
             }
@@ -38,7 +45,7 @@ const AnimatedRoutes = () => {
             opacity: 0,
             y: -10,
             transition: {
-                duration: 0.3
+                duration: 0.25
             }
         }
     };
@@ -58,9 +65,11 @@ const AnimatedRoutes = () => {
                     <Route path="/resume" element={<Resume />} />
                     <Route path="/projects" element={<Projects />} />
                     <Route path="/skills" element={<Skills />} />
-
                     <Route path="/testimonials" element={<Testimonials />} />
                     <Route path="/contact" element={<Contact />} />
+                    <Route path="/privacy" element={<PrivacyPolicy />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </motion.div>
         </AnimatePresence>
@@ -69,19 +78,25 @@ const AnimatedRoutes = () => {
 
 function App() {
     return (
-        <Router>
-            <ScrollToTop />
-            <Starfield />
-            <ScrollProgress />
-            <Analytics />
-            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-                <Navbar />
-                <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <AnimatedRoutes />
-                </main>
-                <Footer />
-            </div>
-        </Router>
+        <ToastProvider>
+            <Router>
+                <ScrollToTop />
+                <Starfield />
+                <SpotlightCursor />
+                <ScrollProgress />
+                <CommandPalette />
+                <CookieBanner />
+                <ToastContainer />
+                <Analytics />
+                <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                    <Navbar />
+                    <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        <AnimatedRoutes />
+                    </main>
+                    <Footer />
+                </div>
+            </Router>
+        </ToastProvider>
     );
 }
 

@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
-import { Github, ExternalLink } from 'lucide-react';
+import { Github, ExternalLink, Search, Filter, X, Sparkles } from 'lucide-react';
 import { useTiltEffect } from '../hooks/useScrollReveal';
 
 const ProjectCard = ({ project, index }) => {
@@ -14,17 +14,19 @@ const ProjectCard = ({ project, index }) => {
         offset: ['start 0.9', 'start 0.3']
     });
 
-    const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
+    const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
     return (
         <motion.div
+            layout
             ref={ref}
             style={{ position: 'relative', y }}
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
             transition={{
-                duration: 0.7,
-                delay: index * 0.15,
+                duration: 0.4,
+                delay: index * 0.08,
                 ease: [0.16, 1, 0.3, 1]
             }}
         >
@@ -35,6 +37,9 @@ const ProjectCard = ({ project, index }) => {
                     padding: 0,
                     overflow: 'hidden',
                     cursor: 'pointer',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
                     ...tilt.style
                 }}
                 {...tilt.handlers}
@@ -63,20 +68,22 @@ const ProjectCard = ({ project, index }) => {
                             background: 'linear-gradient(to top, rgba(2, 6, 23, 0.9) 0%, transparent 60%)'
                         }} />
 
-                        <motion.div
+                        <div
                             style={{
                                 position: 'absolute',
                                 bottom: '1rem',
                                 left: '1rem',
                                 display: 'flex',
-                                gap: '0.5rem'
+                                gap: '0.4rem',
+                                flexWrap: 'wrap',
+                                maxWidth: '90%'
                             }}
                         >
                             {project.tech.slice(0, 3).map((t, i) => (
                                 <span key={i} style={{
                                     fontSize: '0.7rem',
-                                    padding: '0.3rem 0.6rem',
-                                    background: 'rgba(0,0,0,0.6)',
+                                    padding: '0.25rem 0.55rem',
+                                    background: 'rgba(0,0,0,0.65)',
                                     backdropFilter: 'blur(10px)',
                                     borderRadius: '4px',
                                     color: '#60a5fa',
@@ -85,13 +92,26 @@ const ProjectCard = ({ project, index }) => {
                                     {t}
                                 </span>
                             ))}
-                        </motion.div>
+                            {project.tech.length > 3 && (
+                                <span style={{
+                                    fontSize: '0.7rem',
+                                    padding: '0.25rem 0.45rem',
+                                    background: 'rgba(59, 130, 246, 0.2)',
+                                    backdropFilter: 'blur(10px)',
+                                    borderRadius: '4px',
+                                    color: '#fff',
+                                    fontFamily: 'monospace'
+                                }}>
+                                    +{project.tech.length - 3}
+                                </span>
+                            )}
+                        </div>
                     </div>
                 )}
 
-                <div style={{ padding: '2rem' }}>
+                <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                        <h3 style={{ fontSize: '1.5rem', margin: 0 }}>{project.title}</h3>
+                        <h3 style={{ fontSize: '1.4rem', margin: 0 }}>{project.title}</h3>
                         <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
                             {project.repo && (
                                 <motion.a
@@ -125,7 +145,7 @@ const ProjectCard = ({ project, index }) => {
                                     target="_blank"
                                     rel="noreferrer"
                                     whileHover={{ scale: 1.12, color: 'var(--accent-primary)' }}
-                                    style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                                    style={{ color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', transition: 'color 0.2s' }}
                                     title="Live Preview"
                                 >
                                     <ExternalLink size={18} />
@@ -135,7 +155,22 @@ const ProjectCard = ({ project, index }) => {
                         </div>
                     </div>
 
-                    <p style={{ marginBottom: '1.5rem', fontSize: '0.95rem', lineHeight: 1.7 }}>{project.problem}</p>
+                    <p style={{ marginBottom: '1.5rem', fontSize: '0.95rem', lineHeight: 1.7, flex: 1 }}>{project.problem}</p>
+
+                    {project.impact && (
+                        <div style={{
+                            padding: '0.85rem 1rem',
+                            borderRadius: '0.75rem',
+                            background: 'rgba(59, 130, 246, 0.06)',
+                            border: '1px solid rgba(59, 130, 246, 0.12)',
+                            fontSize: '0.85rem',
+                            color: 'var(--text-muted)',
+                            lineHeight: 1.6
+                        }}>
+                            <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>Impact: </span>
+                            {project.impact}
+                        </div>
+                    )}
                 </div>
             </div>
         </motion.div>
@@ -144,6 +179,9 @@ const ProjectCard = ({ project, index }) => {
 
 const Projects = () => {
     const { projects } = portfolioData;
+    const [activeCategory, setActiveCategory] = useState('All');
+    const [searchQuery, setSearchQuery] = useState('');
+
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -155,12 +193,36 @@ const Projects = () => {
     const headerY = useTransform(scrollYProgress, [0, 1], [0, 80]);
     const headerOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
+    const categories = ['All', 'Mobile Apps', 'Full-Stack Web', 'Developer Tools'];
+
+    const filteredProjects = projects.filter((project) => {
+        // Category filter
+        let matchesCategory = true;
+        if (activeCategory === 'Mobile Apps') {
+            matchesCategory = project.tech.some(t => t.toLowerCase().includes('native') || t.toLowerCase().includes('expo'));
+        } else if (activeCategory === 'Full-Stack Web') {
+            matchesCategory = project.tech.some(t => t.toLowerCase().includes('react') || t.toLowerCase().includes('express') || t.toLowerCase().includes('mongodb'));
+        } else if (activeCategory === 'Developer Tools') {
+            matchesCategory = project.title.toLowerCase().includes('portfolio') || project.tech.some(t => t.toLowerCase().includes('vite'));
+        }
+
+        // Search query filter
+        const q = searchQuery.toLowerCase().trim();
+        const matchesSearch = !q || (
+            project.title.toLowerCase().includes(q) ||
+            project.problem.toLowerCase().includes(q) ||
+            project.tech.some(t => t.toLowerCase().includes(q))
+        );
+
+        return matchesCategory && matchesSearch;
+    });
+
     return (
         <div className="page-container" ref={ref}>
             <motion.div
                 style={{
                     textAlign: 'center',
-                    marginBottom: '5rem',
+                    marginBottom: '3.5rem',
                     position: 'relative'
                 }}
             >
@@ -176,11 +238,11 @@ const Projects = () => {
                         marginBottom: '1rem',
                         fontWeight: 600
                     }}>
-                        My Work
+                        Engineering Portfolio
                     </span>
-                    <h1 style={{ marginBottom: '1rem' }}>Projects</h1>
-                    <p style={{ maxWidth: '500px', margin: '0 auto' }}>
-                        Exploring ideas through code, design, and relentless iteration.
+                    <h1 style={{ marginBottom: '1rem' }}>Projects & Work</h1>
+                    <p style={{ maxWidth: '550px', margin: '0 auto', fontSize: '1.05rem' }}>
+                        Production-grade mobile and full-stack systems built with modern architecture.
                     </p>
                 </motion.div>
 
@@ -197,7 +259,107 @@ const Projects = () => {
                 />
             </motion.div>
 
-            <div 
+            {/* Filter & Live Search Bar */}
+            <div style={{ maxWidth: '960px', margin: '0 auto 3rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '1rem'
+                }}>
+                    {/* Category Filter Pills */}
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        {categories.map((cat) => {
+                            const isActive = activeCategory === cat;
+                            return (
+                                <button
+                                    key={cat}
+                                    onClick={() => setActiveCategory(cat)}
+                                    style={{
+                                        padding: '0.5rem 1rem',
+                                        borderRadius: '9999px',
+                                        fontSize: '0.85rem',
+                                        fontWeight: 600,
+                                        border: isActive ? '1px solid var(--accent-primary)' : '1px solid rgba(255, 255, 255, 0.08)',
+                                        background: isActive ? 'rgba(59, 130, 246, 0.15)' : 'rgba(30, 41, 59, 0.3)',
+                                        color: isActive ? '#fff' : 'var(--text-muted)',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                >
+                                    {cat}
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* Search Input */}
+                    <div style={{
+                        position: 'relative',
+                        minWidth: '260px',
+                        flex: '1',
+                        maxWidth: '360px'
+                    }}>
+                        <Search size={16} color="var(--accent-primary)" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Filter by tech or keyword..."
+                            style={{
+                                width: '100%',
+                                padding: '0.55rem 2.2rem 0.55rem 2.5rem',
+                                borderRadius: '9999px',
+                                background: 'rgba(30, 41, 59, 0.3)',
+                                border: '1px solid rgba(59, 130, 246, 0.2)',
+                                color: '#fff',
+                                fontSize: '0.88rem',
+                                outline: 'none'
+                            }}
+                        />
+                        {searchQuery && (
+                            <button
+                                onClick={() => setSearchQuery('')}
+                                style={{
+                                    position: 'absolute',
+                                    right: '0.8rem',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: 'none',
+                                    border: 'none',
+                                    color: 'var(--text-muted)',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <X size={14} />
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+                {/* Showing Count */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                    <span>Showing {filteredProjects.length} of {projects.length} projects</span>
+                    {(searchQuery || activeCategory !== 'All') && (
+                        <button
+                            onClick={() => {
+                                setActiveCategory('All');
+                                setSearchQuery('');
+                            }}
+                            style={{ color: 'var(--accent-primary)', textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', fontSize: '0.82rem' }}
+                        >
+                            Reset filters
+                        </button>
+                    )}
+                </div>
+            </div>
+
+            {/* Projects 2-Column Grid */}
+            <motion.div 
+                layout
                 style={{ 
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 420px), 1fr))',
@@ -206,10 +368,41 @@ const Projects = () => {
                     margin: '0 auto'
                 }}
             >
-                {projects.map((project, index) => (
-                    <ProjectCard key={index} project={project} index={index} />
-                ))}
-            </div>
+                <AnimatePresence mode="popLayout">
+                    {filteredProjects.length === 0 ? (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            style={{
+                                gridColumn: '1 / -1',
+                                textAlign: 'center',
+                                padding: '4rem 1rem',
+                                background: 'rgba(30, 41, 59, 0.2)',
+                                borderRadius: '1.25rem',
+                                border: '1px dashed rgba(59, 130, 246, 0.2)'
+                            }}
+                        >
+                            <Sparkles size={32} color="var(--accent-primary)" style={{ margin: '0 auto 1rem', opacity: 0.6 }} />
+                            <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>No matching projects found</h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                                Try searching for another keyword like "Expo", "Firebase", or "TypeScript".
+                            </p>
+                            <button
+                                onClick={() => { setActiveCategory('All'); setSearchQuery(''); }}
+                                className="btn btn-outline"
+                                style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}
+                            >
+                                Clear Search
+                            </button>
+                        </motion.div>
+                    ) : (
+                        filteredProjects.map((project, index) => (
+                            <ProjectCard key={project.title} project={project} index={index} />
+                        ))
+                    )}
+                </AnimatePresence>
+            </motion.div>
 
             <motion.div
                 style={{

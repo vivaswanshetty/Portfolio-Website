@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { Github, Linkedin, Mail, MapPin, ArrowUpRight, Instagram } from 'lucide-react';
+import { Github, Linkedin, Mail, MapPin, ArrowUpRight, Instagram, Copy, ShieldCheck, Scale, Sparkles } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
+import { useToast } from '../context/ToastContext';
 
 const XIcon = ({ size = 16, color = 'currentColor' }) => (
     <svg viewBox="0 0 24 24" width={size} height={size} fill={color} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
@@ -15,22 +16,26 @@ const Footer = () => {
     const { contact } = portfolioData;
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true });
+    const { showToast } = useToast();
 
-    const footerLinks = [
+    const footerSections = [
         {
             title: "Navigation",
             links: [
                 { name: "Home", path: "/" },
-                { name: "About", path: "/about" },
-                { name: "Contact", path: "/contact" }
+                { name: "About Me", path: "/about" },
+                { name: "Projects", path: "/projects" },
+                { name: "Skills", path: "/skills" },
+                { name: "Resume & CV", path: "/resume" }
             ]
         },
         {
-            title: "Work",
+            title: "Legal & Info",
             links: [
-                { name: "Projects", path: "/projects" },
-                { name: "Resume", path: "/resume" },
-                { name: "Skills", path: "/skills" }
+                { name: "Privacy Policy", path: "/privacy" },
+                { name: "Terms of Service", path: "/terms" },
+                { name: "Testimonials", path: "/testimonials" },
+                { name: "Contact", path: "/contact" }
             ]
         }
     ];
@@ -41,6 +46,12 @@ const Footer = () => {
         { icon: Instagram, href: contact.instagram, label: 'Instagram' },
         { icon: XIcon, href: contact.x, label: 'X' }
     ];
+
+    const handleCopyEmail = (e) => {
+        e.preventDefault();
+        navigator.clipboard.writeText(contact.email);
+        showToast('Email address copied to clipboard! 📋', 'success');
+    };
 
     return (
         <motion.footer
@@ -73,15 +84,31 @@ const Footer = () => {
             <div className="container" style={{ position: 'relative', zIndex: 2 }}>
                 <div className="footer-grid">
                     <div>
-                        <NavLink to="/" className="navbar-logo" style={{ fontSize: '1.6rem', marginBottom: '1.5rem', display: 'inline-block' }}>
+                        <NavLink to="/" className="navbar-logo" style={{ fontSize: '1.6rem', marginBottom: '1.2rem', display: 'inline-block' }}>
                             VIVASWAN
                         </NavLink>
-                        <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: '280px', fontSize: '0.95rem' }}>
-                            Building solutions that matter through innovation and engineering excellence.
+                        <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: '280px', fontSize: '0.92rem', marginBottom: '1.5rem' }}>
+                            Building scalable solutions that matter through innovation and engineering excellence.
                         </p>
+                        
+                        {/* Live status badge */}
+                        <div style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.35rem 0.85rem',
+                            borderRadius: '9999px',
+                            background: 'rgba(34, 197, 94, 0.08)',
+                            border: '1px solid rgba(34, 197, 94, 0.2)',
+                            fontSize: '0.75rem',
+                            color: '#4ade80'
+                        }}>
+                            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e' }} />
+                            Available for high-impact roles
+                        </div>
                     </div>
 
-                    {footerLinks.map((column, idx) => (
+                    {footerSections.map((column, idx) => (
                         <motion.div
                             key={idx}
                             initial={{ opacity: 0, y: 20 }}
@@ -123,6 +150,21 @@ const Footer = () => {
                                 >
                                     {contact.email}
                                 </a>
+                                <button
+                                    onClick={handleCopyEmail}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        color: 'var(--accent-primary)',
+                                        cursor: 'pointer',
+                                        padding: '0.2rem',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}
+                                    title="Copy Email"
+                                >
+                                    <Copy size={13} />
+                                </button>
                             </li>
                             <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                                 <MapPin size={15} color="var(--accent-primary)" />
@@ -149,6 +191,7 @@ const Footer = () => {
                                     className="footer-social-btn"
                                     whileHover={{ y: -3, scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
+                                    title={social.label}
                                 >
                                     <social.icon size={16} />
                                 </motion.a>
@@ -171,9 +214,17 @@ const Footer = () => {
                         gap: '1.5rem'
                     }}
                 >
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>
-                        © {currentYear} Vivaswan Shetty. All rights reserved.
-                    </p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>
+                            © {currentYear} Vivaswan Shetty. All rights reserved.
+                        </p>
+                        <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                            <Link to="/privacy" style={{ color: 'inherit', textDecoration: 'none' }}>Privacy Policy</Link>
+                            <span>•</span>
+                            <Link to="/terms" style={{ color: 'inherit', textDecoration: 'none' }}>Terms of Service</Link>
+                        </div>
+                    </div>
+
                     <NavLink
                         to="/contact"
                         className="footer-work-together-btn"
