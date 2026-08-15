@@ -238,16 +238,24 @@ const FeatureCard = ({ feature, idx, isInView }) => {
                 y: 0,
                 transition: { duration: 0.5, delay: idx * 0.1 }
             } : {}}
+            style={{ height: '100%' }}
         >
             <div
                 ref={tilt.ref}
                 style={{
-                    padding: '2rem',
+                    padding: '2rem 1.6rem',
                     background: 'rgba(30, 41, 59, 0.3)',
                     border: '1px solid rgba(59, 130, 246, 0.15)',
                     borderRadius: '1rem',
                     textAlign: 'center',
                     cursor: 'pointer',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    boxSizing: 'border-box',
+                    minHeight: '270px',
                     ...tilt.style
                 }}
                 {...tilt.handlers}
@@ -259,12 +267,36 @@ const FeatureCard = ({ feature, idx, isInView }) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    margin: '0 auto 1.5rem'
+                    margin: '0 auto 1.5rem',
+                    flexShrink: 0
                 }}>
                     <feature.icon size={28} color={feature.color} />
                 </div>
-                <h3 style={{ fontSize: '1.2rem', marginBottom: '0.8rem' }}>{feature.title}</h3>
-                <p style={{ fontSize: '0.9rem', marginBottom: 0 }}>{feature.desc}</p>
+                <h3 style={{ 
+                    fontSize: '1.15rem', 
+                    marginBottom: '0.75rem',
+                    minHeight: '3.2rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    lineHeight: 1.35,
+                    width: '100%'
+                }}>
+                    {feature.title}
+                </h3>
+                <p style={{ 
+                    fontSize: '0.88rem', 
+                    color: 'var(--text-muted)',
+                    lineHeight: 1.6,
+                    margin: 0,
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%'
+                }}>
+                    {feature.desc}
+                </p>
             </div>
         </motion.div>
     );
@@ -356,10 +388,12 @@ const QuickLinkCard = ({ link, idx, isInView }) => {
                 scale: 1,
                 transition: { duration: 0.4, delay: idx * 0.08 }
             } : {}}
+            style={{ height: '100%' }}
         >
             <div
                 ref={tilt.ref}
                 style={{
+                    height: '100%',
                     ...tilt.style
                 }}
                 {...tilt.handlers}
@@ -370,6 +404,7 @@ const QuickLinkCard = ({ link, idx, isInView }) => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        justifyContent: 'center',
                         gap: '0.8rem',
                         padding: '1.8rem 1rem',
                         background: 'rgba(9, 14, 26, 0.65)',
@@ -378,7 +413,10 @@ const QuickLinkCard = ({ link, idx, isInView }) => {
                         textDecoration: 'none',
                         color: 'white',
                         transition: 'all 0.3s',
-                        width: '100%'
+                        width: '100%',
+                        height: '100%',
+                        minHeight: '160px',
+                        boxSizing: 'border-box'
                     }}
                 >
                     <div style={{
@@ -387,7 +425,8 @@ const QuickLinkCard = ({ link, idx, isInView }) => {
                         background: `${link.color}15`,
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        flexShrink: 0
                     }}>
                         <link.icon size={24} color={link.color} />
                     </div>

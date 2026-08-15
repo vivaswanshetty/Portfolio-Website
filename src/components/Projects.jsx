@@ -149,8 +149,8 @@ const ProjectCard = ({ project, index }) => {
                     </div>
                 )}
 
-                <div style={{ padding: '1.8rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem', gap: '0.75rem' }}>
+                <div style={{ padding: '1.8rem', display: 'flex', flexDirection: 'column', flex: 1, boxSizing: 'border-box' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem', gap: '0.75rem', minHeight: '48px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                             {project.logo && (
                                 <div style={{
@@ -170,7 +170,7 @@ const ProjectCard = ({ project, index }) => {
                                 </div>
                             )}
                             <div>
-                                <h3 style={{ fontSize: '1.3rem', margin: 0, color: '#fff' }}>{project.title}</h3>
+                                <h3 style={{ fontSize: '1.3rem', margin: 0, color: '#fff', lineHeight: 1.2 }}>{project.title}</h3>
                                 {project.tagline && (
                                     <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.2rem' }}>
                                         {project.tagline}
@@ -180,7 +180,7 @@ const ProjectCard = ({ project, index }) => {
                         </div>
 
                         {/* Top Action Icons */}
-                        <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', flexShrink: 0 }}>
                             {project.repo && (
                                 <motion.a
                                     href={project.repo}
@@ -208,7 +208,18 @@ const ProjectCard = ({ project, index }) => {
                         </div>
                     </div>
 
-                    <p style={{ marginBottom: '1.2rem', fontSize: '0.9rem', lineHeight: 1.65, color: 'var(--text-secondary)', flex: 1 }}>
+                    <p style={{ 
+                        marginBottom: '1.2rem', 
+                        fontSize: '0.9rem', 
+                        lineHeight: 1.65, 
+                        color: 'var(--text-secondary)', 
+                        flex: 1,
+                        minHeight: '4.8rem',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                    }}>
                         {project.problem}
                     </p>
 

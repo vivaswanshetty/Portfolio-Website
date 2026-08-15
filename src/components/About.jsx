@@ -42,32 +42,40 @@ const StatCard = ({ stat, index }) => {
     const color = statColors[index % statColors.length];
 
     return (
-        <Link to={stat.link} style={{ textDecoration: 'none' }}>
+        <div style={{ height: '100%' }}>
             <div
                 ref={tilt.ref}
                 className="card"
                 style={{ 
                     textAlign: 'center', 
-                    padding: '2rem', 
+                    padding: '1.75rem 1.25rem', 
                     cursor: 'pointer',
                     border: `1px solid ${color}20`,
+                    height: '100%',
+                    minHeight: '145px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxSizing: 'border-box',
                     ...tilt.style 
                 }}
                 {...tilt.handlers}
             >
                 <h4 style={{
-                    fontSize: '2.5rem',
+                    fontSize: '2.4rem',
                     color: color,
-                    marginBottom: '0.5rem',
+                    marginBottom: '0.4rem',
                     fontWeight: 800,
                     letterSpacing: '-0.02em',
-                    textShadow: `0 0 25px ${color}40`
+                    textShadow: `0 0 25px ${color}40`,
+                    lineHeight: 1.1
                 }}>
                     <AnimatedCounter value={stat.value} />
                 </h4>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{stat.label}</span>
+                <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 500 }}>{stat.label}</span>
             </div>
-        </Link>
+        </div>
     );
 };
 

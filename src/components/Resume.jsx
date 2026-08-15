@@ -200,12 +200,21 @@ const Resume = () => {
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
                     gap: '1.5rem',
-                    marginTop: '1.5rem'
+                    marginTop: '1.5rem',
+                    alignItems: 'stretch'
                 }}>
                     {achievements && (
                         <motion.div
                             className="card"
-                            style={{ padding: '1.8rem', border: '1px solid rgba(245, 158, 11, 0.25)', background: 'rgba(245, 158, 11, 0.03)' }}
+                            style={{ 
+                                padding: '1.8rem', 
+                                border: '1px solid rgba(245, 158, 11, 0.25)', 
+                                background: 'rgba(245, 158, 11, 0.03)',
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                boxSizing: 'border-box'
+                            }}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -214,7 +223,7 @@ const Resume = () => {
                             <h3 style={{ fontSize: '1.1rem', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#fbbf24' }}>
                                 <Award size={18} color="#f59e0b" /> Achievements & Honors
                             </h3>
-                            <ul style={{ paddingLeft: '0' }}>
+                            <ul style={{ paddingLeft: '0', margin: 0, flex: 1 }}>
                                 {achievements.map((a, i) => (
                                     <motion.li
                                         key={i}
@@ -242,7 +251,15 @@ const Resume = () => {
                     {portfolioData.resume.certifications && (
                         <motion.div
                             className="card"
-                            style={{ padding: '1.8rem', border: '1px solid rgba(168, 85, 247, 0.25)', background: 'rgba(168, 85, 247, 0.03)' }}
+                            style={{ 
+                                padding: '1.8rem', 
+                                border: '1px solid rgba(168, 85, 247, 0.25)', 
+                                background: 'rgba(168, 85, 247, 0.03)',
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                boxSizing: 'border-box'
+                            }}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
@@ -251,7 +268,7 @@ const Resume = () => {
                             <h3 style={{ fontSize: '1.1rem', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#c084fc' }}>
                                 <Award size={18} color="#a855f7" /> Certifications & Credentials
                             </h3>
-                            <ul style={{ paddingLeft: '0' }}>
+                            <ul style={{ paddingLeft: '0', margin: 0, flex: 1 }}>
                                 {portfolioData.resume.certifications.map((c, i) => (
                                     <motion.li
                                         key={i}

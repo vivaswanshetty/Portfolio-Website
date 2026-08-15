@@ -45,7 +45,7 @@ export const portfolioData = {
         ],
         stats: [
             { label: "Lines of Code", value: "60k+", numeric: 60000 },
-            { label: "Caffeine Intake", value: "0 L", numeric: 0 },
+            { label: "Biryani Consumed", value: "50kg+", numeric: 0 },
             { label: "Bugs Squashed", value: "800+", numeric: 800 },
             { label: "Hours in Flow", value: "1500+", numeric: 1500 }
         ]
