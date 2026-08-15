@@ -3,10 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
     Search, Home, User, FolderGit2, Code, FileText, Star, Mail,
-    Copy, ExternalLink, ShieldCheck, Scale, X, ArrowRight, CornerDownLeft, Sparkles, Smartphone
+    Copy, ExternalLink, ShieldCheck, Scale, X, ArrowRight, CornerDownLeft, Smartphone, Layers
 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { useToast } from '../context/ToastContext';
+
+// Project Logos
+import elevatexBolt from '../assets/logos/elevatex-bolt.png';
+import elevatexLogo from '../assets/logos/elevatex-logo.png';
+import conqueroneLogo from '../assets/logos/conquerone-logo.png';
+import portfolioLogo from '../assets/logos/portfolio-logo.svg';
 
 const XIcon = ({ size = 16, color = 'currentColor' }) => (
     <svg viewBox="0 0 24 24" width={size} height={size} fill={color} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
@@ -66,11 +72,11 @@ export const CommandPalette = () => {
         { id: 'privacy', category: 'Legal & Info', title: 'Privacy Policy', subtitle: 'Data protection & transparency', icon: ShieldCheck, action: () => navigate('/privacy') },
         { id: 'terms', category: 'Legal & Info', title: 'Terms of Service', subtitle: 'Licensing & usage terms', icon: Scale, action: () => navigate('/terms') },
 
-        // Featured Case Studies
-        { id: 'case-elevatex-web', category: 'Case Studies', title: 'ElevateX Web Platform', subtitle: 'MERN, Socket.io, Razorpay Escrow Case Study', icon: Sparkles, action: () => navigate('/projects/elevatex-web') },
-        { id: 'case-elevatex-mobile', category: 'Case Studies', title: 'ElevateX Mobile App', subtitle: 'React Native, Multiplayer 1v1 Duels Case Study', icon: Smartphone, action: () => navigate('/projects/elevatex-mobile') },
-        { id: 'case-conquerone', category: 'Case Studies', title: 'ConquerONE (AI Fitness)', subtitle: 'Gemini AI 6-Model Cascade & Health Connect', icon: Sparkles, action: () => navigate('/projects/conquerone') },
-        { id: 'case-portfolio', category: 'Case Studies', title: 'Developer Portfolio', subtitle: 'Cosmic Starfield & Multi-Chromatic System', icon: Sparkles, action: () => navigate('/projects/portfolio') },
+        // Featured Case Studies with Custom Logos
+        { id: 'case-elevatex-web', category: 'Case Studies', title: 'ElevateX Web Platform', subtitle: 'MERN, Socket.io, Razorpay Escrow Case Study', image: elevatexBolt, action: () => navigate('/projects/elevatex-web') },
+        { id: 'case-elevatex-mobile', category: 'Case Studies', title: 'ElevateX Mobile App', subtitle: 'React Native, Multiplayer 1v1 Duels Case Study', image: elevatexLogo, action: () => navigate('/projects/elevatex-mobile') },
+        { id: 'case-conquerone', category: 'Case Studies', title: 'ConquerONE (AI Fitness)', subtitle: 'Gemini AI 6-Model Cascade & Health Connect', image: conqueroneLogo, action: () => navigate('/projects/conquerone') },
+        { id: 'case-portfolio', category: 'Case Studies', title: 'Developer Portfolio', subtitle: 'Cosmic Starfield & Multi-Chromatic System', image: portfolioLogo, action: () => navigate('/projects/portfolio') },
 
         // Quick Actions
         {
@@ -224,7 +230,7 @@ export const CommandPalette = () => {
                         >
                             {filteredItems.length === 0 ? (
                                 <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)' }}>
-                                    <Sparkles size={28} color="var(--accent-primary)" style={{ margin: '0 auto 0.75rem', opacity: 0.6 }} />
+                                    <Search size={28} color="var(--accent-primary)" style={{ margin: '0 auto 0.75rem', opacity: 0.6 }} />
                                     <p style={{ margin: 0, fontSize: '0.95rem' }}>No commands found matching "{query}"</p>
                                 </div>
                             ) : (
@@ -252,14 +258,21 @@ export const CommandPalette = () => {
                                                     width: '32px',
                                                     height: '32px',
                                                     borderRadius: '8px',
-                                                    background: isSelected ? 'var(--accent-primary)' : 'rgba(255, 255, 255, 0.05)',
+                                                    background: item.image ? 'rgba(15, 23, 42, 0.9)' : (isSelected ? 'var(--accent-primary)' : 'rgba(255, 255, 255, 0.05)'),
+                                                    border: item.image ? '1px solid rgba(255, 255, 255, 0.12)' : 'none',
                                                     color: isSelected ? '#fff' : 'var(--accent-secondary)',
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
-                                                    transition: 'all 0.15s'
+                                                    transition: 'all 0.15s',
+                                                    overflow: 'hidden',
+                                                    padding: item.image ? '3px' : '0'
                                                 }}>
-                                                    <item.icon size={16} />
+                                                    {item.image ? (
+                                                        <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                                    ) : (
+                                                        <item.icon size={16} />
+                                                    )}
                                                 </div>
                                                 <div>
                                                     <div style={{ color: '#fff', fontSize: '0.95rem', fontWeight: 600 }}>

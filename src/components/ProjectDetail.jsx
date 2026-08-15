@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     ArrowLeft, ExternalLink, Github, Layers, Cpu, CheckCircle2, 
-    Smartphone, Globe, Sparkles, ChevronLeft, ChevronRight, X, Maximize2, ShieldCheck, Zap
+    Smartphone, Globe, ChevronLeft, ChevronRight, X, Maximize2, ShieldCheck, Zap
 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { projectScreenshots } from '../data/projectScreenshots';

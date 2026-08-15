@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
-import { Github, ExternalLink, Search, X, Sparkles, ArrowRight, Layers } from 'lucide-react';
+import { Github, ExternalLink, Search, X, ArrowRight, Layers } from 'lucide-react';
 import { useTiltEffect } from '../hooks/useScrollReveal';
 
 const ProjectCard = ({ project, index }) => {
@@ -445,7 +445,7 @@ const Projects = () => {
                                 border: '1px dashed rgba(56, 189, 248, 0.2)'
                             }}
                         >
-                            <Sparkles size={32} color="var(--accent-azure)" style={{ margin: '0 auto 1rem', opacity: 0.6 }} />
+                            <Search size={32} color="var(--accent-azure)" style={{ margin: '0 auto 1rem', opacity: 0.6 }} />
                             <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>No matching case studies found</h3>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
                                 Try searching for another keyword like "Expo", "Firebase", or "Socket.io".

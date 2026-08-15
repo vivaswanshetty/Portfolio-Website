@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowDown, Code, Palette, Database, Layers, Terminal, Globe, Zap, Star, Briefcase, User, Mail, ArrowRight, Sparkles, Rocket } from 'lucide-react';
+import { ArrowDown, Code, Palette, Database, Layers, Terminal, Globe, Zap, Star, Briefcase, User, Mail, ArrowRight, Cpu, Rocket } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { useTiltEffect } from '../hooks/useScrollReveal';
 
@@ -282,7 +282,7 @@ const FeaturedSection = () => {
             color: '#00f2fe'
         },
         {
-            icon: Sparkles,
+            icon: Cpu,
             title: 'Visionary Architecture',
             desc: 'Designing scalable real-time systems and AI-first workflows',
             color: '#a855f7'

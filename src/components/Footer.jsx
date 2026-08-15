@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { Github, Linkedin, Mail, MapPin, ArrowUpRight, Instagram, Copy, ShieldCheck, Scale, Sparkles } from 'lucide-react';
+import { Github, Linkedin, Mail, MapPin, ArrowUpRight, Instagram, Copy, ShieldCheck, Scale } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { useToast } from '../context/ToastContext';
 

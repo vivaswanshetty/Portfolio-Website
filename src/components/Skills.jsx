@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Cpu, Globe, Wrench, Code, Sparkles, Terminal, Smartphone, Zap, Github, Palette, Cloud, Database, Send, FileText } from 'lucide-react';
+import { Cpu, Globe, Wrench, Code, Terminal, Smartphone, Zap, Github, Palette, Cloud, Database, Send, FileText } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 
 const AnimatedProgressBar = ({ level, name, index }) => {
