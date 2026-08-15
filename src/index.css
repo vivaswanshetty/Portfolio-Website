@@ -1292,6 +1292,24 @@ input:focus-visible {
    PROJECT CASE STUDY & SCREENSHOT SHOWCASE STYLES
    ========================================================================== */
 
+.case-study-page {
+  max-width: 1040px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: calc(var(--nav-height) + var(--nav-top-offset) + 2.5rem) 1.5rem 8rem !important;
+  gap: 2rem !important;
+}
+
+.case-study-top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+}
+
 .case-study-back-link {
   display: inline-flex;
   align-items: center;
@@ -1315,7 +1333,8 @@ input:focus-visible {
 }
 
 .case-study-hero {
-  margin-bottom: 3.5rem;
+  margin-bottom: 2.5rem;
+  width: 100%;
 }
 
 .case-study-badge {

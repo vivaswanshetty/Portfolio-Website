@@ -76,14 +76,14 @@ const ProjectDetail = () => {
     }, [selectedImage, screenshots]);
 
     return (
-        <div className="section-container" style={{ paddingTop: 'calc(var(--nav-height) + 2rem)', paddingBottom: '6rem' }}>
+        <div className="page-container case-study-page">
             
             {/* Top Navigation Bar */}
             <motion.div 
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}
+                className="case-study-top-nav"
             >
                 <Link to="/projects" className="case-study-back-link">
                     <ArrowLeft size={16} /> Back to Projects
