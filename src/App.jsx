@@ -7,6 +7,7 @@ import Home from './components/Hero';
 import About from './components/About';
 import Resume from './components/Resume';
 import Projects from './components/Projects';
+import ProjectDetail from './components/ProjectDetail';
 import Skills from './components/Skills';
 import Contact from './components/Contact';
 import Testimonials from './components/Testimonials';
@@ -64,6 +65,7 @@ const AnimatedRoutes = () => {
                     <Route path="/about" element={<About />} />
                     <Route path="/resume" element={<Resume />} />
                     <Route path="/projects" element={<Projects />} />
+                    <Route path="/projects/:slug" element={<ProjectDetail />} />
                     <Route path="/skills" element={<Skills />} />
                     <Route path="/testimonials" element={<Testimonials />} />
                     <Route path="/contact" element={<Contact />} />

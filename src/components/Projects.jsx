@@ -1,20 +1,32 @@
 import React, { useRef, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
-import { Github, ExternalLink, Search, Filter, X, Sparkles } from 'lucide-react';
+import { Github, ExternalLink, Search, X, Sparkles, ArrowRight, Layers } from 'lucide-react';
 import { useTiltEffect } from '../hooks/useScrollReveal';
 
 const ProjectCard = ({ project, index }) => {
+    const navigate = useNavigate();
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-80px' });
-    const tilt = useTiltEffect(6);
+    const tilt = useTiltEffect(5);
 
     const { scrollYProgress } = useScroll({
         target: ref,
         offset: ['start 0.9', 'start 0.3']
     });
 
-    const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
+    const y = useTransform(scrollYProgress, [0, 1], [30, -30]);
+
+    const handleCardClick = (e) => {
+        // Prevent navigation if user clicked a link or button directly
+        if (e.target.closest('a') || e.target.closest('button')) {
+            return;
+        }
+        if (project.slug) {
+            navigate(`/projects/${project.slug}`);
+        }
+    };
 
     return (
         <motion.div
@@ -33,6 +45,7 @@ const ProjectCard = ({ project, index }) => {
             <div
                 ref={tilt.ref}
                 className="card project-card"
+                onClick={handleCardClick}
                 style={{
                     padding: 0,
                     overflow: 'hidden',
@@ -40,6 +53,7 @@ const ProjectCard = ({ project, index }) => {
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
+                    position: 'relative',
                     ...tilt.style
                 }}
                 {...tilt.handlers}
@@ -59,19 +73,42 @@ const ProjectCard = ({ project, index }) => {
                                 height: '100%',
                                 objectFit: 'cover'
                             }}
-                            whileHover={{ scale: 1.08 }}
-                            transition={{ duration: 0.5 }}
+                            whileHover={{ scale: 1.06 }}
+                            transition={{ duration: 0.4 }}
                         />
                         <div style={{
                             position: 'absolute',
                             inset: 0,
-                            background: 'linear-gradient(to top, rgba(2, 6, 23, 0.9) 0%, transparent 60%)'
+                            background: 'linear-gradient(to top, rgba(3, 7, 18, 0.95) 0%, rgba(3, 7, 18, 0.2) 60%, transparent 100%)'
                         }} />
 
+                        {/* Top Category Badge */}
+                        <div style={{
+                            position: 'absolute',
+                            top: '1rem',
+                            left: '1rem',
+                            display: 'flex',
+                            gap: '0.5rem'
+                        }}>
+                            <span style={{
+                                fontSize: '0.72rem',
+                                fontWeight: 700,
+                                padding: '0.3rem 0.75rem',
+                                borderRadius: '9999px',
+                                background: project.category === 'Mobile Apps' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(56, 189, 248, 0.2)',
+                                border: project.category === 'Mobile Apps' ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(56, 189, 248, 0.4)',
+                                color: project.category === 'Mobile Apps' ? '#34d399' : '#38bdf8',
+                                backdropFilter: 'blur(10px)'
+                            }}>
+                                {project.category}
+                            </span>
+                        </div>
+
+                        {/* Tech Stack Chips on Bottom of Image */}
                         <div
                             style={{
                                 position: 'absolute',
-                                bottom: '1rem',
+                                bottom: '0.85rem',
                                 left: '1rem',
                                 display: 'flex',
                                 gap: '0.4rem',
@@ -83,10 +120,11 @@ const ProjectCard = ({ project, index }) => {
                                 <span key={i} style={{
                                     fontSize: '0.7rem',
                                     padding: '0.25rem 0.55rem',
-                                    background: 'rgba(0,0,0,0.65)',
+                                    background: 'rgba(3, 7, 18, 0.75)',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
                                     backdropFilter: 'blur(10px)',
-                                    borderRadius: '4px',
-                                    color: '#60a5fa',
+                                    borderRadius: '6px',
+                                    color: '#e2e8f0',
                                     fontFamily: 'monospace'
                                 }}>
                                     {t}
@@ -95,12 +133,14 @@ const ProjectCard = ({ project, index }) => {
                             {project.tech.length > 3 && (
                                 <span style={{
                                     fontSize: '0.7rem',
-                                    padding: '0.25rem 0.45rem',
-                                    background: 'rgba(59, 130, 246, 0.2)',
+                                    padding: '0.25rem 0.5rem',
+                                    background: 'rgba(99, 102, 241, 0.25)',
+                                    border: '1px solid rgba(99, 102, 241, 0.4)',
                                     backdropFilter: 'blur(10px)',
-                                    borderRadius: '4px',
-                                    color: '#fff',
-                                    fontFamily: 'monospace'
+                                    borderRadius: '6px',
+                                    color: '#c084fc',
+                                    fontFamily: 'monospace',
+                                    fontWeight: 600
                                 }}>
                                     +{project.tech.length - 3}
                                 </span>
@@ -109,34 +149,29 @@ const ProjectCard = ({ project, index }) => {
                     </div>
                 )}
 
-                <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                        <h3 style={{ fontSize: '1.4rem', margin: 0 }}>{project.title}</h3>
-                        <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
+                <div style={{ padding: '1.8rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem' }}>
+                        <div>
+                            <h3 style={{ fontSize: '1.35rem', margin: 0, color: '#fff' }}>{project.title}</h3>
+                            {project.tagline && (
+                                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.2rem' }}>
+                                    {project.tagline}
+                                </span>
+                            )}
+                        </div>
+
+                        {/* Top Action Icons */}
+                        <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
                             {project.repo && (
                                 <motion.a
                                     href={project.repo}
                                     target="_blank"
                                     rel="noreferrer"
-                                    whileHover={{ scale: 1.12, color: 'var(--accent-primary)' }}
-                                    style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', transition: 'color 0.2s' }}
-                                    title={project.mobileRepo ? "Web Repository" : "GitHub Repository"}
+                                    whileHover={{ scale: 1.15, color: 'var(--accent-azure)' }}
+                                    style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', padding: '0.3rem', transition: 'color 0.2s' }}
+                                    title="GitHub Repository"
                                 >
                                     <Github size={18} />
-                                    {project.mobileRepo && <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Web</span>}
-                                </motion.a>
-                            )}
-                            {project.mobileRepo && (
-                                <motion.a
-                                    href={project.mobileRepo}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    whileHover={{ scale: 1.12, color: 'var(--accent-primary)' }}
-                                    style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', transition: 'color 0.2s' }}
-                                    title="Mobile Repository"
-                                >
-                                    <Github size={18} />
-                                    <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Mobile</span>
                                 </motion.a>
                             )}
                             {project.link && (
@@ -144,33 +179,42 @@ const ProjectCard = ({ project, index }) => {
                                     href={project.link}
                                     target="_blank"
                                     rel="noreferrer"
-                                    whileHover={{ scale: 1.12, color: 'var(--accent-primary)' }}
-                                    style={{ color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', transition: 'color 0.2s' }}
+                                    whileHover={{ scale: 1.15, color: 'var(--accent-cyan)' }}
+                                    style={{ color: 'var(--accent-azure)', display: 'flex', alignItems: 'center', padding: '0.3rem', transition: 'color 0.2s' }}
                                     title="Live Preview"
                                 >
                                     <ExternalLink size={18} />
-                                    {project.mobileRepo && <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Live</span>}
                                 </motion.a>
                             )}
                         </div>
                     </div>
 
-                    <p style={{ marginBottom: '1.5rem', fontSize: '0.95rem', lineHeight: 1.7, flex: 1 }}>{project.problem}</p>
+                    <p style={{ marginBottom: '1.2rem', fontSize: '0.9rem', lineHeight: 1.65, color: 'var(--text-secondary)', flex: 1 }}>
+                        {project.problem}
+                    </p>
 
-                    {project.impact && (
-                        <div style={{
-                            padding: '0.85rem 1rem',
-                            borderRadius: '0.75rem',
-                            background: 'rgba(59, 130, 246, 0.06)',
-                            border: '1px solid rgba(59, 130, 246, 0.12)',
-                            fontSize: '0.85rem',
-                            color: 'var(--text-muted)',
-                            lineHeight: 1.6
-                        }}>
-                            <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>Impact: </span>
-                            {project.impact}
-                        </div>
-                    )}
+                    {/* Footer CTA */}
+                    <div style={{
+                        marginTop: 'auto',
+                        paddingTop: '1.2rem',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    }}>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                            <Layers size={14} color="var(--accent-azure)" />
+                            <span>{project.metrics ? project.metrics[0].val : 'Deep Dive'}</span>
+                        </span>
+
+                        <Link
+                            to={`/projects/${project.slug}`}
+                            className="case-study-cta-btn"
+                        >
+                            <span>Explore</span>
+                            <ArrowRight size={14} />
+                        </Link>
+                    </div>
                 </div>
             </div>
         </motion.div>
@@ -193,17 +237,15 @@ const Projects = () => {
     const headerY = useTransform(scrollYProgress, [0, 1], [0, 80]);
     const headerOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
-    const categories = ['All', 'Mobile Apps', 'Full-Stack Web', 'Developer Tools'];
+    const categories = ['All', 'Mobile Apps', 'Full-Stack Web'];
 
     const filteredProjects = projects.filter((project) => {
         // Category filter
         let matchesCategory = true;
         if (activeCategory === 'Mobile Apps') {
-            matchesCategory = project.tech.some(t => t.toLowerCase().includes('native') || t.toLowerCase().includes('expo'));
+            matchesCategory = project.category === 'Mobile Apps';
         } else if (activeCategory === 'Full-Stack Web') {
-            matchesCategory = project.tech.some(t => t.toLowerCase().includes('react') || t.toLowerCase().includes('express') || t.toLowerCase().includes('mongodb'));
-        } else if (activeCategory === 'Developer Tools') {
-            matchesCategory = project.title.toLowerCase().includes('portfolio') || project.tech.some(t => t.toLowerCase().includes('vite'));
+            matchesCategory = project.category === 'Full-Stack Web';
         }
 
         // Search query filter
@@ -211,6 +253,7 @@ const Projects = () => {
         const matchesSearch = !q || (
             project.title.toLowerCase().includes(q) ||
             project.problem.toLowerCase().includes(q) ||
+            (project.tagline && project.tagline.toLowerCase().includes(q)) ||
             project.tech.some(t => t.toLowerCase().includes(q))
         );
 
@@ -234,15 +277,15 @@ const Projects = () => {
                         fontSize: '0.75rem',
                         textTransform: 'uppercase',
                         letterSpacing: '0.25em',
-                        color: 'var(--accent-primary)',
+                        color: 'var(--accent-azure)',
                         marginBottom: '1rem',
                         fontWeight: 600
                     }}>
                         Engineering Portfolio
                     </span>
-                    <h1 style={{ marginBottom: '1rem' }}>Projects & Work</h1>
-                    <p style={{ maxWidth: '550px', margin: '0 auto', fontSize: '1.05rem' }}>
-                        Production-grade mobile and full-stack systems built with modern architecture.
+                    <h1 style={{ marginBottom: '1rem' }}>Featured Case Studies</h1>
+                    <p style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1.05rem', color: 'var(--text-secondary)' }}>
+                        Production-grade mobile and full-stack systems with detailed technical breakdowns and interactive UI galleries.
                     </p>
                 </motion.div>
 
@@ -251,16 +294,16 @@ const Projects = () => {
                         position: 'absolute',
                         top: '-80px',
                         left: '30%',
-                        width: '300px',
-                        height: '300px',
-                        background: 'radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, transparent 70%)',
+                        width: '320px',
+                        height: '320px',
+                        background: 'radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, transparent 70%)',
                         filter: 'blur(60px)'
                     }}
                 />
             </motion.div>
 
             {/* Filter & Live Search Bar */}
-            <div style={{ maxWidth: '960px', margin: '0 auto 3rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ maxWidth: '980px', margin: '0 auto 3rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -277,12 +320,12 @@ const Projects = () => {
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
                                     style={{
-                                        padding: '0.5rem 1rem',
+                                        padding: '0.5rem 1.1rem',
                                         borderRadius: '9999px',
                                         fontSize: '0.85rem',
                                         fontWeight: 600,
-                                        border: isActive ? '1px solid var(--accent-primary)' : '1px solid rgba(255, 255, 255, 0.08)',
-                                        background: isActive ? 'rgba(59, 130, 246, 0.15)' : 'rgba(30, 41, 59, 0.3)',
+                                        border: isActive ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
+                                        background: isActive ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.03)',
                                         color: isActive ? '#fff' : 'var(--text-muted)',
                                         cursor: 'pointer',
                                         transition: 'all 0.2s ease'
@@ -301,7 +344,7 @@ const Projects = () => {
                         flex: '1',
                         maxWidth: '360px'
                     }}>
-                        <Search size={16} color="var(--accent-primary)" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                        <Search size={16} color="var(--accent-azure)" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                         <input
                             type="text"
                             value={searchQuery}
@@ -311,8 +354,8 @@ const Projects = () => {
                                 width: '100%',
                                 padding: '0.55rem 2.2rem 0.55rem 2.5rem',
                                 borderRadius: '9999px',
-                                background: 'rgba(30, 41, 59, 0.3)',
-                                border: '1px solid rgba(59, 130, 246, 0.2)',
+                                background: 'rgba(255, 255, 255, 0.03)',
+                                border: '1px solid rgba(255, 255, 255, 0.08)',
                                 color: '#fff',
                                 fontSize: '0.88rem',
                                 outline: 'none'
@@ -342,14 +385,14 @@ const Projects = () => {
 
                 {/* Showing Count */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                    <span>Showing {filteredProjects.length} of {projects.length} projects</span>
+                    <span>Showing {filteredProjects.length} of {projects.length} case studies</span>
                     {(searchQuery || activeCategory !== 'All') && (
                         <button
                             onClick={() => {
                                 setActiveCategory('All');
                                 setSearchQuery('');
                             }}
-                            style={{ color: 'var(--accent-primary)', textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', fontSize: '0.82rem' }}
+                            style={{ color: 'var(--accent-azure)', textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', fontSize: '0.82rem' }}
                         >
                             Reset filters
                         </button>
@@ -362,9 +405,9 @@ const Projects = () => {
                 layout
                 style={{ 
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 420px), 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 450px), 1fr))',
                     gap: '2.5rem',
-                    maxWidth: '960px',
+                    maxWidth: '980px',
                     margin: '0 auto'
                 }}
             >
@@ -378,15 +421,15 @@ const Projects = () => {
                                 gridColumn: '1 / -1',
                                 textAlign: 'center',
                                 padding: '4rem 1rem',
-                                background: 'rgba(30, 41, 59, 0.2)',
+                                background: 'rgba(255, 255, 255, 0.02)',
                                 borderRadius: '1.25rem',
-                                border: '1px dashed rgba(59, 130, 246, 0.2)'
+                                border: '1px dashed rgba(56, 189, 248, 0.2)'
                             }}
                         >
-                            <Sparkles size={32} color="var(--accent-primary)" style={{ margin: '0 auto 1rem', opacity: 0.6 }} />
-                            <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>No matching projects found</h3>
+                            <Sparkles size={32} color="var(--accent-azure)" style={{ margin: '0 auto 1rem', opacity: 0.6 }} />
+                            <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>No matching case studies found</h3>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-                                Try searching for another keyword like "Expo", "Firebase", or "TypeScript".
+                                Try searching for another keyword like "Expo", "Firebase", or "Socket.io".
                             </p>
                             <button
                                 onClick={() => { setActiveCategory('All'); setSearchQuery(''); }}
@@ -398,7 +441,7 @@ const Projects = () => {
                         </motion.div>
                     ) : (
                         filteredProjects.map((project, index) => (
-                            <ProjectCard key={project.title} project={project} index={index} />
+                            <ProjectCard key={project.slug || project.title} project={project} index={index} />
                         ))
                     )}
                 </AnimatePresence>
@@ -418,7 +461,7 @@ const Projects = () => {
                         style={{
                             width: '60px',
                             height: '2px',
-                            background: 'rgba(59, 130, 246, 0.2)',
+                            background: 'rgba(56, 189, 248, 0.2)',
                             borderRadius: '1px',
                             overflow: 'hidden'
                         }}
@@ -430,7 +473,7 @@ const Projects = () => {
                             style={{
                                 width: '100%',
                                 height: '100%',
-                                background: 'var(--accent-primary)'
+                                background: 'var(--accent-cyan)'
                             }}
                             initial={{ x: '-100%' }}
                             animate={{ x: '200%' }}

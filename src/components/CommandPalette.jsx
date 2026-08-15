@@ -58,13 +58,19 @@ export const CommandPalette = () => {
         // Navigation
         { id: 'home', category: 'Navigation', title: 'Home', subtitle: 'Return to mission control', icon: Home, action: () => navigate('/') },
         { id: 'about', category: 'Navigation', title: 'About Me', subtitle: 'Background & leadership story', icon: User, action: () => navigate('/about') },
-        { id: 'projects', category: 'Navigation', title: 'Projects', subtitle: 'ElevateX, ConquerONE, & Portfolio', icon: FolderGit2, action: () => navigate('/projects') },
+        { id: 'projects', category: 'Navigation', title: 'All Projects', subtitle: 'Browse all case studies & works', icon: FolderGit2, action: () => navigate('/projects') },
         { id: 'skills', category: 'Navigation', title: 'Skills & Tech Stack', subtitle: 'React Native, TypeScript, Node.js', icon: Code, action: () => navigate('/skills') },
         { id: 'resume', category: 'Navigation', title: 'Resume & Experience', subtitle: 'BMSCE, certifications, timeline', icon: FileText, action: () => navigate('/resume') },
         { id: 'testimonials', category: 'Navigation', title: 'Testimonials', subtitle: 'Feedback & quotes', icon: Star, action: () => navigate('/testimonials') },
         { id: 'contact', category: 'Navigation', title: 'Contact', subtitle: 'Get in touch directly', icon: Mail, action: () => navigate('/contact') },
         { id: 'privacy', category: 'Legal & Info', title: 'Privacy Policy', subtitle: 'Data protection & transparency', icon: ShieldCheck, action: () => navigate('/privacy') },
         { id: 'terms', category: 'Legal & Info', title: 'Terms of Service', subtitle: 'Licensing & usage terms', icon: Scale, action: () => navigate('/terms') },
+
+        // Featured Case Studies
+        { id: 'case-elevatex-web', category: 'Case Studies', title: 'ElevateX Web Platform', subtitle: 'MERN, Socket.io, Razorpay Escrow Case Study', icon: Sparkles, action: () => navigate('/projects/elevatex-web') },
+        { id: 'case-elevatex-mobile', category: 'Case Studies', title: 'ElevateX Mobile App', subtitle: 'React Native, Multiplayer 1v1 Duels Case Study', icon: Smartphone, action: () => navigate('/projects/elevatex-mobile') },
+        { id: 'case-conquerone', category: 'Case Studies', title: 'ConquerONE (AI Fitness)', subtitle: 'Gemini AI 6-Model Cascade & Health Connect', icon: Sparkles, action: () => navigate('/projects/conquerone') },
+        { id: 'case-portfolio', category: 'Case Studies', title: 'Developer Portfolio', subtitle: 'Cosmic Starfield & Multi-Chromatic System', icon: Sparkles, action: () => navigate('/projects/portfolio') },
 
         // Quick Actions
         {
@@ -300,7 +306,7 @@ export const CommandPalette = () => {
                                 <span>Esc Close</span>
                             </div>
                             <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>
-                                Vivaswan OS v2.0
+                                Vivaswan's Portfolio.
                             </span>
                         </div>
                     </motion.div>
