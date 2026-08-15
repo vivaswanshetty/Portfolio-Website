@@ -150,14 +150,33 @@ const ProjectCard = ({ project, index }) => {
                 )}
 
                 <div style={{ padding: '1.8rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem' }}>
-                        <div>
-                            <h3 style={{ fontSize: '1.35rem', margin: 0, color: '#fff' }}>{project.title}</h3>
-                            {project.tagline && (
-                                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.2rem' }}>
-                                    {project.tagline}
-                                </span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem', gap: '0.75rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                            {project.logo && (
+                                <div style={{
+                                    width: '38px',
+                                    height: '38px',
+                                    borderRadius: '10px',
+                                    overflow: 'hidden',
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    flexShrink: 0,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: '3px'
+                                }}>
+                                    <img src={project.logo} alt={`${project.title} logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                </div>
                             )}
+                            <div>
+                                <h3 style={{ fontSize: '1.3rem', margin: 0, color: '#fff' }}>{project.title}</h3>
+                                {project.tagline && (
+                                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.2rem' }}>
+                                        {project.tagline}
+                                    </span>
+                                )}
+                            </div>
                         </div>
 
                         {/* Top Action Icons */}

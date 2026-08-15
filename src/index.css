@@ -1374,6 +1374,21 @@ input:focus-visible {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.case-study-hero-logo {
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 4px;
+}
+
 .case-study-title {
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   font-weight: 800;

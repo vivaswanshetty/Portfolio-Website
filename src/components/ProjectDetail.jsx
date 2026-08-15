@@ -113,7 +113,15 @@ const ProjectDetail = () => {
                     </span>
                 </div>
 
-                <h1 className="case-study-title">{project.title}</h1>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', margin: '0.5rem 0 0.8rem', flexWrap: 'wrap' }}>
+                    {project.logo && (
+                        <div className="case-study-hero-logo">
+                            <img src={project.logo} alt={`${project.title} Logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                        </div>
+                    )}
+                    <h1 className="case-study-title" style={{ margin: 0 }}>{project.title}</h1>
+                </div>
+
                 <p className="case-study-tagline">{project.tagline}</p>
                 <p className="case-study-overview">{project.problem}</p>
 
