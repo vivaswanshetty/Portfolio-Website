@@ -5,6 +5,7 @@
 // No coding updates are required in the components.
 // -----------------------------------------------------------------------------
 import elevatexImg from '../assets/elevatex.png';
+import elevatexMobileCoverImg from '../assets/elevatex-mobile-cover.png';
 import conqueroneImg from '../assets/conquerone.png';
 import portfolioMockupImg from '../assets/portfolio_mockup.png';
 
@@ -146,7 +147,7 @@ export const portfolioData = {
             category: "Mobile Apps",
             tagline: "High-Performance Gamified Momentum Network & Mobile Client",
             logo: elevatexLogo,
-            image: elevatexImg,
+            image: elevatexMobileCoverImg,
             problem: "ElevateX Mobile is a high-performance cross-platform Expo client built with React Native 0.76, Expo SDK 52, TypeScript, and Bun. Features dark glassmorphism styling, native haptic feedback, Google OAuth & guest logins, Instagram-style real-time messaging with 200MB rich media uploads, 1v1 multiplayer skill duels, and a live task marketplace synchronized with the shared backend.",
             tech: [
                 "React Native 0.76",
