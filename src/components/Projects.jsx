@@ -79,7 +79,7 @@ const ProjectCard = ({ project, index }) => {
                         <div style={{
                             position: 'absolute',
                             inset: 0,
-                            background: 'linear-gradient(to top, rgba(3, 7, 18, 0.95) 0%, rgba(3, 7, 18, 0.2) 60%, transparent 100%)'
+                            background: 'linear-gradient(to top, rgba(3, 7, 18, 0.6) 0%, transparent 60%)'
                         }} />
 
                         {/* Top Category Badge */}
@@ -95,56 +95,13 @@ const ProjectCard = ({ project, index }) => {
                                 fontWeight: 700,
                                 padding: '0.3rem 0.75rem',
                                 borderRadius: '9999px',
-                                background: project.category === 'Mobile Apps' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(56, 189, 248, 0.2)',
+                                background: project.category === 'Mobile Apps' ? 'rgba(16, 185, 129, 0.25)' : 'rgba(56, 189, 248, 0.25)',
                                 border: project.category === 'Mobile Apps' ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(56, 189, 248, 0.4)',
                                 color: project.category === 'Mobile Apps' ? '#34d399' : '#38bdf8',
                                 backdropFilter: 'blur(10px)'
                             }}>
                                 {project.category}
                             </span>
-                        </div>
-
-                        {/* Tech Stack Chips on Bottom of Image */}
-                        <div
-                            style={{
-                                position: 'absolute',
-                                bottom: '0.85rem',
-                                left: '1rem',
-                                display: 'flex',
-                                gap: '0.4rem',
-                                flexWrap: 'wrap',
-                                maxWidth: '90%'
-                            }}
-                        >
-                            {project.tech.slice(0, 3).map((t, i) => (
-                                <span key={i} style={{
-                                    fontSize: '0.7rem',
-                                    padding: '0.25rem 0.55rem',
-                                    background: 'rgba(3, 7, 18, 0.75)',
-                                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                                    backdropFilter: 'blur(10px)',
-                                    borderRadius: '6px',
-                                    color: '#e2e8f0',
-                                    fontFamily: 'monospace'
-                                }}>
-                                    {t}
-                                </span>
-                            ))}
-                            {project.tech.length > 3 && (
-                                <span style={{
-                                    fontSize: '0.7rem',
-                                    padding: '0.25rem 0.5rem',
-                                    background: 'rgba(99, 102, 241, 0.25)',
-                                    border: '1px solid rgba(99, 102, 241, 0.4)',
-                                    backdropFilter: 'blur(10px)',
-                                    borderRadius: '6px',
-                                    color: '#c084fc',
-                                    fontFamily: 'monospace',
-                                    fontWeight: 600
-                                }}>
-                                    +{project.tech.length - 3}
-                                </span>
-                            )}
                         </div>
                     </div>
                 )}
@@ -209,7 +166,7 @@ const ProjectCard = ({ project, index }) => {
                     </div>
 
                     <p style={{ 
-                        marginBottom: '1.2rem', 
+                        marginBottom: '1rem', 
                         fontSize: '0.9rem', 
                         lineHeight: 1.65, 
                         color: 'var(--text-secondary)', 
@@ -222,6 +179,43 @@ const ProjectCard = ({ project, index }) => {
                     }}>
                         {project.problem}
                     </p>
+
+                    {/* Tech Stack Chips in Card Body */}
+                    <div style={{
+                        display: 'flex',
+                        gap: '0.45rem',
+                        flexWrap: 'wrap',
+                        marginBottom: '1.25rem'
+                    }}>
+                        {project.tech.slice(0, 3).map((t, i) => (
+                            <span key={i} style={{
+                                fontSize: '0.72rem',
+                                padding: '0.25rem 0.6rem',
+                                background: 'rgba(56, 189, 248, 0.08)',
+                                border: '1px solid rgba(56, 189, 248, 0.2)',
+                                borderRadius: '6px',
+                                color: 'var(--accent-azure)',
+                                fontFamily: 'monospace',
+                                fontWeight: 500
+                            }}>
+                                {t}
+                            </span>
+                        ))}
+                        {project.tech.length > 3 && (
+                            <span style={{
+                                fontSize: '0.72rem',
+                                padding: '0.25rem 0.55rem',
+                                background: 'rgba(192, 132, 252, 0.1)',
+                                border: '1px solid rgba(192, 132, 252, 0.25)',
+                                borderRadius: '6px',
+                                color: '#c084fc',
+                                fontFamily: 'monospace',
+                                fontWeight: 600
+                            }}>
+                                +{project.tech.length - 3}
+                            </span>
+                        )}
+                    </div>
 
                     {/* Footer CTA */}
                     <div style={{
