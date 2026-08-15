@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
     Search, Home, User, FolderGit2, Code, FileText, Star, Mail,
-    Copy, ExternalLink, ShieldCheck, Scale, X, ArrowRight, CornerDownLeft, Sparkles
+    Copy, ExternalLink, ShieldCheck, Scale, X, ArrowRight, CornerDownLeft, Sparkles, Smartphone
 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { useToast } from '../context/ToastContext';
