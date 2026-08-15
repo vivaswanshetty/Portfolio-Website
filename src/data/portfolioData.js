@@ -7,7 +7,7 @@
 import elevatexImg from '../assets/elevatex.png';
 import elevatexMobileCoverImg from '../assets/elevatex-mobile-cover.png';
 import conqueroneImg from '../assets/conquerone.png';
-import portfolioMockupImg from '../assets/portfolio_mockup.png';
+import portfolioCoverImg from '../assets/portfolio-cover.png';
 
 // Project Logos
 import elevatexLogo from '../assets/logos/elevatex-logo.png';
@@ -219,7 +219,7 @@ export const portfolioData = {
             category: "Full-Stack Web",
             tagline: "High-Performance Cosmic Multi-Chromatic Portfolio System",
             logo: portfolioLogo,
-            image: portfolioMockupImg,
+            image: portfolioCoverImg,
             problem: "Engineered as an ultra-modern developer portfolio showcasing systems architecture, interactive screenshot galleries with device frames, command palette (⌘K), hardware-accelerated starfield canvas, and privacy-first cookie management.",
             tech: [
                 "React 19 (Vite)",

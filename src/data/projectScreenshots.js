@@ -37,8 +37,12 @@ import ewUserSearch from '../assets/projects/elevatex-web/User Search.png';
 import ewWallet from '../assets/projects/elevatex-web/Wallet.png';
 import ewActivity from '../assets/projects/elevatex-web/Activity.png';
 
-// Portfolio Mockup
-import portfolioHero from '../assets/portfolio_mockup.png';
+// Portfolio Screenshots
+import pHome from '../assets/projects/portfolio/Home.png';
+import pAbout from '../assets/projects/portfolio/About.png';
+import pProjects from '../assets/projects/portfolio/Projects.png';
+import pSkills from '../assets/projects/portfolio/Skills.png';
+import pContact from '../assets/projects/portfolio/Contact.png';
 
 export const projectScreenshots = {
     'conquerone': [
@@ -77,6 +81,10 @@ export const projectScreenshots = {
         { src: ewActivity, title: "Activity Log & Audit Trail", category: "Analytics", description: "Real-time timeline of XP gains, task applications, payouts, and system alerts." }
     ],
     'portfolio': [
-        { src: portfolioHero, title: "Minimalist Cosmic Interface", category: "UI/UX", description: "Custom Starfield animation, responsive navigation, and performance-optimized single-page architecture." }
+        { src: pHome, title: "Interactive Cosmic Hero & Terminal", category: "Hero & Brand", description: "Atmospheric multi-chromatic background, interactive command palette (⌘K), dynamic resume CTA, and quick links." },
+        { src: pAbout, title: "Engineering Philosophy & Metrics", category: "About & Vision", description: "Interactive stat counters, core architectural principles, education credentials, and leadership trajectory." },
+        { src: pProjects, title: "Featured Systems & Live Galleries", category: "Engineering Showcase", description: "Filterable project grid with live repository links, verified technology badges, and deep-dive case studies." },
+        { src: pSkills, title: "Technical Arsenal & Competency Radar", category: "Technical Toolkit", description: "Categorized technical stack, proficiency meters, systems engineering toolsets, and certifications." },
+        { src: pContact, title: "Interactive Terminal & Direct Inquiry", category: "Contact Hub", description: "Integrated terminal interface with live status pulse, social contact channels, and instant messaging." }
     ]
 };

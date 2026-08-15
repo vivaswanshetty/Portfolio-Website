@@ -307,7 +307,7 @@ const Projects = () => {
                     }}>
                         Engineering Portfolio
                     </span>
-                    <h1 style={{ marginBottom: '1rem' }}>Featured Case Studies</h1>
+                    <h1 style={{ marginBottom: '1rem' }}>Featured Projects</h1>
                     <p style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1.05rem', color: 'var(--text-secondary)' }}>
                         Production-grade mobile and full-stack systems with detailed technical breakdowns and interactive UI galleries.
                     </p>
