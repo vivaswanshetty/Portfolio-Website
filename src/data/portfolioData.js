@@ -31,7 +31,7 @@ export const portfolioData = {
     about: {
         title: "About Me",
         tagline: "Visionary. Builder. Leader.",
-        description: "I am currently pursuing my degree in Engineering, with a focus on blending technical depth with entrepreneurial vision. My journey is defined by a relentless drive to innovate and lead teams towards impactful technology solutions. I believe in the power of code to solve real-world problems and creating sustainable business models around them.",
+        description: "I am currently pursuing my degree in Engineering from BMS College of Engineering, Bengaluru, with a focus on blending technical depth with entrepreneurial vision. My journey is defined by a relentless drive to innovate and lead teams towards impactful technology solutions. I believe in the power of code to solve real-world problems and creating sustainable business models around them.",
         highlights: [
             "Aspiring Tech Entrepreneur",
             "Full Stack Developer",

@@ -6,6 +6,8 @@ import { Briefcase, Calendar, Award, GraduationCap, MapPin, ChevronRight } from 
 const TimelineItem = ({ job, index, isLeft }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-100px' });
+    const colors = ['#10b981', '#a855f7'];
+    const accentColor = colors[index % colors.length];
 
     return (
         <motion.div
@@ -20,30 +22,31 @@ const TimelineItem = ({ job, index, isLeft }) => {
             >
                 <motion.div
                     className="timeline-dot"
-                    whileHover={{ scale: 1.4, background: 'var(--accent-primary)' }}
+                    style={{ background: accentColor, boxShadow: `0 0 15px ${accentColor}80` }}
+                    whileHover={{ scale: 1.4 }}
                 />
 
                 <motion.div
                     className="card"
-                    style={{ padding: '2rem' }}
+                    style={{ padding: '2rem', border: `1px solid ${accentColor}25` }}
                     whileHover={{ y: -6, transition: { duration: 0.15, ease: 'easeOut' } }}
                 >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
                         <div style={{
                             width: '36px', height: '36px',
-                            background: 'rgba(59, 130, 246, 0.1)',
+                            background: `${accentColor}18`,
                             borderRadius: '10px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center'
                         }}>
-                            <Briefcase size={18} color="var(--accent-primary)" />
+                            <Briefcase size={18} color={accentColor} />
                         </div>
                         <h3 style={{ fontSize: '1.2rem', margin: 0 }}>{job.role}</h3>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-                        <span style={{ color: 'var(--accent-secondary)', fontWeight: 600, fontSize: '0.95rem' }}>{job.company}</span>
+                        <span style={{ color: accentColor, fontWeight: 600, fontSize: '0.95rem' }}>{job.company}</span>
                         <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                             <Calendar size={12} /> {job.duration}
                         </span>
@@ -59,10 +62,11 @@ const TimelineItem = ({ job, index, isLeft }) => {
                                     style={{
                                         fontSize: '0.72rem',
                                         padding: '0.3rem 0.8rem',
-                                        background: 'rgba(59, 130, 246, 0.1)',
-                                        border: '1px solid rgba(59, 130, 246, 0.2)',
+                                        background: `${accentColor}12`,
+                                        border: `1px solid ${accentColor}30`,
                                         borderRadius: '9999px',
-                                        color: 'var(--accent-primary)'
+                                        color: accentColor,
+                                        fontWeight: 600
                                     }}
                                 >
                                     {h}
@@ -201,14 +205,14 @@ const Resume = () => {
                     {achievements && (
                         <motion.div
                             className="card"
-                            style={{ padding: '1.8rem' }}
+                            style={{ padding: '1.8rem', border: '1px solid rgba(245, 158, 11, 0.25)', background: 'rgba(245, 158, 11, 0.03)' }}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: 0.3 }}
                         >
-                            <h3 style={{ fontSize: '1.1rem', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                                <Award size={18} color="var(--accent-primary)" /> Achievements
+                            <h3 style={{ fontSize: '1.1rem', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#fbbf24' }}>
+                                <Award size={18} color="#f59e0b" /> Achievements & Honors
                             </h3>
                             <ul style={{ paddingLeft: '0' }}>
                                 {achievements.map((a, i) => (
@@ -227,7 +231,7 @@ const Resume = () => {
                                         viewport={{ once: true }}
                                         transition={{ delay: 0.4 + i * 0.1 }}
                                     >
-                                        <ChevronRight size={18} color="var(--accent-primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                                        <ChevronRight size={18} color="#f59e0b" style={{ flexShrink: 0, marginTop: '2px' }} />
                                         <span>{a}</span>
                                     </motion.li>
                                 ))}
@@ -238,14 +242,14 @@ const Resume = () => {
                     {portfolioData.resume.certifications && (
                         <motion.div
                             className="card"
-                            style={{ padding: '1.8rem' }}
+                            style={{ padding: '1.8rem', border: '1px solid rgba(168, 85, 247, 0.25)', background: 'rgba(168, 85, 247, 0.03)' }}
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: 0.4 }}
                         >
-                            <h3 style={{ fontSize: '1.1rem', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                                <Award size={18} color="var(--accent-secondary)" /> Certifications
+                            <h3 style={{ fontSize: '1.1rem', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#c084fc' }}>
+                                <Award size={18} color="#a855f7" /> Certifications & Credentials
                             </h3>
                             <ul style={{ paddingLeft: '0' }}>
                                 {portfolioData.resume.certifications.map((c, i) => (
@@ -264,7 +268,7 @@ const Resume = () => {
                                         viewport={{ once: true }}
                                         transition={{ delay: 0.4 + i * 0.1 }}
                                     >
-                                        <ChevronRight size={18} color="var(--accent-secondary)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                                        <ChevronRight size={18} color="#a855f7" style={{ flexShrink: 0, marginTop: '2px' }} />
                                         <div>
                                             {c.link ? (
                                                 <a 
@@ -278,7 +282,7 @@ const Resume = () => {
                                                         transition: 'color 0.25s ease', 
                                                         cursor: 'pointer' 
                                                     }}
-                                                    onMouseEnter={(e) => e.target.style.color = 'var(--accent-secondary)'}
+                                                    onMouseEnter={(e) => e.target.style.color = '#c084fc'}
                                                     onMouseLeave={(e) => e.target.style.color = 'white'}
                                                 >
                                                     {c.name}
@@ -297,7 +301,21 @@ const Resume = () => {
                 )}
             </motion.div>
 
-
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                style={{ textAlign: 'center', marginTop: '4rem' }}
+            >
+                <a
+                    href="/resume.pdf"
+                    download="Vivaswan_Shetty_Resume.pdf"
+                    className="btn btn-primary"
+                    style={{ padding: '0.85rem 2.2rem', fontSize: '1rem' }}
+                >
+                    <Award size={18} /> Download Official Resume (PDF)
+                </a>
+            </motion.div>
         </div>
     );
 };

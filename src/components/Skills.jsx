@@ -41,7 +41,7 @@ const AnimatedProgressBar = ({ level, name, index }) => {
                     transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.2 + index * 0.15 }}
                     style={{
                         height: '100%',
-                        background: 'linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-primary))',
+                        background: 'linear-gradient(90deg, #00f2fe 0%, #38bdf8 35%, #818cf8 70%, #c084fc 100%)',
                         backgroundSize: '200% 100%',
                         borderRadius: '4px',
                         position: 'relative'

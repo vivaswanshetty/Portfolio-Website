@@ -1,17 +1,42 @@
 :root {
-  --bg-color: #020617;
-  --bg-secondary: #0f172a;
+  --bg-color: #030712;
+  --bg-secondary: #080d1a;
+  --bg-card: rgba(9, 14, 26, 0.65);
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  --accent-primary: #3b82f6;
-  --accent-secondary: #60a5fa;
-  --accent-tertiary: #8b5cf6;
-  --glass-bg: rgba(15, 23, 42, 0.6);
-  --glass-border: rgba(59, 130, 246, 0.2);
+  --text-subtle: #64748b;
+
+  /* Masterpiece Multi-Chromatic Accents */
+  --accent-cyan: #00f2fe;
+  --accent-azure: #38bdf8;
+  --accent-primary: #38bdf8;
+  --accent-indigo: #6366f1;
+  --accent-violet: #8b5cf6;
+  --accent-purple: #c084fc;
+  --accent-secondary: #818cf8;
+  --accent-tertiary: #c084fc;
+  --accent-emerald: #10b981;
+  --accent-mint: #34d399;
+  --accent-amber: #f59e0b;
+  --accent-gold: #fbbf24;
+
+  /* Masterpiece Fusion Gradients */
+  --grad-aurora: linear-gradient(135deg, #00f2fe 0%, #38bdf8 25%, #818cf8 50%, #c084fc 75%, #34d399 100%);
+  --grad-primary: linear-gradient(135deg, #00f2fe 0%, #38bdf8 40%, #6366f1 100%);
+  --grad-violet: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #c084fc 100%);
+  --grad-emerald: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  --grad-amber: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+
+  /* Glassmorphism & Borders */
+  --glass-bg: rgba(9, 14, 26, 0.65);
+  --glass-border: rgba(56, 189, 248, 0.16);
+  --glass-border-hover: rgba(129, 140, 248, 0.45);
+
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
   --font-brand: 'Inter', sans-serif;
   --font-tech: 'Space Grotesk', sans-serif;
+
   /* Desktop: floating pill sits at top: 1.5rem (~24px) + pill height (~52px) = ~76px clearance needed */
   --nav-height: 76px;
   /* Floating offset — how far the pill's top edge is from viewport top */
@@ -291,12 +316,14 @@ img {
   text-decoration: none;
   font-family: var(--font-brand);
   font-weight: 800;
-  font-size: 1.1rem;
-  letter-spacing: 0.05em;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+  background: var(--grad-aurora);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: gradient-shift 6s ease infinite;
 }
 
 .navbar-links {
@@ -321,13 +348,15 @@ img {
 
 .navbar-link:hover {
   color: white;
-  background: rgba(59, 130, 246, 0.1);
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.15);
 }
 
 .navbar-link.active {
   color: white;
-  background: rgba(59, 130, 246, 0.15);
-  border: 1px solid rgba(59, 130, 246, 0.25);
+  background: rgba(99, 102, 241, 0.16);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
 }
 
 .navbar-contact-btn {
@@ -335,19 +364,20 @@ img {
   font-weight: 600;
   color: white;
   text-decoration: none;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.1rem;
   border-radius: 2rem;
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  background: var(--grad-primary);
   margin-left: 0.5rem;
   transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0, 242, 254, 0.25);
 }
 
 .navbar-contact-btn:hover {
   transform: scale(1.05);
-  box-shadow: 0 5px 20px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 25px rgba(99, 102, 241, 0.45), 0 0 15px rgba(0, 242, 254, 0.3);
 }
 
 /* Mobile Menu — visibility is controlled by framer-motion AnimatePresence */
@@ -607,13 +637,13 @@ p {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+  background: var(--grad-aurora);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   display: inline-block;
-  background-size: 200% 200%;
-  animation: gradient-shift 5s ease infinite;
+  background-size: 300% 300%;
+  animation: gradient-shift 6s ease infinite;
 }
 
 .uppercase-label {
@@ -645,52 +675,53 @@ p {
 
 .btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.4);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  background: var(--grad-primary);
   color: white;
   border: 1px solid transparent;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+  background: linear-gradient(135deg, var(--accent-azure), var(--accent-indigo), var(--accent-purple));
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.55), 0 0 20px rgba(0, 242, 254, 0.4);
 }
 
 .btn-outline {
   border: 1px solid var(--glass-border);
-  background: rgba(30, 41, 59, 0.5);
-  color: var(--accent-primary);
+  background: rgba(9, 14, 26, 0.6);
+  color: var(--accent-azure);
 }
 
 .btn-outline:hover {
-  border-color: var(--accent-primary);
-  background: rgba(59, 130, 246, 0.1);
+  border-color: var(--accent-azure);
+  background: rgba(56, 189, 248, 0.12);
   color: white;
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
 }
 
 /* Cards */
 .card {
-  background: rgba(30, 41, 59, 0.3);
+  background: rgba(9, 14, 26, 0.65);
   border: 1px solid var(--glass-border);
   border-radius: 1rem;
   padding: 2.5rem;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .card:hover {
-  border-color: var(--accent-primary);
+  border-color: var(--glass-border-hover);
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
-  background: rgba(30, 41, 59, 0.6);
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(56, 189, 248, 0.12);
+  background: rgba(13, 21, 38, 0.78);
 }
 
 /* Page Containers */

@@ -39,10 +39,11 @@ const Starfield = () => {
                     width: 100%; height: 100%;
                     z-index: -4;
                     background:
-                        radial-gradient(ellipse at 20% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-                        radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
-                        radial-gradient(ellipse at 50% 50%, rgba(96, 165, 250, 0.03) 0%, transparent 70%),
-                        linear-gradient(180deg, #020617 0%, #0f172a 50%, #1e293b 100%);
+                        radial-gradient(ellipse at 15% 15%, rgba(0, 242, 254, 0.08) 0%, transparent 45%),
+                        radial-gradient(ellipse at 85% 20%, rgba(139, 92, 246, 0.09) 0%, transparent 45%),
+                        radial-gradient(ellipse at 20% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 50%),
+                        linear-gradient(180deg, #030712 0%, #080d1a 50%, #0b1222 100%);
                 }
 
                 .grid-overlay {
@@ -51,8 +52,8 @@ const Starfield = () => {
                     width: 100%; height: 100%;
                     z-index: -3;
                     background-image:
-                        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+                        linear-gradient(rgba(56, 189, 248, 0.035) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(56, 189, 248, 0.035) 1px, transparent 1px);
                     background-size: 80px 80px;
                     mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
                     -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
@@ -67,24 +68,32 @@ const Starfield = () => {
 
                 .orb-1 {
                     width: 500px; height: 500px;
-                    background: radial-gradient(circle, rgba(59, 130, 246, 0.25), transparent 70%);
+                    background: radial-gradient(circle, rgba(0, 242, 254, 0.2), transparent 70%);
                     top: 5%; left: -15%;
                     filter: blur(100px);
                     opacity: 0.5;
                 }
 
                 .orb-2 {
-                    width: 400px; height: 400px;
-                    background: radial-gradient(circle, rgba(139, 92, 246, 0.2), transparent 70%);
+                    width: 450px; height: 450px;
+                    background: radial-gradient(circle, rgba(139, 92, 246, 0.22), transparent 70%);
                     bottom: 15%; right: -10%;
-                    filter: blur(80px);
-                    opacity: 0.4;
+                    filter: blur(90px);
+                    opacity: 0.45;
                 }
 
                 .orb-3 {
-                    width: 300px; height: 300px;
-                    background: radial-gradient(circle, rgba(96, 165, 250, 0.15), transparent 70%);
+                    width: 350px; height: 350px;
+                    background: radial-gradient(circle, rgba(16, 185, 129, 0.16), transparent 70%);
                     top: 40%; left: 55%;
+                    filter: blur(70px);
+                    opacity: 0.35;
+                }
+
+                .orb-4 {
+                    width: 280px; height: 280px;
+                    background: radial-gradient(circle, rgba(245, 158, 11, 0.14), transparent 70%);
+                    bottom: 5%; left: 10%;
                     filter: blur(60px);
                     opacity: 0.3;
                 }
@@ -146,6 +155,12 @@ const Starfield = () => {
                 className="floating-orb orb-3"
                 style={{
                     transform: `translate(${mousePos.x * 0.4}px, ${-scrollY * 0.08}px)`,
+                }}
+            />
+            <div
+                className="floating-orb orb-4"
+                style={{
+                    transform: `translate(${-mousePos.x * 0.25}px, ${scrollY * 0.1}px)`,
                 }}
             />
 

@@ -35,8 +35,12 @@ const AnimatedCounter = ({ value, duration = 2000 }) => {
     return <span ref={ref}>{count}{suffix}</span>;
 };
 
-const StatCard = ({ stat }) => {
+const statColors = ['#00f2fe', '#f59e0b', '#10b981', '#c084fc'];
+
+const StatCard = ({ stat, index }) => {
     const tilt = useTiltEffect(10);
+    const color = statColors[index % statColors.length];
+
     return (
         <Link to={stat.link} style={{ textDecoration: 'none' }}>
             <div
@@ -46,16 +50,18 @@ const StatCard = ({ stat }) => {
                     textAlign: 'center', 
                     padding: '2rem', 
                     cursor: 'pointer',
+                    border: `1px solid ${color}20`,
                     ...tilt.style 
                 }}
                 {...tilt.handlers}
             >
                 <h4 style={{
                     fontSize: '2.5rem',
-                    color: 'var(--accent-primary)',
+                    color: color,
                     marginBottom: '0.5rem',
                     fontWeight: 800,
-                    letterSpacing: '-0.02em'
+                    letterSpacing: '-0.02em',
+                    textShadow: `0 0 25px ${color}40`
                 }}>
                     <AnimatedCounter value={stat.value} />
                 </h4>
@@ -226,26 +232,32 @@ const About = () => {
                     <p style={{ marginBottom: '2rem', lineHeight: 1.9, fontSize: '1.05rem' }}>{description}</p>
 
                     <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
-                        {highlights.map((item, idx) => (
-                            <motion.span
-                                key={idx}
-                                style={{
-                                    padding: '0.6rem 1.2rem',
-                                    background: 'rgba(59, 130, 246, 0.08)',
-                                    border: '1px solid rgba(59, 130, 246, 0.15)',
-                                    borderRadius: '9999px',
-                                    fontSize: '0.85rem',
-                                    color: 'var(--accent-primary)'
-                                }}
-                                whileHover={{
-                                    scale: 1.05,
-                                    background: 'rgba(59, 130, 246, 0.15)',
-                                    borderColor: 'var(--accent-primary)'
-                                }}
-                            >
-                                {item}
-                            </motion.span>
-                        ))}
+                        {highlights.map((item, idx) => {
+                            const badgeColors = ['#a855f7', '#00f2fe', '#f59e0b', '#10b981'];
+                            const c = badgeColors[idx % badgeColors.length];
+                            return (
+                                <motion.span
+                                    key={idx}
+                                    style={{
+                                        padding: '0.6rem 1.2rem',
+                                        background: `${c}12`,
+                                        border: `1px solid ${c}30`,
+                                        borderRadius: '9999px',
+                                        fontSize: '0.85rem',
+                                        color: c,
+                                        fontWeight: 600
+                                    }}
+                                    whileHover={{
+                                        scale: 1.05,
+                                        background: `${c}22`,
+                                        borderColor: c,
+                                        boxShadow: `0 0 15px ${c}35`
+                                    }}
+                                >
+                                    {item}
+                                </motion.span>
+                            );
+                        })}
                     </div>
 
                     <motion.div
@@ -255,7 +267,7 @@ const About = () => {
                             right: '-30px',
                             width: '150px',
                             height: '1px',
-                            background: 'linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.2), transparent)'
+                            background: 'linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.2), transparent)'
                         }}
                     />
                 </motion.div>
@@ -276,14 +288,14 @@ const About = () => {
                             right: '-10%',
                             width: '200px',
                             height: '200px',
-                            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
+                            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%)',
                             filter: 'blur(50px)',
                             y: y1
                         }}
                     />
 
                     {stats && stats.map((stat, idx) => (
-                        <StatCard key={idx} stat={stat} />
+                        <StatCard key={idx} stat={stat} index={idx} />
                     ))}
                 </motion.div>
             </motion.div>

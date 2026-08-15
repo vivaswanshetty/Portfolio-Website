@@ -277,27 +277,27 @@ const FeaturedSection = () => {
     const features = [
         {
             icon: Code,
-            title: 'Full Stack Development',
-            desc: 'Building robust applications with modern technologies',
-            color: '#3b82f6'
+            title: 'Full Stack & Mobile Systems',
+            desc: 'Production-ready apps with React Native, Expo & MERN stack',
+            color: '#00f2fe'
         },
         {
             icon: Sparkles,
-            title: 'Creative Solutions',
-            desc: 'Transforming complex problems into elegant interfaces',
-            color: '#8b5cf6'
+            title: 'Visionary Architecture',
+            desc: 'Designing scalable real-time systems and AI-first workflows',
+            color: '#a855f7'
         },
         {
             icon: Zap,
-            title: 'Performance Focused',
-            desc: 'Optimized for speed and seamless user experience',
-            color: '#06b6d4'
+            title: 'High Performance & Speed',
+            desc: 'Optimized algorithms, offline-first sync, and smooth animations',
+            color: '#10b981'
         },
         {
             icon: Globe,
-            title: 'Global Perspective',
-            desc: 'Building products for diverse audiences',
-            color: '#10b981'
+            title: 'Leadership & Execution',
+            desc: 'Driving projects from zero to scale with entrepreneurial focus',
+            color: '#f59e0b'
         },
     ];
 
@@ -372,8 +372,8 @@ const QuickLinkCard = ({ link, idx, isInView }) => {
                         alignItems: 'center',
                         gap: '0.8rem',
                         padding: '1.8rem 1rem',
-                        background: 'rgba(30, 41, 59, 0.3)',
-                        border: '1px solid rgba(59, 130, 246, 0.15)',
+                        background: 'rgba(9, 14, 26, 0.65)',
+                        border: `1px solid ${link.color}25`,
                         borderRadius: '1rem',
                         textDecoration: 'none',
                         color: 'white',
@@ -381,7 +381,16 @@ const QuickLinkCard = ({ link, idx, isInView }) => {
                         width: '100%'
                     }}
                 >
-                    <link.icon size={28} color="var(--accent-primary)" />
+                    <div style={{
+                        width: '48px', height: '48px',
+                        borderRadius: '12px',
+                        background: `${link.color}15`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        <link.icon size={24} color={link.color} />
+                    </div>
                     <span style={{ fontWeight: 600, fontSize: '1rem' }}>{link.label}</span>
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{link.desc}</span>
                 </Link>
@@ -395,10 +404,10 @@ const QuickLinks = () => {
     const isInView = useInView(ref, { once: true, margin: '-100px' });
 
     const links = [
-        { icon: User, label: 'About', path: '/about', desc: 'My journey & experience' },
-        { icon: Briefcase, label: 'Projects', path: '/projects', desc: 'Featured work' },
-        { icon: Code, label: 'Skills', path: '/skills', desc: 'Technologies I use' },
-        { icon: Mail, label: 'Contact', path: '/contact', desc: 'Get in touch' },
+        { icon: User, label: 'About', path: '/about', desc: 'My journey & vision', color: '#38bdf8' },
+        { icon: Briefcase, label: 'Projects', path: '/projects', desc: 'Featured applications', color: '#a855f7' },
+        { icon: Code, label: 'Skills', path: '/skills', desc: 'Technical mastery', color: '#10b981' },
+        { icon: Mail, label: 'Contact', path: '/contact', desc: 'Let\'s collaborate', color: '#f59e0b' },
     ];
 
     return (
