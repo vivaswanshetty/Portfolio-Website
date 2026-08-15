@@ -275,49 +275,42 @@ img {
 
 .navbar-main {
   position: fixed;
-  top: 1.5rem;
+  top: 1.25rem;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
-  width: min(90%, 900px);
-  max-width: 900px;
+  width: min(92%, 840px);
+  max-width: 840px;
   z-index: 1000;
-  padding: 0.85rem 1.8rem;
+  padding: 0.45rem 0.6rem 0.45rem 1.4rem;
   border-radius: 9999px;
-  background: rgba(10, 15, 30, 0.45);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  background: rgba(6, 10, 20, 0.65);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3), 
-              inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-/* Hidden by default on desktop, shown on mobile via media query */
-.mobile-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 0.25rem;
-  align-items: center;
-  justify-content: center;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12),
+              0 0 0 1px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
 }
 
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: white;
+  gap: 0.45rem;
   text-decoration: none;
+  padding-right: 0.5rem;
+}
+
+.navbar-logo-text {
   font-family: var(--font-brand);
   font-weight: 800;
-  font-size: 1.15rem;
-  letter-spacing: 0.06em;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
   background: var(--grad-aurora);
   background-size: 200% auto;
   -webkit-background-clip: text;
@@ -326,93 +319,209 @@ img {
   animation: gradient-shift 6s ease infinite;
 }
 
+.navbar-logo-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+  display: inline-block;
+}
+
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.2rem;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 0.2rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .navbar-link {
-  font-size: 0.82rem;
+  position: relative;
+  font-size: 0.84rem;
   font-weight: 500;
   color: var(--text-muted);
   text-decoration: none;
-  padding: 0.55rem 0.85rem;
-  border-radius: 2rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  transition: all 0.3s;
-  border: 1px solid transparent;
+  transition: color 0.2s ease;
 }
 
 .navbar-link:hover {
-  color: white;
-  background: rgba(56, 189, 248, 0.1);
-  border-color: rgba(56, 189, 248, 0.15);
+  color: #ffffff;
 }
 
 .navbar-link.active {
-  color: white;
-  background: rgba(99, 102, 241, 0.16);
-  border: 1px solid rgba(99, 102, 241, 0.35);
-  box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+  color: #ffffff;
+  font-weight: 600;
 }
 
-.navbar-contact-btn {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: white;
-  text-decoration: none;
-  padding: 0.5rem 1.1rem;
-  border-radius: 2rem;
+.navbar-active-pill {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.navbar-actions {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  background: var(--grad-primary);
-  margin-left: 0.5rem;
-  transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(0, 242, 254, 0.25);
+}
+
+.navbar-cmd-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navbar-cmd-btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(56, 189, 248, 0.3);
+  color: #ffffff;
+}
+
+.navbar-cmd-icon {
+  color: var(--accent-azure);
+}
+
+.navbar-cmd-shortcut {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.navbar-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 1.15rem;
+  border-radius: 9999px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(99, 102, 241, 0.25));
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 4px 15px -3px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .navbar-contact-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 25px rgba(99, 102, 241, 0.45), 0 0 15px rgba(0, 242, 254, 0.3);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(99, 102, 241, 0.45));
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow: 0 6px 20px -3px rgba(99, 102, 241, 0.45), 0 0 15px rgba(56, 189, 248, 0.3);
+  transform: translateY(-1px);
 }
 
-/* Mobile Menu — visibility is controlled by framer-motion AnimatePresence */
+/* Mobile Controls */
+.mobile-actions {
+  display: none;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mobile-cmd-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--accent-azure);
+  cursor: pointer;
+}
+
+.mobile-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: white;
+  cursor: pointer;
+}
+
+/* Mobile Menu Overlay */
 .mobile-menu {
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 23, 0.98);
+  background: rgba(3, 7, 18, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   z-index: 999;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  padding: 2rem;
 }
 
 .mobile-menu-link {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: white;
-  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.5rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 1rem;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
 }
 
-.mobile-menu-link.contact {
-  color: var(--accent-primary);
+.mobile-menu-link:hover,
+.mobile-menu-link.active {
+  color: #ffffff;
+  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.mobile-menu-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-azure);
+}
+
+.mobile-menu-link.contact-pill {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(99, 102, 241, 0.25));
+  border-color: rgba(56, 189, 248, 0.35);
+  color: #ffffff;
+  justify-content: center;
 }
 
 /* Responsive Navbar */
 @media (max-width: 900px) {
   :root {
     --nav-height: 65px;
-    --nav-top-offset: 0px; /* Mobile nav is pinned at top: 0, no floating offset */
+    --nav-top-offset: 0px;
   }
 
   .navbar-main {
@@ -426,32 +535,22 @@ img {
     border-radius: 0;
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 1rem 1.5rem;
-    background: rgba(10, 15, 30, 0.6);
-    backdrop-filter: blur(24px) saturate(190%);
-    -webkit-backdrop-filter: blur(24px) saturate(190%);
-    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
+    padding: 0.8rem 1.25rem;
+    background: rgba(6, 10, 20, 0.8);
   }
 
   .desktop-only {
     display: none !important;
   }
 
-  .mobile-toggle {
+  .mobile-actions {
     display: flex !important;
   }
-
-  /* Mobile menu is controlled by framer-motion AnimatePresence, NOT by CSS display */
 }
 
 @media (min-width: 901px) {
-  .mobile-toggle {
+  .mobile-actions {
     display: none !important;
-  }
-
-  /* Hide scroll progress on small viewports to avoid overlap */
-  .scroll-progress-hidden-mobile {
-    display: none;
   }
 }
 

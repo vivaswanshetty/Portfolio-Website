@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, User, FolderGit2, FileText, Mail, Menu, X, Code, Search, Sparkles } from 'lucide-react';
+import { Home, User, FolderGit2, FileText, Mail, Menu, X, Code, Search } from 'lucide-react';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const navLinks = [
-        { name: 'HOME', path: '/', icon: Home },
-        { name: 'ABOUT', path: '/about', icon: User },
-        { name: 'PROJECTS', path: '/projects', icon: FolderGit2 },
-        { name: 'SKILLS', path: '/skills', icon: Code },
-        { name: 'RESUME', path: '/resume', icon: FileText },
+        { name: 'Home', path: '/', icon: Home },
+        { name: 'About', path: '/about', icon: User },
+        { name: 'Projects', path: '/projects', icon: FolderGit2 },
+        { name: 'Skills', path: '/skills', icon: Code },
+        { name: 'Resume', path: '/resume', icon: FileText },
     ];
 
     const openCommandPalette = () => {
@@ -21,11 +21,12 @@ const Navbar = () => {
     return (
         <>
             <motion.nav
-                initial={{ y: -100, opacity: 0 }}
+                initial={{ y: -80, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 className="navbar-main"
             >
+                {/* Brand Logo */}
                 <NavLink
                     to="/"
                     className="navbar-logo"
@@ -36,87 +37,77 @@ const Navbar = () => {
                         }
                     }}
                 >
-                    VIVASWAN
+                    <span className="navbar-logo-text">VIVASWAN</span>
+                    <span className="navbar-logo-dot" />
                 </NavLink>
 
+                {/* Desktop Navigation Links */}
                 <div className="desktop-only navbar-links">
                     {navLinks.map((link) => (
-                        <motion.div
+                        <NavLink
                             key={link.path}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                            to={link.path}
+                            className={({ isActive }) => `navbar-link ${isActive ? 'active' : ''}`}
                         >
-                            <NavLink
-                                to={link.path}
-                                className={({ isActive }) => `navbar-link ${isActive ? 'active' : ''}`}
-                            >
-                                <link.icon size={14} />
-                                {link.name}
-                            </NavLink>
-                        </motion.div>
+                            {({ isActive }) => (
+                                <>
+                                    <span style={{ position: 'relative', zIndex: 2 }}>{link.name}</span>
+                                    {isActive && (
+                                        <motion.div
+                                            layoutId="activeNavIndicator"
+                                            className="navbar-active-pill"
+                                            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                                        />
+                                    )}
+                                </>
+                            )}
+                        </NavLink>
                     ))}
+                </div>
 
-                    {/* Command Palette Trigger Button */}
+                {/* Right Side Actions: Command Palette & Contact */}
+                <div className="desktop-only navbar-actions">
                     <motion.button
                         onClick={openCommandPalette}
-                        className="navbar-link"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        style={{
-                            background: 'rgba(59, 130, 246, 0.08)',
-                            border: '1px solid rgba(59, 130, 246, 0.2)',
-                            color: 'var(--text-muted)',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.4rem',
-                            padding: '0.45rem 0.8rem'
-                        }}
-                        title="Open Command Palette (Cmd + K / Ctrl + K)"
+                        className="navbar-cmd-btn"
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        title="Search & Commands (⌘K / Ctrl+K)"
                     >
-                        <Search size={13} color="var(--accent-primary)" />
-                        <span style={{ fontSize: '0.72rem', letterSpacing: '0.05em', color: '#fff', fontWeight: 600 }}>⌘K</span>
+                        <Search size={13} className="navbar-cmd-icon" />
+                        <span className="navbar-cmd-shortcut">⌘K</span>
                     </motion.button>
 
                     <NavLink to="/contact" className="navbar-contact-btn">
-                        <Mail size={14} />
-                        CONTACT
+                        <span>Contact</span>
                     </NavLink>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    {/* Mobile Command Palette trigger */}
+                {/* Mobile Right Controls */}
+                <div className="mobile-actions">
                     <motion.button
                         onClick={openCommandPalette}
-                        className="mobile-toggle"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        style={{
-                            display: 'none',
-                            padding: '0.4rem',
-                            borderRadius: '8px',
-                            background: 'rgba(59, 130, 246, 0.1)',
-                            border: '1px solid rgba(59, 130, 246, 0.2)'
-                        }}
+                        className="mobile-cmd-btn"
+                        whileTap={{ scale: 0.92 }}
                         title="Search & Commands"
                     >
-                        <Search size={18} color="var(--accent-primary)" />
+                        <Search size={17} />
                     </motion.button>
 
                     <motion.button
                         onClick={() => setIsOpen(!isOpen)}
                         className="mobile-toggle"
-                        whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
+                        aria-label="Toggle menu"
                     >
                         <AnimatePresence mode="wait">
                             {isOpen ? (
                                 <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}>
-                                    <X size={24} />
+                                    <X size={22} />
                                 </motion.div>
                             ) : (
                                 <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}>
-                                    <Menu size={24} />
+                                    <Menu size={22} />
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -124,48 +115,57 @@ const Navbar = () => {
                 </div>
             </motion.nav>
 
+            {/* Mobile Drawer Menu */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
+                        initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+                        animate={{ opacity: 1, backdropFilter: 'blur(20px)' }}
+                        exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
                         transition={{ duration: 0.3 }}
                         className="mobile-menu"
                     >
-                        {navLinks.map((link, idx) => (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', maxWidth: '320px' }}>
+                            {navLinks.map((link, idx) => (
+                                <motion.div
+                                    key={link.path}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ delay: idx * 0.06 }}
+                                >
+                                    <NavLink
+                                        to={link.path}
+                                        onClick={() => setIsOpen(false)}
+                                        className={({ isActive }) => `mobile-menu-link ${isActive ? 'active' : ''}`}
+                                    >
+                                        <div className="mobile-menu-icon">
+                                            <link.icon size={20} />
+                                        </div>
+                                        <span>{link.name}</span>
+                                    </NavLink>
+                                </motion.div>
+                            ))}
+
                             <motion.div
-                                key={link.path}
-                                initial={{ opacity: 0, y: 30 }}
+                                initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{ delay: idx * 0.08 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ delay: navLinks.length * 0.06 }}
+                                style={{ marginTop: '1rem' }}
                             >
                                 <NavLink
-                                    to={link.path}
+                                    to="/contact"
                                     onClick={() => setIsOpen(false)}
-                                    className="mobile-menu-link"
+                                    className="mobile-menu-link contact-pill"
                                 >
-                                    <link.icon size={26} />
-                                    {link.name}
+                                    <div className="mobile-menu-icon contact">
+                                        <Mail size={20} />
+                                    </div>
+                                    <span>Get In Touch</span>
                                 </NavLink>
                             </motion.div>
-                        ))}
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ delay: navLinks.length * 0.08 }}
-                        >
-                            <NavLink
-                                to="/contact"
-                                onClick={() => setIsOpen(false)}
-                                className="mobile-menu-link contact"
-                            >
-                                <Mail size={26} />
-                                CONTACT
-                            </NavLink>
-                        </motion.div>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
