@@ -902,17 +902,17 @@ p {
 
 .editorial-display-wordmark {
   font-family: var(--font-heading), 'Outfit', 'Inter', sans-serif;
-  font-size: clamp(3.8rem, 12.8vw, 16.5rem);
+  font-size: clamp(5.2rem, 16vw, 22rem);
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.04em;
   line-height: 0.8;
   color: #ffffff;
   text-align: center;
   white-space: nowrap;
   user-select: none;
   pointer-events: none;
-  transform: translate(-3vw, -4%);
+  transform: translate(-1.5vw, -4%);
 }
 
 /* Layer 3: Foreground Cutout Subject Overlapping the Typography */
@@ -1406,7 +1406,7 @@ p {
     padding: calc(var(--nav-height) + var(--nav-top-offset) + 1.5rem) 1.5rem 4rem;
   }
   .editorial-display-wordmark {
-    font-size: clamp(2.8rem, 12vw, 8rem);
+    font-size: clamp(3.4rem, 14.5vw, 9.5rem);
     transform: translate(-1vw, -4%);
   }
   .editorial-bottom-row {
