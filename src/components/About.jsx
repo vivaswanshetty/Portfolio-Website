@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
 import portraitImg from '../assets/vivaswan_portrait.jpg';
-import { useTiltEffect } from '../hooks/useScrollReveal';
 
 const AnimatedCounter = ({ value, duration = 2000 }) => {
     const [count, setCount] = useState(0);
@@ -35,46 +33,15 @@ const AnimatedCounter = ({ value, duration = 2000 }) => {
     return <span ref={ref}>{count}{suffix}</span>;
 };
 
-const statColors = ['#00f2fe', '#f59e0b', '#10b981', '#c084fc'];
-
 const StatCard = ({ stat, index }) => {
-    const tilt = useTiltEffect(10);
-    const color = statColors[index % statColors.length];
-
     return (
-        <div style={{ height: '100%' }}>
-            <div
-                ref={tilt.ref}
-                className="card"
-                style={{ 
-                    textAlign: 'center', 
-                    padding: '1.75rem 1.25rem', 
-                    cursor: 'pointer',
-                    border: `1px solid ${color}20`,
-                    height: '100%',
-                    minHeight: '145px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxSizing: 'border-box',
-                    ...tilt.style 
-                }}
-                {...tilt.handlers}
-            >
-                <h4 style={{
-                    fontSize: '2.4rem',
-                    color: color,
-                    marginBottom: '0.4rem',
-                    fontWeight: 800,
-                    letterSpacing: '-0.02em',
-                    textShadow: `0 0 25px ${color}40`,
-                    lineHeight: 1.1
-                }}>
-                    <AnimatedCounter value={stat.value} />
-                </h4>
-                <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 500 }}>{stat.label}</span>
-            </div>
+        <div className="editorial-stat-card">
+            <h4 className="editorial-stat-number">
+                <AnimatedCounter value={stat.value} />
+            </h4>
+            <span className="editorial-stat-label">
+                0{index + 1} / {stat.label}
+            </span>
         </div>
     );
 };
@@ -82,28 +49,17 @@ const StatCard = ({ stat, index }) => {
 const About = () => {
     const { title, description, highlights, stats } = portfolioData.about;
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: '-100px' });
-    const portraitTilt = useTiltEffect(10);
-
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ['start end', 'end start']
-    });
-
-    const y1 = useTransform(scrollYProgress, [0, 1], [100, -100]);
-    const y2 = useTransform(scrollYProgress, [0, 1], [50, -50]);
-    const opacity = useTransform(scrollYProgress, [0, 0.3, 0.8, 1], [0, 1, 1, 0]);
 
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: { staggerChildren: 0.1 }
+            transition: { staggerChildren: 0.12 }
         }
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 40 },
+        hidden: { opacity: 0, y: 30 },
         visible: {
             opacity: 1,
             y: 0,
@@ -112,231 +68,102 @@ const About = () => {
     };
 
     return (
-        <div className="page-container" ref={ref}>
+        <div className="editorial-page-container" ref={ref}>
+            {/* Opening Editorial Header */}
             <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
-                style={{
-                    textAlign: 'center',
-                    marginBottom: '5rem',
-                    position: 'relative'
-                }}
+                className="editorial-page-header"
             >
-                <motion.span
-                    style={{
-                        display: 'inline-block',
-                        fontSize: '0.75rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.25em',
-                        color: 'var(--accent-primary)',
-                        marginBottom: '1rem',
-                        fontWeight: 600
-                    }}
-                >
-                    About Me
-                </motion.span>
-                <h1 style={{ marginBottom: 0 }}>{title}</h1>
-
-                <motion.div
-                    style={{
-                        position: 'absolute',
-                        top: '-100px',
-                        left: '50%',
-                        width: '400px',
-                        height: '400px',
-                        background: 'radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, transparent 70%)',
-                        filter: 'blur(60px)',
-                        transform: 'translateX(-50%)',
-                        y: y1
-                    }}
-                />
+                <div className="editorial-eyebrow-container" style={{ marginBottom: '0.8rem' }}>
+                    <span className="editorial-eyebrow-text">
+                        ABOUT & PHILOSOPHY.
+                    </span>
+                    <div className="editorial-eyebrow-rule" />
+                </div>
+                <h1 className="editorial-page-title">
+                    {title}
+                </h1>
             </motion.div>
 
+            {/* Main Editorial 3-Column Split: Portrait | Bio | Key Metrics */}
             <motion.div
-                className="grid grid-3"
-                style={{ alignItems: 'center', gap: '3rem' }}
+                className="editorial-split-grid"
                 variants={containerVariants}
                 initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: '-100px' }}
+                animate="visible"
             >
-                <motion.div
-                    variants={itemVariants}
-                    style={{
-                        position: 'relative',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '100%'
-                    }}
-                >
-                    <motion.div
-                        style={{
-                            position: 'absolute',
-                            width: '100%',
-                            height: '100%',
-                            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)',
-                            filter: 'blur(30px)',
-                            zIndex: 1,
-                            pointerEvents: 'none'
-                        }}
-                    />
-                    <div
-                        ref={portraitTilt.ref}
-                        style={{
-                            position: 'relative',
-                            zIndex: 2,
-                            width: '100%',
-                            maxWidth: '300px',
-                            borderRadius: '1.5rem',
-                            padding: '0.4rem',
-                            background: 'rgba(30, 41, 59, 0.25)',
-                            border: '1px solid rgba(59, 130, 246, 0.2)',
-                            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
-                            overflow: 'hidden',
-                            ...portraitTilt.style
-                        }}
-                        {...portraitTilt.handlers}
-                    >
+                {/* Column 1: Sharp Editorial Portrait Frame */}
+                <motion.div variants={itemVariants}>
+                    <div className="editorial-portrait-frame">
                         <img
                             src={portraitImg}
                             alt="Vivaswan Shetty"
-                            style={{
-                                width: '100%',
-                                height: 'auto',
-                                borderRadius: '1.1rem',
-                                display: 'block',
-                                objectFit: 'cover'
-                            }}
+                            className="editorial-portrait-img"
                         />
                     </div>
                 </motion.div>
 
-                <motion.div variants={itemVariants} style={{ position: 'relative' }}>
-                    <motion.div
-                        style={{
-                            position: 'absolute',
-                            top: '20%',
-                            left: '-20%',
-                            width: '200px',
-                            height: '200px',
-                            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%)',
-                            filter: 'blur(40px)',
-                            y: y2
-                        }}
-                    />
-
-                    <span style={{
-                        display: 'inline-block',
-                        fontSize: '0.85rem',
-                        color: 'var(--accent-primary)',
-                        marginBottom: '1rem',
-                        fontWeight: 500
+                {/* Column 2: Typographic Bio & Editorial Highlight Badges */}
+                <motion.div variants={itemVariants}>
+                    <div style={{
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                        paddingBottom: '1.25rem',
+                        marginBottom: '1.75rem'
                     }}>
-                        Who I Am
-                    </span>
-                    <p style={{ marginBottom: '2rem', lineHeight: 1.9, fontSize: '1.05rem' }}>{description}</p>
-
-                    <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
-                        {highlights.map((item, idx) => {
-                            const badgeColors = ['#a855f7', '#00f2fe', '#f59e0b', '#10b981'];
-                            const c = badgeColors[idx % badgeColors.length];
-                            return (
-                                <motion.span
-                                    key={idx}
-                                    style={{
-                                        padding: '0.6rem 1.2rem',
-                                        background: `${c}12`,
-                                        border: `1px solid ${c}30`,
-                                        borderRadius: '9999px',
-                                        fontSize: '0.85rem',
-                                        color: c,
-                                        fontWeight: 600
-                                    }}
-                                    whileHover={{
-                                        scale: 1.05,
-                                        background: `${c}22`,
-                                        borderColor: c,
-                                        boxShadow: `0 0 15px ${c}35`
-                                    }}
-                                >
-                                    {item}
-                                </motion.span>
-                            );
-                        })}
+                        <span className="editorial-eyebrow-text" style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                            WHO I AM
+                        </span>
                     </div>
 
-                    <motion.div
-                        style={{
-                            position: 'absolute',
-                            bottom: '-50px',
-                            right: '-30px',
-                            width: '150px',
-                            height: '1px',
-                            background: 'linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.2), transparent)'
-                        }}
-                    />
+                    <p style={{
+                        fontSize: '1.05rem',
+                        lineHeight: 1.85,
+                        color: 'var(--text-main)',
+                        marginBottom: '2.5rem',
+                        fontFamily: 'var(--font-body)'
+                    }}>
+                        {description}
+                    </p>
+
+                    <div style={{
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                        paddingBottom: '0.75rem',
+                        marginBottom: '1.25rem'
+                    }}>
+                        <span className="editorial-eyebrow-text" style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                            CORE COMPETENCIES
+                        </span>
+                    </div>
+
+                    <div className="editorial-badge-group">
+                        {highlights.map((item, idx) => (
+                            <span key={idx} className="editorial-badge">
+                                {item}
+                            </span>
+                        ))}
+                    </div>
                 </motion.div>
 
-                <motion.div
-                    variants={itemVariants}
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(2, 1fr)',
-                        gap: '1.2rem',
-                        position: 'relative'
-                    }}
-                >
-                    <motion.div
-                        style={{
-                            position: 'absolute',
-                            top: '-30%',
-                            right: '-10%',
-                            width: '200px',
-                            height: '200px',
-                            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%)',
-                            filter: 'blur(50px)',
-                            y: y1
-                        }}
-                    />
+                {/* Column 3: High-Contrast Editorial Stats Grid */}
+                <motion.div variants={itemVariants}>
+                    <div style={{
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                        paddingBottom: '1.25rem',
+                        marginBottom: '1.75rem'
+                    }}>
+                        <span className="editorial-eyebrow-text" style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                            METRICS & IMPACT
+                        </span>
+                    </div>
 
-                    {stats && stats.map((stat, idx) => (
-                        <StatCard key={idx} stat={stat} index={idx} />
-                    ))}
+                    <div className="editorial-stat-grid">
+                        {stats && stats.map((stat, idx) => (
+                            <StatCard key={idx} stat={stat} index={idx} />
+                        ))}
+                    </div>
                 </motion.div>
-            </motion.div>
-
-            <motion.div
-                style={{
-                    marginTop: '4rem',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '3rem',
-                    opacity
-                }}
-            >
-                {[...Array(5)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        style={{
-                            width: '4px',
-                            height: `${20 + i * 10}px`,
-                            background: 'linear-gradient(180deg, var(--accent-primary), transparent)',
-                            borderRadius: '2px'
-                        }}
-                        animate={{
-                            scaleY: [1, 1.3, 1],
-                            opacity: [0.3, 0.6, 0.3]
-                        }}
-                        transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            delay: i * 0.2
-                        }}
-                    />
-                ))}
             </motion.div>
         </div>
     );

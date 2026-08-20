@@ -38,12 +38,7 @@ const Starfield = () => {
                     top: 0; left: 0;
                     width: 100%; height: 100%;
                     z-index: -4;
-                    background:
-                        radial-gradient(ellipse at 15% 15%, rgba(0, 242, 254, 0.08) 0%, transparent 45%),
-                        radial-gradient(ellipse at 85% 20%, rgba(139, 92, 246, 0.09) 0%, transparent 45%),
-                        radial-gradient(ellipse at 20% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
-                        radial-gradient(ellipse at 80% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 50%),
-                        linear-gradient(180deg, #030712 0%, #080d1a 50%, #0b1222 100%);
+                    background: #030712;
                 }
 
                 .grid-overlay {
@@ -52,18 +47,15 @@ const Starfield = () => {
                     width: 100%; height: 100%;
                     z-index: -3;
                     background-image:
-                        linear-gradient(rgba(56, 189, 248, 0.035) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(56, 189, 248, 0.035) 1px, transparent 1px);
-                    background-size: 80px 80px;
+                        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+                    background-size: 100px 100px;
                     mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
                     -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
                 }
 
                 .floating-orb {
-                    position: fixed;
-                    border-radius: 50%;
-                    z-index: -2;
-                    transition: transform 0.3s ease-out;
+                    display: none;
                 }
 
                 .orb-1 {

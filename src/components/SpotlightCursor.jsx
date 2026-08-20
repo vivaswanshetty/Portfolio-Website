@@ -46,7 +46,7 @@ export const SpotlightCursor = () => {
                 height: '100vh',
                 pointerEvents: 'none',
                 zIndex: 9998,
-                background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(59, 130, 246, 0.045), transparent 75%)`,
+                background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255, 255, 255, 0.025), transparent 75%)`,
                 transition: 'opacity 0.3s ease'
             }}
         />
