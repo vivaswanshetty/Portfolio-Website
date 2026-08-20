@@ -67,7 +67,6 @@ const Hero = () => {
                             Future Engineering Leader.<br />
                             Building High-Impact Systems.
                         </span>
-                        <div className="editorial-eyebrow-rule" />
                     </motion.div>
                 </div>
 
@@ -93,7 +92,6 @@ const Hero = () => {
                         <span className="editorial-status-line">AVAILABLE FOR</span>
                         <span className="editorial-status-line highlight">HIGH-IMPACT ROLES</span>
                         <span className="editorial-status-line accent">2026</span>
-                        <div className="editorial-status-rule" />
                     </div>
                 </motion.div>
             </div>
@@ -205,7 +203,6 @@ const FeaturedSection = () => {
                 <h2 className="editorial-section-title">
                     ENGINEERING <span style={{ color: '#ef4444' }}>CAPABILITIES</span>
                 </h2>
-                <div className="editorial-eyebrow-rule" />
             </motion.div>
 
             <div style={{
@@ -284,46 +281,40 @@ const QuickLinks = () => {
             ref={ref}
             style={{
                 position: 'relative',
-                padding: '4rem 2.5rem 8rem',
+                padding: '6rem 2.5rem 8rem',
                 maxWidth: '1300px',
                 margin: '0 auto',
                 zIndex: 10
             }}
         >
-            {/* Aesthetic Cinematic Background Artwork */}
+            {/* Seamless Cinematic Atmospheric Backdrop (No box lines, infinite radial blend) */}
             <div style={{
                 position: 'absolute',
-                top: 0,
-                left: '1.5rem',
-                right: '1.5rem',
-                bottom: '4rem',
-                borderRadius: '1.5rem',
-                overflow: 'hidden',
+                top: '-20%',
+                left: '-25vw',
+                right: '-25vw',
+                bottom: '-20%',
                 zIndex: 0,
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 35px rgba(239, 68, 68, 0.05)'
+                pointerEvents: 'none',
+                overflow: 'hidden',
+                maskImage: 'radial-gradient(ellipse 75% 65% at 50% 50%, black 25%, transparent 85%)',
+                WebkitMaskImage: 'radial-gradient(ellipse 75% 65% at 50% 50%, black 25%, transparent 85%)'
             }}>
                 <img 
                     src={archiveBg} 
-                    alt="Archive Background" 
+                    alt="Archive Atmosphere" 
                     style={{
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
                         objectPosition: 'center',
-                        opacity: 0.45,
+                        opacity: 0.42,
                         filter: 'brightness(0.85) contrast(1.15)'
                     }}
                 />
-                {/* Seamless Edge Blending Vignette */}
-                <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'radial-gradient(ellipse at center, rgba(3, 7, 18, 0.4) 0%, rgba(3, 7, 18, 0.85) 100%), linear-gradient(to bottom, rgba(3, 7, 18, 0.95) 0%, transparent 20%, transparent 80%, rgba(3, 7, 18, 0.95) 100%)'
-                }} />
             </div>
 
-            <div style={{ position: 'relative', zIndex: 1, padding: '2rem 1.5rem 0' }}>
+            <div style={{ position: 'relative', zIndex: 1 }}>
                 <motion.div
                     initial={{ opacity: 0, y: 25 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -334,7 +325,6 @@ const QuickLinks = () => {
                     <h2 className="editorial-section-title">
                         EXPLORE THE <span style={{ color: '#ef4444' }}>ARCHIVE</span>
                     </h2>
-                    <div className="editorial-eyebrow-rule" />
                 </motion.div>
 
                 <div style={{
