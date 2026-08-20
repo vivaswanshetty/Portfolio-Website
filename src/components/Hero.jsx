@@ -3,7 +3,8 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowDown, Code, Cpu, Zap, Globe, User, Briefcase, Mail } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
-import vivaswanCutoutImg from '../assets/vivaswan_cutout_clean.png';
+import vivaswanBgImg from '../assets/vivaswan_hero_cinematic_bg.png';
+import vivaswanCutoutWideImg from '../assets/vivaswan_cutout_wide.png';
 
 const Hero = () => {
     const containerRef = useRef(null);
@@ -14,15 +15,6 @@ const Hero = () => {
 
     const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
     const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 30 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
-        }
-    };
 
     return (
         <section
@@ -55,29 +47,33 @@ const Hero = () => {
                 <div className="editorial-eyebrow-rule" />
             </motion.div>
 
-            {/* Center Stage: Oversized Display Typography & Cutout Overlap */}
+            {/* Center Stage: Multi-Layer Cinematic Depth Sandwich */}
             <motion.div 
                 className="editorial-stage"
                 style={{ y, opacity }}
             >
-                {/* Massive Ultra-Bold Display Wordmark */}
+                {/* Layer 1: Full High-Res Background Image (Ocean Waves, Horizon, Beach) */}
+                <div className="editorial-stage-bg-layer">
+                    <img 
+                        src={vivaswanBgImg} 
+                        alt="Vivaswan Shetty Background" 
+                        className="editorial-stage-bg-img"
+                    />
+                </div>
+
+                {/* Layer 2: Massive Ultra-Bold Display Wordmark Morphed Between Background & Subject */}
                 <div className="editorial-display-wordmark">
                     VIVASWAN
                 </div>
 
-                {/* Overlapping Cutout Subject Photo */}
-                <motion.div 
-                    className="editorial-cutout-container"
-                    initial={{ opacity: 0, y: 50, scale: 0.96 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-                >
+                {/* Layer 3: Foreground Isolated Cutout Subject Overlapping the Typography */}
+                <div className="editorial-stage-cutout-layer">
                     <img 
-                        src={vivaswanCutoutImg} 
+                        src={vivaswanCutoutWideImg} 
                         alt="Vivaswan Shetty" 
-                        className="editorial-cutout-img"
+                        className="editorial-stage-cutout-img"
                     />
-                </motion.div>
+                </div>
             </motion.div>
 
             {/* Bottom Row: Solid Rectangular CTAs & Status Tag */}
