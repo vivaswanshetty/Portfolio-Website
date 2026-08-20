@@ -317,7 +317,7 @@ img {
 .navbar-logo-dot {
   width: 5px;
   height: 5px;
-  border-radius: 0;
+  border-radius: 50%;
   background: #ef4444;
   box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
   display: inline-block;
@@ -1019,7 +1019,7 @@ p {
   text-transform: uppercase;
   letter-spacing: 0.16em;
   padding: 0.95rem 2.2rem;
-  border-radius: 0 !important;
+  border-radius: 9999px !important;
   border: 1px solid #f8fafc;
   text-decoration: none;
   cursor: pointer;
@@ -1057,7 +1057,7 @@ p {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 0;
+  border-radius: 9999px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
@@ -1185,17 +1185,18 @@ p {
 
 .editorial-portrait-frame {
   position: relative;
-  border-radius: 0 !important;
+  border-radius: 1.25rem !important;
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(9, 14, 26, 0.6);
   padding: 0.6rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
 .editorial-portrait-img {
   width: 100%;
   height: auto;
-  border-radius: 0 !important;
+  border-radius: 0.9rem !important;
   display: block;
   object-fit: cover;
 }
@@ -1211,7 +1212,7 @@ p {
   display: inline-flex;
   align-items: center;
   padding: 0.55rem 1.1rem;
-  border-radius: 0 !important;
+  border-radius: 9999px !important;
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(255, 255, 255, 0.03);
   color: #f8fafc;
@@ -1240,7 +1241,7 @@ p {
   display: inline-flex;
   align-items: center;
   padding: 0.45rem 0.85rem;
-  border-radius: 0 !important;
+  border-radius: 9999px !important;
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(255, 255, 255, 0.03);
   color: #f8fafc;
@@ -1271,7 +1272,7 @@ p {
 }
 
 .editorial-stat-card {
-  border-radius: 0 !important;
+  border-radius: 1.25rem !important;
   background: rgba(9, 14, 26, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 1.75rem 1.25rem;
@@ -1306,9 +1307,9 @@ p {
   color: #94a3b8;
 }
 
-/* Editorial Grid Cards (Sharp 0-radius, high-contrast) */
+/* Editorial Grid Cards (Squircle 1.25rem, high-contrast) */
 .editorial-card {
-  border-radius: 0 !important;
+  border-radius: 1.25rem !important;
   background: rgba(9, 14, 26, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 2.25rem 1.75rem;
@@ -1332,7 +1333,7 @@ p {
   padding: 2.25rem 1.75rem;
   background: rgba(9, 14, 26, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 0;
+  border-radius: 1.25rem;
   text-decoration: none;
   color: #ffffff;
   width: 100%;

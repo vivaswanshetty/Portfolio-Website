@@ -97,7 +97,7 @@ const ProjectCard = ({ project, index }) => {
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.14em',
                                 padding: '0.35rem 0.8rem',
-                                borderRadius: 0,
+                                borderRadius: '9999px',
                                 background: '#030712',
                                 border: '1px solid rgba(255, 255, 255, 0.25)',
                                 color: '#f8fafc',
@@ -116,7 +116,7 @@ const ProjectCard = ({ project, index }) => {
                                 <div style={{
                                     width: '38px',
                                     height: '38px',
-                                    borderRadius: 0,
+                                    borderRadius: '10px',
                                     overflow: 'hidden',
                                     background: 'rgba(255, 255, 255, 0.05)',
                                     border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -213,7 +213,7 @@ const ProjectCard = ({ project, index }) => {
                                 padding: '0.3rem 0.65rem',
                                 background: 'rgba(255, 255, 255, 0.04)',
                                 border: '1px solid rgba(255, 255, 255, 0.12)',
-                                borderRadius: 0,
+                                borderRadius: '6px',
                                 color: '#f8fafc',
                                 fontFamily: 'monospace',
                                 fontWeight: 600,
@@ -228,7 +228,7 @@ const ProjectCard = ({ project, index }) => {
                                 padding: '0.3rem 0.6rem',
                                 background: 'rgba(255, 255, 255, 0.04)',
                                 border: '1px solid rgba(255, 255, 255, 0.12)',
-                                borderRadius: 0,
+                                borderRadius: '6px',
                                 color: 'var(--text-muted)',
                                 fontFamily: 'monospace',
                                 fontWeight: 600
@@ -349,7 +349,7 @@ const Projects = () => {
                     flexWrap: 'wrap',
                     gap: '1.25rem'
                 }}>
-                    {/* Category Filter Rectangular Buttons */}
+                    {/* Category Filter Buttons */}
                     <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
                         {categories.map((cat) => {
                             const isActive = activeCategory === cat;
@@ -359,7 +359,7 @@ const Projects = () => {
                                     onClick={() => setActiveCategory(cat)}
                                     style={{
                                         padding: '0.6rem 1.3rem',
-                                        borderRadius: 0,
+                                        borderRadius: '9999px',
                                         fontSize: '0.78rem',
                                         fontFamily: 'var(--font-body)',
                                         fontWeight: 700,
@@ -378,14 +378,14 @@ const Projects = () => {
                         })}
                     </div>
 
-                    {/* Search Input with Sharp Editorial Frame */}
+                    {/* Search Input with Rounded Editorial Frame */}
                     <div style={{
                         position: 'relative',
                         minWidth: '260px',
                         flex: '1',
                         maxWidth: '360px'
                     }}>
-                        <Search size={15} color="#94a3b8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                        <Search size={15} color="#94a3b8" style={{ position: 'absolute', left: '1.2rem', top: '50%', transform: 'translateY(-50%)' }} />
                         <input
                             type="text"
                             value={searchQuery}
@@ -393,8 +393,8 @@ const Projects = () => {
                             placeholder="FILTER BY TECH OR KEYWORD..."
                             style={{
                                 width: '100%',
-                                padding: '0.65rem 2.2rem 0.65rem 2.4rem',
-                                borderRadius: 0,
+                                padding: '0.65rem 2.2rem 0.65rem 2.6rem',
+                                borderRadius: '9999px',
                                 background: 'rgba(9, 14, 26, 0.6)',
                                 border: '1px solid rgba(255, 255, 255, 0.14)',
                                 color: '#ffffff',

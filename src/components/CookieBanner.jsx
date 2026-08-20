@@ -39,7 +39,7 @@ export const CookieBanner = () => {
                         WebkitBackdropFilter: 'blur(24px)',
                         border: '1px solid rgba(255, 255, 255, 0.16)',
                         borderLeft: '3px solid #ef4444',
-                        borderRadius: 0,
+                        borderRadius: '1.25rem',
                         padding: '1.4rem 1.6rem',
                         boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(239, 68, 68, 0.1)',
                         display: 'flex',
@@ -51,7 +51,7 @@ export const CookieBanner = () => {
                         <div style={{
                             width: '36px',
                             height: '36px',
-                            borderRadius: 0,
+                            borderRadius: '10px',
                             background: 'rgba(239, 68, 68, 0.1)',
                             border: '1px solid rgba(239, 68, 68, 0.3)',
                             display: 'flex',

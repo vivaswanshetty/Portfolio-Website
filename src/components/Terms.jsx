@@ -78,7 +78,7 @@ const Terms = () => {
                             <div style={{
                                 width: '36px',
                                 height: '36px',
-                                borderRadius: 0,
+                                borderRadius: '10px',
                                 background: 'rgba(239, 68, 68, 0.1)',
                                 border: '1px solid rgba(239, 68, 68, 0.3)',
                                 display: 'flex',

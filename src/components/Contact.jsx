@@ -190,7 +190,7 @@ const Contact = () => {
                                 width: '80px', 
                                 height: '80px',
                                 background: '#f8fafc',
-                                borderRadius: 0,
+                                borderRadius: '1.25rem',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',

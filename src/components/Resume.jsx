@@ -20,7 +20,7 @@ const TimelineItem = ({ job, index, isLeft }) => {
             >
                 <motion.div
                     className="timeline-dot"
-                    style={{ background: '#ffffff', borderRadius: 0, border: '2px solid #030712', boxShadow: '0 0 10px rgba(255, 255, 255, 0.5)' }}
+                    style={{ background: '#ffffff', borderRadius: '50%', border: '2px solid #030712', boxShadow: '0 0 10px rgba(255, 255, 255, 0.5)' }}
                     whileHover={{ scale: 1.3 }}
                 />
 

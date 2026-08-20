@@ -89,7 +89,7 @@ const TestimonialCard = ({ testimonial, index }) => {
                     style={{
                         width: '42px', 
                         height: '42px', 
-                        borderRadius: 0,
+                        borderRadius: '10px',
                         background: '#f8fafc',
                         display: 'flex', 
                         alignItems: 'center', 

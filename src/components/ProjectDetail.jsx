@@ -124,7 +124,7 @@ const ProjectDetail = () => {
                         <div style={{
                             width: '52px',
                             height: '52px',
-                            borderRadius: 0,
+                            borderRadius: '12px',
                             overflow: 'hidden',
                             background: 'rgba(255, 255, 255, 0.05)',
                             border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -207,9 +207,9 @@ const ProjectDetail = () => {
                             background: 'rgba(3, 7, 18, 0.9)'
                         }}>
                             <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                                <div style={{ width: '8px', height: '8px', background: 'rgba(255, 255, 255, 0.3)' }} />
-                                <div style={{ width: '8px', height: '8px', background: 'rgba(255, 255, 255, 0.3)' }} />
-                                <div style={{ width: '8px', height: '8px', background: 'rgba(255, 255, 255, 0.3)' }} />
+                                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.3)' }} />
+                                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.3)' }} />
+                                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.3)' }} />
                             </div>
                             <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
                                 {project.slug}.app/official-cover
@@ -271,7 +271,7 @@ const ProjectDetail = () => {
                                     onClick={() => setActiveCategory(cat)}
                                     style={{
                                         padding: '0.55rem 1.2rem',
-                                        borderRadius: 0,
+                                        borderRadius: '9999px',
                                         fontSize: '0.76rem',
                                         fontFamily: 'var(--font-body)',
                                         fontWeight: 700,

@@ -46,7 +46,7 @@ const AnimatedProgressBar = ({ level, name, index }) => {
             <div style={{
                 height: '6px',
                 background: 'rgba(255, 255, 255, 0.08)',
-                borderRadius: 0,
+                borderRadius: '9999px',
                 overflow: 'hidden',
                 position: 'relative'
             }}>
@@ -57,7 +57,7 @@ const AnimatedProgressBar = ({ level, name, index }) => {
                     style={{
                         height: '100%',
                         background: '#f8fafc',
-                        borderRadius: 0,
+                        borderRadius: '9999px',
                         position: 'relative'
                     }}
                 >

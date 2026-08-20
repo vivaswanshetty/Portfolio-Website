@@ -169,7 +169,7 @@ export const CommandPalette = () => {
                             WebkitBackdropFilter: 'blur(30px)',
                             border: '1px solid rgba(255, 255, 255, 0.16)',
                             borderTop: '2px solid #ef4444',
-                            borderRadius: 0,
+                            borderRadius: '1.25rem',
                             boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 30px rgba(239, 68, 68, 0.1)',
                             overflow: 'hidden',
                             display: 'flex',
@@ -216,7 +216,7 @@ export const CommandPalette = () => {
                                     background: 'rgba(255, 255, 255, 0.06)',
                                     border: '1px solid rgba(255, 255, 255, 0.15)',
                                     color: 'var(--text-muted)',
-                                    borderRadius: 0,
+                                    borderRadius: '6px',
                                     padding: '0.3rem 0.6rem',
                                     fontSize: '0.72rem',
                                     fontWeight: 700,
@@ -233,7 +233,10 @@ export const CommandPalette = () => {
                             style={{
                                 maxHeight: '380px',
                                 overflowY: 'auto',
-                                padding: '0.75rem'
+                                padding: '0.75rem',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '0.35rem'
                             }}
                         >
                             {filteredItems.length === 0 ? (
@@ -256,7 +259,7 @@ export const CommandPalette = () => {
                                                 alignItems: 'center',
                                                 justifyContent: 'space-between',
                                                 padding: '0.75rem 1rem',
-                                                borderRadius: 0,
+                                                borderRadius: '0.75rem',
                                                 cursor: 'pointer',
                                                 background: isSelected ? 'rgba(239, 68, 68, 0.1)' : 'transparent',
                                                 border: isSelected ? '1px solid rgba(239, 68, 68, 0.4)' : '1px solid transparent',
@@ -267,7 +270,7 @@ export const CommandPalette = () => {
                                                 <div style={{
                                                     width: '32px',
                                                     height: '32px',
-                                                    borderRadius: 0,
+                                                    borderRadius: '0.6rem',
                                                     background: item.image ? 'rgba(3, 7, 18, 0.9)' : (isSelected ? '#ef4444' : 'rgba(255, 255, 255, 0.05)'),
                                                     border: item.image ? '1px solid rgba(255, 255, 255, 0.15)' : 'none',
                                                     color: isSelected ? '#ffffff' : '#f8fafc',
@@ -301,7 +304,7 @@ export const CommandPalette = () => {
                                                     background: isSelected ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255, 255, 255, 0.04)',
                                                     border: '1px solid rgba(255, 255, 255, 0.08)',
                                                     padding: '0.2rem 0.5rem',
-                                                    borderRadius: 0,
+                                                    borderRadius: '6px',
                                                     fontFamily: 'monospace',
                                                     textTransform: 'uppercase',
                                                     letterSpacing: '0.08em'
@@ -335,8 +338,8 @@ export const CommandPalette = () => {
                                 <span>↵ Select</span>
                                 <span>Esc Close</span>
                             </div>
-                            <span style={{ color: '#ef4444', fontWeight: 700 }}>
-                                VIVASWAN SHETTY.
+                            <span style={{ color: '#ffffff', fontWeight: 700 }}>
+                                VIVASWAN SHETTY<span style={{ color: '#ef4444' }}>.</span>
                             </span>
                         </div>
                     </motion.div>

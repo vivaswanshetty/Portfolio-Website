@@ -51,7 +51,7 @@ export const ToastContainer = () => {
                                 border: `1px solid ${borderColor}`,
                                 borderLeft: `3px solid ${iconColor}`,
                                 padding: '0.85rem 1.25rem',
-                                borderRadius: 0,
+                                borderRadius: '0.85rem',
                                 boxShadow: '0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(239, 68, 68, 0.1)',
                                 display: 'flex',
                                 alignItems: 'center',
