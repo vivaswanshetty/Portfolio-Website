@@ -8,6 +8,12 @@ const TestimonialCard = ({ testimonial, index }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-50px' });
 
+    const name = testimonial.name || testimonial.author || 'Collaborator';
+    const role = testimonial.role || '';
+    const company = testimonial.company || '';
+    const content = testimonial.content || testimonial.quote || '';
+    const avatarLetter = (name && name.charAt(0)) ? name.charAt(0).toUpperCase() : 'E';
+
     return (
         <motion.div
             ref={ref}
@@ -69,7 +75,7 @@ const TestimonialCard = ({ testimonial, index }) => {
                     minHeight: '5.5rem'
                 }}
             >
-                "{testimonial.content}"
+                "{content}"
             </motion.p>
 
             <motion.div
@@ -101,7 +107,7 @@ const TestimonialCard = ({ testimonial, index }) => {
                     }}
                     whileHover={{ scale: 1.08 }}
                 >
-                    {testimonial.name.charAt(0)}
+                    {avatarLetter}
                 </motion.div>
                 <div>
                     <h4 style={{ 
@@ -112,7 +118,7 @@ const TestimonialCard = ({ testimonial, index }) => {
                         textTransform: 'uppercase',
                         color: '#ffffff'
                     }}>
-                        {testimonial.name}
+                        {name}
                     </h4>
                     <span style={{ 
                         fontSize: '0.75rem', 
@@ -120,7 +126,7 @@ const TestimonialCard = ({ testimonial, index }) => {
                         textTransform: 'uppercase', 
                         letterSpacing: '0.1em' 
                     }}>
-                        {testimonial.role}
+                        {role}{company ? ` • ${company}` : ''}
                     </span>
                 </div>
             </motion.div>
