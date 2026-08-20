@@ -1339,8 +1339,10 @@ p {
   flex-direction: column;
   justify-content: space-between;
   padding: 2.25rem 1.75rem;
-  background: rgba(9, 14, 26, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(4, 9, 20, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 1.25rem;
   text-decoration: none;
   color: #ffffff;
@@ -1350,6 +1352,7 @@ p {
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1368,9 +1371,9 @@ p {
 }
 
 .editorial-quicklink-card:hover {
-  border-color: rgba(239, 68, 68, 0.45);
-  background: rgba(239, 68, 68, 0.04);
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.7), 0 0 20px rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.6);
+  background: rgba(12, 18, 35, 0.85);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(239, 68, 68, 0.2);
   transform: translateY(-5px);
 }
 

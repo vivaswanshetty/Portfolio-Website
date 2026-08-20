@@ -6,6 +6,8 @@ import { portfolioData } from '../data/portfolioData';
 import vivaswanBgImg from '../assets/vivaswan_walking_bg.png';
 import vivaswanCutoutImg from '../assets/vivaswan_walking_cutout.png';
 
+import archiveBg from '../assets/archive_bg.jpg';
+
 const Hero = () => {
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -281,34 +283,69 @@ const QuickLinks = () => {
         <section
             ref={ref}
             style={{
-                padding: '0 2.5rem 8rem',
+                position: 'relative',
+                padding: '4rem 2.5rem 8rem',
                 maxWidth: '1300px',
                 margin: '0 auto',
-                position: 'relative',
                 zIndex: 10
             }}
         >
-            <motion.div
-                initial={{ opacity: 0, y: 25 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6 }}
-                className="editorial-section-header"
-            >
-                <span className="editorial-eyebrow-text">NAVIGATION.</span>
-                <h2 className="editorial-section-title">
-                    EXPLORE THE <span style={{ color: '#ef4444' }}>ARCHIVE</span>
-                </h2>
-                <div className="editorial-eyebrow-rule" />
-            </motion.div>
-
+            {/* Aesthetic Cinematic Background Artwork */}
             <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                gap: '1.25rem'
+                position: 'absolute',
+                top: 0,
+                left: '1.5rem',
+                right: '1.5rem',
+                bottom: '4rem',
+                borderRadius: '1.5rem',
+                overflow: 'hidden',
+                zIndex: 0,
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 35px rgba(239, 68, 68, 0.05)'
             }}>
-                {links.map((link, idx) => (
-                    <QuickLinkCard key={idx} link={link} idx={idx} isInView={isInView} />
-                ))}
+                <img 
+                    src={archiveBg} 
+                    alt="Archive Background" 
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                        opacity: 0.45,
+                        filter: 'brightness(0.85) contrast(1.15)'
+                    }}
+                />
+                {/* Seamless Edge Blending Vignette */}
+                <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'radial-gradient(ellipse at center, rgba(3, 7, 18, 0.4) 0%, rgba(3, 7, 18, 0.85) 100%), linear-gradient(to bottom, rgba(3, 7, 18, 0.95) 0%, transparent 20%, transparent 80%, rgba(3, 7, 18, 0.95) 100%)'
+                }} />
+            </div>
+
+            <div style={{ position: 'relative', zIndex: 1, padding: '2rem 1.5rem 0' }}>
+                <motion.div
+                    initial={{ opacity: 0, y: 25 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.6 }}
+                    className="editorial-section-header"
+                >
+                    <span className="editorial-eyebrow-text">NAVIGATION.</span>
+                    <h2 className="editorial-section-title">
+                        EXPLORE THE <span style={{ color: '#ef4444' }}>ARCHIVE</span>
+                    </h2>
+                    <div className="editorial-eyebrow-rule" />
+                </motion.div>
+
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                    gap: '1.25rem'
+                }}>
+                    {links.map((link, idx) => (
+                        <QuickLinkCard key={idx} link={link} idx={idx} isInView={isInView} />
+                    ))}
+                </div>
             </div>
         </section>
     );
