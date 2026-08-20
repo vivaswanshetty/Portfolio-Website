@@ -109,45 +109,23 @@ const FeatureCard = ({ feature, idx, isInView }) => {
                 transition: { duration: 0.5, delay: idx * 0.08 }
             } : {}}
             style={{ height: '100%' }}
+            whileHover={{ y: -6 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: 'spring', stiffness: 350, damping: 25 }}
         >
-            <div className="editorial-card">
+            <div className="editorial-feature-card">
                 <div>
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginBottom: '1.5rem',
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                        paddingBottom: '0.75rem'
-                    }}>
-                        <feature.icon size={22} color="var(--text-main)" />
-                        <span style={{ 
-                            fontFamily: 'var(--font-body)', 
-                            fontSize: '0.72rem', 
-                            color: 'var(--text-subtle)', 
-                            letterSpacing: '0.15em' 
-                        }}>
+                    <div className="feature-card-header">
+                        <feature.icon size={22} className="feature-card-icon" />
+                        <span className="feature-card-index">
                             0{idx + 1}
                         </span>
                     </div>
-                    <h3 style={{ 
-                        fontSize: '1.15rem', 
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        letterSpacing: '-0.01em',
-                        marginBottom: '0.85rem',
-                        lineHeight: 1.3,
-                        color: 'var(--text-main)'
-                    }}>
+                    <h3 className="feature-card-title">
                         {feature.title}
                     </h3>
                 </div>
-                <p style={{ 
-                    fontSize: '0.88rem', 
-                    color: 'var(--text-muted)',
-                    lineHeight: 1.65,
-                    margin: 0
-                }}>
+                <p className="feature-card-desc">
                     {feature.desc}
                 </p>
             </div>
