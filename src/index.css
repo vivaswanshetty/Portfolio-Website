@@ -806,9 +806,13 @@ p {
 /* ==========================================================================
    Editorial High-Fashion Hero & Layout Design System
    ========================================================================== */
+/* ==========================================================================
+   Editorial High-Fashion Hero & Layout Design System
+   ========================================================================== */
 .editorial-hero-section {
   min-height: 100vh;
   min-height: 100dvh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -817,6 +821,105 @@ p {
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
+}
+
+/* Layer 0: Full-Hero Background Photo */
+.editorial-hero-bg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.editorial-hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+
+/* Layer 1: Dark Scrim Gradient Overlay for Text Legibility */
+.editorial-hero-scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(3, 7, 18, 0.82) 0%,
+    rgba(3, 7, 18, 0.38) 20%,
+    rgba(3, 7, 18, 0.08) 45%,
+    rgba(3, 7, 18, 0.45) 75%,
+    rgba(3, 7, 18, 0.98) 100%
+  );
+}
+
+/* Layer 2: Massive Ultra-Bold Display Wordmark Morphed Between Photo and Subject */
+.editorial-hero-typography-layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -46%);
+  width: 100%;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.editorial-display-wordmark {
+  font-family: var(--font-heading), 'Outfit', 'Inter', sans-serif;
+  font-size: clamp(5.8rem, 18.5vw, 24rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+  line-height: 0.8;
+  color: #ffffff;
+  text-align: center;
+  width: 100%;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Layer 3: Foreground Cutout Subject Overlapping the Typography */
+.editorial-hero-cutout-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.editorial-hero-cutout-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+
+/* Layer 10: Content Overlay Wrapper */
+.editorial-hero-content-wrapper {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: auto;
 }
 
 /* Subtle editorial top ticker/indicator */
@@ -829,10 +932,10 @@ p {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: var(--text-subtle);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   padding-bottom: 0.75rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 /* Eyebrow Micro-Label + Underline Motif (Top-Left) */
@@ -840,95 +943,26 @@ p {
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 380px;
+  max-width: 400px;
   z-index: 10;
 }
 
 .editorial-eyebrow-text {
   font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.82rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: var(--text-main);
+  color: #ffffff;
   line-height: 1.55;
   margin-bottom: 0.6rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
 .editorial-eyebrow-rule {
-  width: 48px;
+  width: 52px;
   height: 1.5px;
-  background-color: var(--text-main);
-}
-
-/* Center Stage: Oversized Display Typography & Multi-Layer Depth Sandwich */
-.editorial-stage {
-  position: relative;
-  width: 100%;
-  max-width: 1400px;
-  margin: 1rem auto;
-  aspect-ratio: 16/9;
-  max-height: 72vh;
-  min-height: 480px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 0;
-}
-
-.editorial-stage-bg-layer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.editorial-stage-bg-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
-.editorial-display-wordmark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  font-family: var(--font-heading), 'Outfit', 'Inter', sans-serif;
-  font-size: clamp(5rem, 16.5vw, 19rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.045em;
-  line-height: 0.82;
-  color: #ffffff;
-  text-align: center;
-  width: 100%;
-  user-select: none;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.editorial-stage-cutout-layer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.editorial-stage-cutout-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
+  background-color: #ffffff;
 }
 
 /* Bottom Controls & Status Row */
@@ -938,7 +972,7 @@ p {
   align-items: flex-end;
   width: 100%;
   z-index: 10;
-  padding-top: 1rem;
+  padding-top: 2rem;
 }
 
 /* Solid Rectangular CTA + Secondary Text Link */
@@ -966,7 +1000,7 @@ p {
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .editorial-btn-primary:hover {
@@ -981,7 +1015,7 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  color: var(--text-muted);
+  color: #cbd5e1;
   font-family: var(--font-body);
   font-size: 0.82rem;
   font-weight: 600;
@@ -991,6 +1025,7 @@ p {
   cursor: pointer;
   position: relative;
   transition: color 0.2s ease;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .editorial-btn-secondary::after {
@@ -1021,6 +1056,7 @@ p {
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .editorial-status-line {
@@ -1029,18 +1065,18 @@ p {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: var(--text-muted);
+  color: #94a3b8;
   line-height: 1.5;
 }
 
 .editorial-status-line.highlight {
-  color: var(--text-main);
+  color: #ffffff;
 }
 
 .editorial-status-rule {
   width: 40px;
   height: 1.5px;
-  background-color: var(--text-muted);
+  background-color: #ffffff;
   margin-top: 0.5rem;
 }
 

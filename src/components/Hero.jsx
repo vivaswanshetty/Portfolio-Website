@@ -21,86 +21,92 @@ const Hero = () => {
             ref={containerRef}
             className="editorial-hero-section"
         >
-            {/* Top Sub-Bar / Ticker */}
-            <motion.div 
-                className="editorial-top-ticker"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-            >
-                <span>Full-Stack & Mobile Systems</span>
-                <span>Bengaluru, IN • IST</span>
-                <span>Available for 2026</span>
-            </motion.div>
+            {/* Layer 0: Full-Hero Background Photo (Beach, Waves, Horizon) */}
+            <div className="editorial-hero-bg-layer">
+                <img 
+                    src={vivaswanBgImg} 
+                    alt="Vivaswan Shetty Background" 
+                    className="editorial-hero-bg-img"
+                />
+            </div>
 
-            {/* Top-Left Eyebrow Micro-Label + Underline Motif */}
-            <motion.div 
-                className="editorial-eyebrow-container"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7, delay: 0.1 }}
-            >
-                <span className="editorial-eyebrow-text">
-                    Future Engineering Leader.<br />
-                    Building High-Impact Systems.
-                </span>
-                <div className="editorial-eyebrow-rule" />
-            </motion.div>
+            {/* Layer 1: Dark Scrim Gradient Overlay for Contrast & Text Legibility */}
+            <div className="editorial-hero-scrim" />
 
-            {/* Center Stage: Multi-Layer Cinematic Depth Sandwich */}
+            {/* Layer 2: Massive Ultra-Bold Display Typography Morphed Directly Into 3D Depth */}
             <motion.div 
-                className="editorial-stage"
+                className="editorial-hero-typography-layer"
                 style={{ y, opacity }}
             >
-                {/* Layer 1: Full High-Res Background Image (Ocean Waves, Horizon, Beach) */}
-                <div className="editorial-stage-bg-layer">
-                    <img 
-                        src={vivaswanBgImg} 
-                        alt="Vivaswan Shetty Background" 
-                        className="editorial-stage-bg-img"
-                    />
-                </div>
-
-                {/* Layer 2: Massive Ultra-Bold Display Wordmark Morphed Between Background & Subject */}
                 <div className="editorial-display-wordmark">
                     VIVASWAN
                 </div>
-
-                {/* Layer 3: Foreground Isolated Cutout Subject Overlapping the Typography */}
-                <div className="editorial-stage-cutout-layer">
-                    <img 
-                        src={vivaswanCutoutWideImg} 
-                        alt="Vivaswan Shetty" 
-                        className="editorial-stage-cutout-img"
-                    />
-                </div>
             </motion.div>
 
-            {/* Bottom Row: Solid Rectangular CTAs & Status Tag */}
-            <motion.div 
-                className="editorial-bottom-row"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.3 }}
-            >
-                {/* Bottom Left: Solid Rectangular Button + Text Link */}
-                <div className="editorial-cta-group">
-                    <Link to="/projects" className="editorial-btn-primary">
-                        VIEW PROJECTS
-                    </Link>
-                    <Link to="/contact" className="editorial-btn-secondary">
-                        GET IN TOUCH <ArrowRight size={14} />
-                    </Link>
+            {/* Layer 3: Foreground Isolated Cutout Subject Overlapping the Typography */}
+            <div className="editorial-hero-cutout-layer">
+                <img 
+                    src={vivaswanCutoutWideImg} 
+                    alt="Vivaswan Shetty" 
+                    className="editorial-hero-cutout-img"
+                />
+            </div>
+
+            {/* Layer 10: Unified Content Overlay (Nav clearance, Ticker, Eyebrow, CTAs, Status) */}
+            <div className="editorial-hero-content-wrapper">
+                {/* Top Area: Ticker + Eyebrow */}
+                <div>
+                    <motion.div 
+                        className="editorial-top-ticker"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <span>Full-Stack & Mobile Systems</span>
+                        <span>Bengaluru, IN • IST</span>
+                        <span>Available for 2026</span>
+                    </motion.div>
+
+                    <motion.div 
+                        className="editorial-eyebrow-container"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.7, delay: 0.1 }}
+                    >
+                        <span className="editorial-eyebrow-text">
+                            Future Engineering Leader.<br />
+                            Building High-Impact Systems.
+                        </span>
+                        <div className="editorial-eyebrow-rule" />
+                    </motion.div>
                 </div>
 
-                {/* Bottom Right: Editorial Status Tag */}
-                <div className="editorial-status-tag">
-                    <span className="editorial-status-line">AVAILABLE FOR</span>
-                    <span className="editorial-status-line highlight">HIGH-IMPACT ROLES</span>
-                    <span className="editorial-status-line">2026</span>
-                    <div className="editorial-status-rule" />
-                </div>
-            </motion.div>
+                {/* Bottom Row: Solid Rectangular CTAs & Status Tag */}
+                <motion.div 
+                    className="editorial-bottom-row"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, delay: 0.25 }}
+                >
+                    {/* Bottom Left: Solid Rectangular Button + Text Link */}
+                    <div className="editorial-cta-group">
+                        <Link to="/projects" className="editorial-btn-primary">
+                            VIEW PROJECTS
+                        </Link>
+                        <Link to="/contact" className="editorial-btn-secondary">
+                            GET IN TOUCH <ArrowRight size={14} />
+                        </Link>
+                    </div>
+
+                    {/* Bottom Right: Editorial Status Tag */}
+                    <div className="editorial-status-tag">
+                        <span className="editorial-status-line">AVAILABLE FOR</span>
+                        <span className="editorial-status-line highlight">HIGH-IMPACT ROLES</span>
+                        <span className="editorial-status-line">2026</span>
+                        <div className="editorial-status-rule" />
+                    </div>
+                </motion.div>
+            </div>
         </section>
     );
 };
