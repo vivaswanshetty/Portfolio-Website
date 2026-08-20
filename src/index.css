@@ -885,34 +885,34 @@ p {
 /* Layer 2: Massive Ultra-Bold Display Wordmark Morphed Between Photo and Subject */
 .editorial-hero-typography-layer {
   position: absolute;
-  top: 50%;
-  left: 46%;
-  transform: translate(-50%, -46%);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
-  max-width: 100vw;
+  height: 100%;
   z-index: 2;
   pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
-  padding: 0 1rem;
   box-sizing: border-box;
 }
 
 .editorial-display-wordmark {
   font-family: var(--font-heading), 'Outfit', 'Inter', sans-serif;
-  font-size: clamp(4.4rem, 14.5vw, 19rem);
+  font-size: clamp(3.8rem, 12.8vw, 16.5rem);
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em;
   line-height: 0.8;
   color: #ffffff;
   text-align: center;
-  width: auto;
   white-space: nowrap;
   user-select: none;
   pointer-events: none;
+  transform: translate(-3vw, -4%);
 }
 
 /* Layer 3: Foreground Cutout Subject Overlapping the Typography */
@@ -1405,11 +1405,9 @@ p {
   .editorial-page-container {
     padding: calc(var(--nav-height) + var(--nav-top-offset) + 1.5rem) 1.5rem 4rem;
   }
-  .editorial-hero-typography-layer {
-    left: 48%;
-  }
   .editorial-display-wordmark {
-    font-size: clamp(3.2rem, 13.5vw, 8.5rem);
+    font-size: clamp(2.8rem, 12vw, 8rem);
+    transform: translate(-1vw, -4%);
   }
   .editorial-bottom-row {
     flex-direction: column;
