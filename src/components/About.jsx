@@ -80,7 +80,6 @@ const About = () => {
                     <span className="editorial-eyebrow-text">
                         ABOUT & PHILOSOPHY.
                     </span>
-                    <div className="editorial-eyebrow-rule" />
                 </div>
                 <h1 className="editorial-page-title">
                     ABOUT <span style={{ color: '#ef4444' }}>ME</span>.
