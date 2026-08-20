@@ -3,8 +3,8 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowDown, Code, Cpu, Zap, Globe, User, Briefcase, Mail } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
-import vivaswanBgImg from '../assets/vivaswan_hero_cinematic_bg.png';
-import vivaswanCutoutWideImg from '../assets/vivaswan_cutout_wide.png';
+import vivaswanBgImg from '../assets/vivaswan_walking_bg.png';
+import vivaswanCutoutImg from '../assets/vivaswan_walking_cutout.png';
 
 const Hero = () => {
     const containerRef = useRef(null);
@@ -21,7 +21,7 @@ const Hero = () => {
             ref={containerRef}
             className="editorial-hero-section"
         >
-            {/* Layer 0: Full-Hero Background Photo (Beach, Waves, Horizon) */}
+            {/* Layer 0: Full-Hero Background Photo (Walking Beach Scene) */}
             <div className="editorial-hero-bg-layer">
                 <img 
                     src={vivaswanBgImg} 
@@ -46,7 +46,7 @@ const Hero = () => {
             {/* Layer 3: Foreground Isolated Cutout Subject Overlapping the Typography */}
             <div className="editorial-hero-cutout-layer">
                 <img 
-                    src={vivaswanCutoutWideImg} 
+                    src={vivaswanCutoutImg} 
                     alt="Vivaswan Shetty" 
                     className="editorial-hero-cutout-img"
                 />
@@ -338,11 +338,11 @@ const QuickLinks = () => {
 
 const Home = () => {
     return (
-        <>
+        <div className="home-editorial-wrapper">
             <Hero />
             <FeaturedSection />
             <QuickLinks />
-        </>
+        </div>
     );
 };
 

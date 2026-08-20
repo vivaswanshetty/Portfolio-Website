@@ -806,9 +806,33 @@ p {
 /* ==========================================================================
    Editorial High-Fashion Hero & Layout Design System
    ========================================================================== */
-/* ==========================================================================
-   Editorial High-Fashion Hero & Layout Design System
-   ========================================================================== */
+.home-editorial-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  overflow: hidden;
+}
+
+.home-editorial-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 85vh;
+  left: 0;
+  right: 0;
+  height: 180vh;
+  background-image: url('./assets/vivaswan_walking_bg.png');
+  background-size: cover;
+  background-position: center 60%;
+  background-repeat: no-repeat;
+  opacity: 0.16;
+  filter: blur(12px) saturate(130%);
+  pointer-events: none;
+  z-index: 1;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0) 100%);
+}
+
 .editorial-hero-section {
   min-height: 100vh;
   min-height: 100dvh;
@@ -817,7 +841,7 @@ p {
   flex-direction: column;
   justify-content: space-between;
   padding: calc(var(--nav-height) + var(--nav-top-offset) + 0.5rem) 2.5rem 2.5rem;
-  background-color: var(--bg-color);
+  background-color: transparent;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
@@ -853,10 +877,10 @@ p {
   background: linear-gradient(
     to bottom,
     rgba(3, 7, 18, 0.82) 0%,
-    rgba(3, 7, 18, 0.38) 20%,
-    rgba(3, 7, 18, 0.08) 45%,
-    rgba(3, 7, 18, 0.45) 75%,
-    rgba(3, 7, 18, 0.98) 100%
+    rgba(3, 7, 18, 0.35) 20%,
+    rgba(3, 7, 18, 0.05) 45%,
+    rgba(3, 7, 18, 0.4) 75%,
+    rgba(3, 7, 18, 0.9) 100%
   );
 }
 
