@@ -148,7 +148,7 @@ const Testimonials = () => {
                     <div className="editorial-eyebrow-rule" />
                 </div>
                 <h1 className="editorial-page-title">
-                    WHAT PEERS & PARTNERS SAY.
+                    PEER & LEADERSHIP <span style={{ color: '#ef4444' }}>ENDORSEMENTS</span>.
                 </h1>
                 <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
                     Direct feedback from engineering leaders, product collaborators, and teams I've partnered with.

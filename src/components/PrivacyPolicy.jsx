@@ -48,7 +48,7 @@ const PrivacyPolicy = () => {
     ];
 
     return (
-        <div className="page-container" ref={containerRef}>
+        <div className="editorial-page-container" ref={containerRef}>
             <motion.div
                 style={{
                     textAlign: 'center',
@@ -57,29 +57,18 @@ const PrivacyPolicy = () => {
                 }}
             >
                 <motion.div style={{ y: headerY }}>
-                    <Link
-                        to="/"
-                        style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            color: 'var(--accent-primary)',
-                            fontSize: '0.85rem',
-                            fontWeight: 600,
-                            marginBottom: '1.5rem',
-                            textDecoration: 'none',
-                            padding: '0.4rem 1rem',
-                            borderRadius: '9999px',
-                            background: 'rgba(59, 130, 246, 0.08)',
-                            border: '1px solid rgba(59, 130, 246, 0.15)'
-                        }}
-                    >
-                        <ArrowLeft size={14} /> Back to Home
-                    </Link>
+                    <div className="editorial-eyebrow-container" style={{ justifyContent: 'center', marginBottom: '0.8rem' }}>
+                        <span className="editorial-eyebrow-text">
+                            LEGAL & DATA COMPLIANCE.
+                        </span>
+                        <div className="editorial-eyebrow-rule" />
+                    </div>
 
-                    <h1 style={{ marginBottom: '1rem', fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>Privacy Policy</h1>
-                    <p style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1rem' }}>
-                        Last Updated: May 2026. Transparent, privacy-by-design standards for this portfolio.
+                    <h1 className="editorial-page-title" style={{ textAlign: 'center', margin: '0 auto 1rem' }}>
+                        PRIVACY <span style={{ color: '#ef4444' }}>POLICY</span>.
+                    </h1>
+                    <p style={{ maxWidth: '600px', margin: '0 auto', fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>
+                        Last Updated: 2026. Transparent, privacy-by-design standards for this portfolio.
                     </p>
                 </motion.div>
             </motion.div>
@@ -92,24 +81,25 @@ const PrivacyPolicy = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.4, delay: idx * 0.08 }}
-                        className="card"
-                        style={{ padding: '2rem' }}
+                        className="editorial-card"
+                        style={{ padding: '2.25rem 2rem' }}
                     >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1.25rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '1rem' }}>
                             <div style={{
-                                width: '38px',
-                                height: '38px',
-                                borderRadius: '10px',
-                                background: 'rgba(59, 130, 246, 0.1)',
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: 0,
+                                background: 'rgba(239, 68, 68, 0.1)',
+                                border: '1px solid rgba(239, 68, 68, 0.3)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
-                                <section.icon size={20} color="var(--accent-primary)" />
+                                <section.icon size={18} color="#ef4444" />
                             </div>
-                            <h2 style={{ fontSize: '1.3rem', margin: 0 }}>{section.title}</h2>
+                            <h2 style={{ fontSize: '1.15rem', margin: 0, fontFamily: 'var(--font-heading)', fontWeight: 800, textTransform: 'uppercase', color: '#ffffff' }}>{section.title}</h2>
                         </div>
-                        <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.8, whiteSpace: 'pre-line', color: 'var(--text-muted)' }}>
+                        <p style={{ margin: 0, fontSize: '0.92rem', lineHeight: 1.8, whiteSpace: 'pre-line', color: 'var(--text-muted)' }}>
                             {section.content}
                         </p>
                     </motion.div>
@@ -119,24 +109,25 @@ const PrivacyPolicy = () => {
                     initial={{ opacity: 0, y: 25 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="card"
+                    className="editorial-card"
                     style={{
                         padding: '2.5rem',
                         textAlign: 'center',
-                        background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.5))',
-                        border: '1px solid rgba(59, 130, 246, 0.3)'
+                        borderLeft: '3px solid #ef4444'
                     }}
                 >
-                    <Mail size={32} color="var(--accent-secondary)" style={{ margin: '0 auto 1rem' }} />
-                    <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Questions or Data Inquiries?</h3>
-                    <p style={{ fontSize: '0.95rem', marginBottom: '1.5rem', color: 'var(--text-muted)' }}>
+                    <Mail size={32} color="#ef4444" style={{ margin: '0 auto 1rem' }} />
+                    <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', fontFamily: 'var(--font-heading)', fontWeight: 800, textTransform: 'uppercase', color: '#ffffff' }}>
+                        QUESTIONS OR DATA INQUIRIES?
+                    </h3>
+                    <p style={{ fontSize: '0.9rem', marginBottom: '1.5rem', color: 'var(--text-muted)' }}>
                         Feel free to reach out directly if you have any questions regarding privacy or data handling.
                     </p>
                     <a
                         href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="btn btn-primary"
+                        className="editorial-btn-primary"
                         style={{ display: 'inline-flex' }}
                     >
                         <Mail size={16} /> {contact.email}

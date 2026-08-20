@@ -332,7 +332,7 @@ const Projects = () => {
                         <div className="editorial-eyebrow-rule" />
                     </div>
                     <h1 className="editorial-page-title">
-                        FEATURED PRODUCTION SYSTEMS.
+                        FEATURED PRODUCTION <span style={{ color: '#ef4444' }}>SYSTEMS</span>.
                     </h1>
                     <p style={{ maxWidth: '640px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
                         Production-grade mobile and full-stack applications with architecture breakdowns, performance metrics, and interactive design galleries.

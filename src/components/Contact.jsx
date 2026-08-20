@@ -55,7 +55,7 @@ const Contact = () => {
                         <div className="editorial-eyebrow-rule" />
                     </div>
                     <h1 className="editorial-page-title">
-                        INITIATE DIALOGUE & COLLABORATE.
+                        INITIATE DIALOGUE & <span style={{ color: '#ef4444' }}>COLLABORATE</span>.
                     </h1>
                     <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
                         Open for technical leadership, production engineering collaborations, and high-impact systems development.
@@ -104,7 +104,7 @@ const Contact = () => {
                             color: '#ffffff',
                             lineHeight: 1.2 
                         }}>
-                            LET'S ARCHITECT SOMETHING ICONIC.
+                            LET'S ARCHITECT SOMETHING <span style={{ color: '#ef4444' }}>ICONIC</span>.
                         </h2>
                         <p style={{ marginBottom: '2.5rem', lineHeight: 1.8, color: 'var(--text-muted)', fontSize: '0.95rem' }}>
                             Whether you have an ambitious platform to build, an engineering hurdle to solve, or wish to explore executive technical leadership, my inbox is open.
@@ -219,7 +219,7 @@ const Contact = () => {
                             textTransform: 'uppercase',
                             color: '#ffffff'
                         }}>
-                            EMAIL VIVASWAN
+                            EMAIL <span style={{ color: '#ef4444' }}>VIVASWAN</span>
                         </h3>
                         <p style={{ marginBottom: '2.5rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                             Direct transmission • Guaranteed response within 24 hours

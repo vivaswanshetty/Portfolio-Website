@@ -258,7 +258,7 @@ const ProjectDetail = () => {
                             <div className="editorial-eyebrow-rule" />
                         </div>
                         <h2 className="editorial-section-title" style={{ margin: 0 }}>
-                            HIGH-RESOLUTION SCREENSHOTS
+                            HIGH-RESOLUTION <span style={{ color: '#ef4444' }}>SCREENSHOTS</span>
                         </h2>
                     </div>
 
@@ -375,7 +375,7 @@ const ProjectDetail = () => {
                                 textTransform: 'uppercase',
                                 color: '#ffffff'
                             }}>
-                                SYSTEM ARCHITECTURE
+                                SYSTEM <span style={{ color: '#ef4444' }}>ARCHITECTURE</span>
                             </h3>
                         </div>
                         <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', color: 'var(--text-subtle)', letterSpacing: '0.15em' }}>
@@ -428,7 +428,7 @@ const ProjectDetail = () => {
                                 textTransform: 'uppercase',
                                 color: '#ffffff'
                             }}>
-                                ENGINEERING HURDLES SOLVED
+                                ENGINEERING <span style={{ color: '#ef4444' }}>CHALLENGES</span> SOLVED
                             </h3>
                         </div>
                         <span style={{ fontFamily: 'var(--font-body)', fontSize: '0.72rem', color: 'var(--text-subtle)', letterSpacing: '0.15em' }}>

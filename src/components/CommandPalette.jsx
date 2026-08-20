@@ -156,18 +156,21 @@ export const CommandPalette = () => {
                     onClick={() => setIsOpen(false)}
                 >
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: -20 }}
+                        initial={{ opacity: 0, scale: 0.96, y: -15 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -20 }}
+                        exit={{ opacity: 0, scale: 0.96, y: -15 }}
                         transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         onClick={(e) => e.stopPropagation()}
                         style={{
                             width: '100%',
-                            maxWidth: '620px',
-                            background: 'rgba(15, 23, 42, 0.95)',
-                            border: '1px solid rgba(59, 130, 246, 0.25)',
-                            borderRadius: '1.25rem',
-                            boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px rgba(59, 130, 246, 0.15)',
+                            maxWidth: '640px',
+                            background: 'rgba(3, 7, 18, 0.96)',
+                            backdropFilter: 'blur(30px)',
+                            WebkitBackdropFilter: 'blur(30px)',
+                            border: '1px solid rgba(255, 255, 255, 0.16)',
+                            borderTop: '2px solid #ef4444',
+                            borderRadius: 0,
+                            boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 30px rgba(239, 68, 68, 0.1)',
                             overflow: 'hidden',
                             display: 'flex',
                             flexDirection: 'column'
@@ -179,10 +182,11 @@ export const CommandPalette = () => {
                             alignItems: 'center',
                             gap: '0.85rem',
                             padding: '1.2rem 1.4rem',
-                            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                            position: 'relative'
+                            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                            position: 'relative',
+                            background: 'rgba(255, 255, 255, 0.02)'
                         }}>
-                            <Search size={20} color="var(--accent-primary)" style={{ flexShrink: 0 }} />
+                            <Search size={20} color="#ef4444" style={{ flexShrink: 0 }} />
                             <input
                                 ref={inputRef}
                                 type="text"
@@ -192,27 +196,31 @@ export const CommandPalette = () => {
                                     setSelectedIndex(0);
                                 }}
                                 onKeyDown={handleKeyDownInList}
-                                placeholder="Type a command or search (e.g., projects, contact, resume)..."
+                                placeholder="TYPE A COMMAND OR SEARCH ARCHIVE..."
                                 style={{
                                     width: '100%',
                                     background: 'transparent',
                                     border: 'none',
                                     outline: 'none',
-                                    color: '#fff',
-                                    fontSize: '1.05rem',
-                                    fontFamily: 'inherit'
+                                    color: '#ffffff',
+                                    fontSize: '0.95rem',
+                                    fontFamily: 'var(--font-body)',
+                                    fontWeight: 600,
+                                    letterSpacing: '0.06em',
+                                    textTransform: 'uppercase'
                                 }}
                             />
                             <button
                                 onClick={() => setIsOpen(false)}
                                 style={{
                                     background: 'rgba(255, 255, 255, 0.06)',
-                                    border: 'none',
+                                    border: '1px solid rgba(255, 255, 255, 0.15)',
                                     color: 'var(--text-muted)',
-                                    borderRadius: '6px',
-                                    padding: '0.3rem 0.5rem',
-                                    fontSize: '0.75rem',
-                                    fontWeight: 600,
+                                    borderRadius: 0,
+                                    padding: '0.3rem 0.6rem',
+                                    fontSize: '0.72rem',
+                                    fontWeight: 700,
+                                    fontFamily: 'monospace',
                                     cursor: 'pointer'
                                 }}
                             >
@@ -230,8 +238,10 @@ export const CommandPalette = () => {
                         >
                             {filteredItems.length === 0 ? (
                                 <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)' }}>
-                                    <Search size={28} color="var(--accent-primary)" style={{ margin: '0 auto 0.75rem', opacity: 0.6 }} />
-                                    <p style={{ margin: 0, fontSize: '0.95rem' }}>No commands found matching "{query}"</p>
+                                    <Search size={28} color="#ef4444" style={{ margin: '0 auto 0.75rem', opacity: 0.6 }} />
+                                    <p style={{ margin: 0, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                                        NO COMMANDS FOUND MATCHING "{query}"
+                                    </p>
                                 </div>
                             ) : (
                                 filteredItems.map((item, idx) => {
@@ -246,10 +256,10 @@ export const CommandPalette = () => {
                                                 alignItems: 'center',
                                                 justifyContent: 'space-between',
                                                 padding: '0.75rem 1rem',
-                                                borderRadius: '0.75rem',
+                                                borderRadius: 0,
                                                 cursor: 'pointer',
-                                                background: isSelected ? 'rgba(59, 130, 246, 0.15)' : 'transparent',
-                                                border: isSelected ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid transparent',
+                                                background: isSelected ? 'rgba(239, 68, 68, 0.1)' : 'transparent',
+                                                border: isSelected ? '1px solid rgba(239, 68, 68, 0.4)' : '1px solid transparent',
                                                 transition: 'all 0.15s ease'
                                             }}
                                         >
@@ -257,10 +267,10 @@ export const CommandPalette = () => {
                                                 <div style={{
                                                     width: '32px',
                                                     height: '32px',
-                                                    borderRadius: '8px',
-                                                    background: item.image ? 'rgba(15, 23, 42, 0.9)' : (isSelected ? 'var(--accent-primary)' : 'rgba(255, 255, 255, 0.05)'),
-                                                    border: item.image ? '1px solid rgba(255, 255, 255, 0.12)' : 'none',
-                                                    color: isSelected ? '#fff' : 'var(--accent-secondary)',
+                                                    borderRadius: 0,
+                                                    background: item.image ? 'rgba(3, 7, 18, 0.9)' : (isSelected ? '#ef4444' : 'rgba(255, 255, 255, 0.05)'),
+                                                    border: item.image ? '1px solid rgba(255, 255, 255, 0.15)' : 'none',
+                                                    color: isSelected ? '#ffffff' : '#f8fafc',
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
@@ -275,10 +285,10 @@ export const CommandPalette = () => {
                                                     )}
                                                 </div>
                                                 <div>
-                                                    <div style={{ color: '#fff', fontSize: '0.95rem', fontWeight: 600 }}>
+                                                    <div style={{ color: '#ffffff', fontSize: '0.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                                                         {item.title}
                                                     </div>
-                                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+                                                    <div style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>
                                                         {item.subtitle}
                                                     </div>
                                                 </div>
@@ -286,15 +296,19 @@ export const CommandPalette = () => {
 
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                                 <span style={{
-                                                    fontSize: '0.7rem',
-                                                    color: 'var(--text-muted)',
-                                                    background: 'rgba(255, 255, 255, 0.04)',
+                                                    fontSize: '0.68rem',
+                                                    color: isSelected ? '#ffffff' : 'var(--text-muted)',
+                                                    background: isSelected ? 'rgba(239, 68, 68, 0.3)' : 'rgba(255, 255, 255, 0.04)',
+                                                    border: '1px solid rgba(255, 255, 255, 0.08)',
                                                     padding: '0.2rem 0.5rem',
-                                                    borderRadius: '4px'
+                                                    borderRadius: 0,
+                                                    fontFamily: 'monospace',
+                                                    textTransform: 'uppercase',
+                                                    letterSpacing: '0.08em'
                                                 }}>
                                                     {item.category}
                                                 </span>
-                                                {isSelected && <CornerDownLeft size={14} color="var(--accent-primary)" />}
+                                                {isSelected && <CornerDownLeft size={14} color="#ef4444" />}
                                             </div>
                                         </div>
                                     );
@@ -308,18 +322,21 @@ export const CommandPalette = () => {
                             alignItems: 'center',
                             justifyContent: 'space-between',
                             padding: '0.75rem 1.25rem',
-                            background: 'rgba(2, 6, 23, 0.6)',
-                            borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-                            fontSize: '0.75rem',
-                            color: 'var(--text-muted)'
+                            background: 'rgba(2, 6, 23, 0.8)',
+                            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                            fontSize: '0.72rem',
+                            color: 'var(--text-muted)',
+                            fontFamily: 'var(--font-body)',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.1em'
                         }}>
                             <div style={{ display: 'flex', gap: '1rem' }}>
                                 <span>↑↓ Navigate</span>
                                 <span>↵ Select</span>
                                 <span>Esc Close</span>
                             </div>
-                            <span style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>
-                                Vivaswan's Portfolio.
+                            <span style={{ color: '#ef4444', fontWeight: 700 }}>
+                                VIVASWAN SHETTY.
                             </span>
                         </div>
                     </motion.div>

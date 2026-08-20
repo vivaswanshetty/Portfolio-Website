@@ -52,7 +52,7 @@ const Hero = () => {
                     >
                         <span>Full-Stack & Mobile Systems</span>
                         <span>Bengaluru, IN • IST</span>
-                        <span>Available for 2026</span>
+                        <span>AI, Tech and Beyond</span>
                     </motion.div>
 
                     <motion.div 
@@ -295,7 +295,9 @@ const QuickLinks = () => {
                 className="editorial-section-header"
             >
                 <span className="editorial-eyebrow-text">NAVIGATION.</span>
-                <h2 className="editorial-section-title">EXPLORE THE ARCHIVE</h2>
+                <h2 className="editorial-section-title">
+                    EXPLORE THE <span style={{ color: '#ef4444' }}>ARCHIVE</span>
+                </h2>
                 <div className="editorial-eyebrow-rule" />
             </motion.div>
 

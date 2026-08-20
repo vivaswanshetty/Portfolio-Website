@@ -224,11 +224,11 @@ const Footer = () => {
                         </p>
 
                         {/* Location & Live Clock Badge */}
-                        <div className="editorial-badge" style={{ padding: '0.45rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', alignSelf: 'flex-start', fontSize: '0.72rem' }}>
+                        <div className="editorial-time-badge" style={{ padding: '0.45rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', alignSelf: 'flex-start', fontSize: '0.72rem' }}>
                             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ef4444', boxShadow: '0 0 8px #ef4444', display: 'inline-block' }} />
                             <Clock size={12} color="#f8fafc" />
                             <span>BENGALURU, IN (IST):</span>
-                            <strong style={{ color: '#fff', fontFamily: 'monospace' }}>{bengaluruTime || 'Live'}</strong>
+                            <strong style={{ color: '#ffffff', fontFamily: 'monospace' }}>{bengaluruTime || 'Live'}</strong>
                         </div>
                     </div>
 

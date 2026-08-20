@@ -6,14 +6,15 @@
   --text-muted: #94a3b8;
   --text-subtle: #64748b;
 
-  /* Masterpiece Multi-Chromatic Accents */
+  /* Masterpiece Accents & Editorial Red */
+  --accent-red: #ef4444;
+  --accent-primary: #ef4444;
   --accent-cyan: #00f2fe;
   --accent-azure: #38bdf8;
-  --accent-primary: #38bdf8;
   --accent-indigo: #6366f1;
   --accent-violet: #8b5cf6;
   --accent-purple: #c084fc;
-  --accent-secondary: #818cf8;
+  --accent-secondary: #f43f5e;
   --accent-tertiary: #c084fc;
   --accent-emerald: #10b981;
   --accent-mint: #34d399;
@@ -1226,8 +1227,40 @@ p {
 .editorial-badge:hover {
   border-color: #ffffff;
   background: #f8fafc;
-  color: #020617;
+  color: #020617 !important;
   transform: none;
+}
+
+.editorial-badge:hover * {
+  color: #020617 !important;
+}
+
+/* Time & Realtime Badges (Persistent Dark Glass with Red Accent on Hover) */
+.editorial-time-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  color: #f8fafc;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.editorial-time-badge:hover {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+}
+
+.editorial-time-badge:hover strong {
+  color: #ffffff !important;
 }
 
 /* Editorial Stats Grid & Cards */

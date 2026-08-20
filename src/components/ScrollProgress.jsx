@@ -53,7 +53,7 @@ const ScrollProgress = () => {
                         left: 0,
                         width: '100%',
                         height: '100%',
-                        background: 'linear-gradient(180deg, var(--accent-primary), var(--accent-secondary))',
+                        background: 'linear-gradient(180deg, #ef4444, #ffffff)',
                         scaleY: scrollYProgress,
                         transformOrigin: 'top'
                     }}

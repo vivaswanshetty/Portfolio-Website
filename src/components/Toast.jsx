@@ -32,32 +32,36 @@ export const ToastContainer = () => {
                         borderColor = 'rgba(239, 68, 68, 0.3)';
                     } else if (toast.type === 'info') {
                         Icon = Info;
-                        iconColor = '#3b82f6';
-                        borderColor = 'rgba(59, 130, 246, 0.3)';
+                        iconColor = '#ef4444';
+                        borderColor = 'rgba(239, 68, 68, 0.4)';
                     }
 
                     return (
                         <motion.div
                             key={toast.id}
-                            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.2 } }}
+                            exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
                             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                             style={{
                                 pointerEvents: 'auto',
-                                background: 'rgba(15, 23, 42, 0.85)',
-                                backdropFilter: 'blur(16px)',
-                                WebkitBackdropFilter: 'blur(16px)',
+                                background: 'rgba(3, 7, 18, 0.92)',
+                                backdropFilter: 'blur(20px)',
+                                WebkitBackdropFilter: 'blur(20px)',
                                 border: `1px solid ${borderColor}`,
+                                borderLeft: `3px solid ${iconColor}`,
                                 padding: '0.85rem 1.25rem',
-                                borderRadius: '1rem',
-                                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(59, 130, 246, 0.1)',
+                                borderRadius: 0,
+                                boxShadow: '0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(239, 68, 68, 0.1)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '0.75rem',
                                 color: '#f8fafc',
-                                fontSize: '0.9rem',
-                                fontWeight: 500
+                                fontSize: '0.85rem',
+                                fontFamily: 'var(--font-body)',
+                                fontWeight: 600,
+                                letterSpacing: '0.04em',
+                                textTransform: 'uppercase'
                             }}
                         >
                             <Icon size={18} color={iconColor} style={{ flexShrink: 0 }} />

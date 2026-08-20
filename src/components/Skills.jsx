@@ -132,7 +132,7 @@ const Skills = () => {
                         <div className="editorial-eyebrow-rule" />
                     </div>
                     <h1 className="editorial-page-title">
-                        TECHNICAL PROFICIENCY & STACK.
+                        TECHNICAL <span style={{ color: '#ef4444' }}>PROFICIENCY</span> & STACK.
                     </h1>
                     <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
                         Production-proven technologies, system paradigms, and engineering toolchains I use to build scalable digital products.
@@ -175,7 +175,7 @@ const Skills = () => {
                                 letterSpacing: '-0.01em',
                                 color: 'var(--text-main)'
                             }}>
-                                CORE ENGINEERING
+                                CORE <span style={{ color: '#ef4444' }}>ENGINEERING</span>
                             </h2>
                         </div>
                         <span style={{ 
@@ -224,7 +224,7 @@ const Skills = () => {
                                     letterSpacing: '-0.01em',
                                     color: 'var(--text-main)'
                                 }}>
-                                    DOMAIN EXPERTISE
+                                    DOMAIN <span style={{ color: '#ef4444' }}>EXPERTISE</span>
                                 </h3>
                             </div>
                             <span style={{ 
@@ -289,7 +289,7 @@ const Skills = () => {
                                     letterSpacing: '-0.01em',
                                     color: 'var(--text-main)'
                                 }}>
-                                    DEVELOPMENT TOOLCHAIN
+                                    DEVELOPMENT <span style={{ color: '#ef4444' }}>TOOLCHAIN</span>
                                 </h3>
                             </div>
                             <span style={{ 

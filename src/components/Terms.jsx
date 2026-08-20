@@ -38,7 +38,7 @@ const Terms = () => {
     ];
 
     return (
-        <div className="page-container" ref={containerRef}>
+        <div className="editorial-page-container" ref={containerRef}>
             <motion.div
                 style={{
                     textAlign: 'center',
@@ -47,29 +47,18 @@ const Terms = () => {
                 }}
             >
                 <motion.div style={{ y: headerY }}>
-                    <Link
-                        to="/"
-                        style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            color: 'var(--accent-primary)',
-                            fontSize: '0.85rem',
-                            fontWeight: 600,
-                            marginBottom: '1.5rem',
-                            textDecoration: 'none',
-                            padding: '0.4rem 1rem',
-                            borderRadius: '9999px',
-                            background: 'rgba(59, 130, 246, 0.08)',
-                            border: '1px solid rgba(59, 130, 246, 0.15)'
-                        }}
-                    >
-                        <ArrowLeft size={14} /> Back to Home
-                    </Link>
+                    <div className="editorial-eyebrow-container" style={{ justifyContent: 'center', marginBottom: '0.8rem' }}>
+                        <span className="editorial-eyebrow-text">
+                            LEGAL TERMS & GOVERNANCE.
+                        </span>
+                        <div className="editorial-eyebrow-rule" />
+                    </div>
 
-                    <h1 style={{ marginBottom: '1rem', fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>Terms of Service</h1>
-                    <p style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1rem' }}>
-                        Last Updated: May 2026. Standard usage terms and intellectual property information.
+                    <h1 className="editorial-page-title" style={{ textAlign: 'center', margin: '0 auto 1rem' }}>
+                        TERMS OF <span style={{ color: '#ef4444' }}>SERVICE</span>.
+                    </h1>
+                    <p style={{ maxWidth: '600px', margin: '0 auto', fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>
+                        Last Updated: 2026. Standard usage terms and intellectual property information.
                     </p>
                 </motion.div>
             </motion.div>
@@ -82,32 +71,33 @@ const Terms = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.4, delay: idx * 0.08 }}
-                        className="card"
-                        style={{ padding: '2rem' }}
+                        className="editorial-card"
+                        style={{ padding: '2.25rem 2rem' }}
                     >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1.25rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '1rem' }}>
                             <div style={{
-                                width: '38px',
-                                height: '38px',
-                                borderRadius: '10px',
-                                background: 'rgba(59, 130, 246, 0.1)',
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: 0,
+                                background: 'rgba(239, 68, 68, 0.1)',
+                                border: '1px solid rgba(239, 68, 68, 0.3)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
-                                <section.icon size={20} color="var(--accent-primary)" />
+                                <section.icon size={18} color="#ef4444" />
                             </div>
-                            <h2 style={{ fontSize: '1.3rem', margin: 0 }}>{section.title}</h2>
+                            <h2 style={{ fontSize: '1.15rem', margin: 0, fontFamily: 'var(--font-heading)', fontWeight: 800, textTransform: 'uppercase', color: '#ffffff' }}>{section.title}</h2>
                         </div>
-                        <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.8, color: 'var(--text-muted)' }}>
+                        <p style={{ margin: 0, fontSize: '0.92rem', lineHeight: 1.8, color: 'var(--text-muted)' }}>
                             {section.content}
                         </p>
                     </motion.div>
                 ))}
 
                 <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                    <Link to="/contact" className="btn btn-outline">
-                        <Mail size={16} /> Contact For Inquiries
+                    <Link to="/contact" className="editorial-btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Mail size={16} /> CONTACT FOR INQUIRIES
                     </Link>
                 </div>
             </div>

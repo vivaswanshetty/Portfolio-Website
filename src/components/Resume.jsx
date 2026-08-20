@@ -157,7 +157,7 @@ const Resume = () => {
                         <div className="editorial-eyebrow-rule" />
                     </div>
                     <h1 className="editorial-page-title">
-                        PROFESSIONAL TRAJECTORY & EXPERIENCE.
+                        PROFESSIONAL TRAJECTORY & <span style={{ color: '#ef4444' }}>EXPERIENCE</span>.
                     </h1>
                     <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
                         Chronological record of engineering roles, production deliveries, academic qualifications, and verified honors.
@@ -201,7 +201,7 @@ const Resume = () => {
                         textTransform: 'uppercase',
                         color: '#ffffff'
                     }}>
-                        ACADEMIC QUALIFICATIONS
+                        ACADEMIC <span style={{ color: '#ef4444' }}>QUALIFICATIONS</span>
                     </h2>
                 </div>
 
@@ -250,7 +250,7 @@ const Resume = () => {
                                         textTransform: 'uppercase',
                                         color: '#ffffff' 
                                     }}>
-                                        ACHIEVEMENTS & HONORS
+                                        ACHIEVEMENTS & <span style={{ color: '#ef4444' }}>HONORS</span>
                                     </h3>
                                 </div>
                                 <ul style={{ paddingLeft: '0', margin: 0, flex: 1, listStyle: 'none' }}>
@@ -311,7 +311,7 @@ const Resume = () => {
                                         textTransform: 'uppercase',
                                         color: '#ffffff' 
                                     }}>
-                                        CERTIFICATIONS & CREDENTIALS
+                                        VERIFIED <span style={{ color: '#ef4444' }}>CERTIFICATIONS</span>
                                     </h3>
                                 </div>
                                 <ul style={{ paddingLeft: '0', margin: 0, flex: 1, listStyle: 'none' }}>
