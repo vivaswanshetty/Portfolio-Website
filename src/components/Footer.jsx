@@ -9,7 +9,7 @@ import { portfolioData } from '../data/portfolioData';
 import { useToast } from '../context/ToastContext';
 import vLogo from '../assets/logos/v-logo.png';
 
-const XIcon = ({ size = 16, color = 'currentColor' }) => (
+const XIcon = ({ size = 15, color = 'currentColor' }) => (
     <svg viewBox="0 0 24 24" width={size} height={size} fill={color} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
     </svg>
@@ -90,10 +90,10 @@ const Footer = () => {
     ];
 
     const socialLinks = [
-        { icon: Github, href: contact.github, label: 'GitHub', color: '#38bdf8' },
-        { icon: Linkedin, href: contact.linkedin, label: 'LinkedIn', color: '#60a5fa' },
-        { icon: Instagram, href: contact.instagram, label: 'Instagram', color: '#f43f5e' },
-        { icon: XIcon, href: contact.x, label: 'X', color: '#c084fc' }
+        { icon: Github, href: contact.github, label: 'GitHub' },
+        { icon: Linkedin, href: contact.linkedin, label: 'LinkedIn' },
+        { icon: Instagram, href: contact.instagram, label: 'Instagram' },
+        { icon: XIcon, href: contact.x, label: 'X' }
     ];
 
     return (
@@ -102,71 +102,123 @@ const Footer = () => {
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="site-footer"
+            style={{
+                position: 'relative',
+                background: '#020617',
+                borderTop: '1px solid rgba(255, 255, 255, 0.12)',
+                padding: '6rem 0 3rem',
+                overflow: 'hidden'
+            }}
         >
-            {/* Ambient Background Cosmic Glows */}
-            <div className="footer-ambient-glow glow-1" />
-            <div className="footer-ambient-glow glow-2" />
-
-            <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+            <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', position: 'relative', zIndex: 2 }}>
                 
-                {/* Pre-Footer Hero CTA Card */}
+                {/* Pre-Footer Editorial Callout Card */}
                 <motion.div 
-                    className="footer-cta-card"
+                    className="editorial-card"
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
+                    style={{
+                        padding: '3.5rem 3rem',
+                        marginBottom: '5rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '2rem'
+                    }}
                 >
-                    <div className="footer-cta-content">
-                        <div className="footer-cta-badge">
-                            <span className="live-pulse-dot" /> Available for High-Impact Engineering Roles
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '2rem' }}>
+                        <div style={{ maxWidth: '650px' }}>
+                            <div className="editorial-eyebrow-container" style={{ marginBottom: '1rem' }}>
+                                <span className="editorial-eyebrow-text">
+                                    AVAILABLE FOR 2026 INITIATIVES
+                                </span>
+                                <div className="editorial-eyebrow-rule" />
+                            </div>
+                            <h3 style={{ 
+                                fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', 
+                                fontFamily: 'var(--font-heading)',
+                                fontWeight: 900,
+                                textTransform: 'uppercase',
+                                letterSpacing: '-0.02em',
+                                color: '#ffffff',
+                                margin: '0 0 1rem',
+                                lineHeight: 1.15
+                            }}>
+                                LET'S BUILD HIGH-IMPACT SYSTEMS TOGETHER.
+                            </h3>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
+                                Visionary platforms, high-performance distributed systems, or mobile engineering challenges.
+                            </p>
                         </div>
-                        <h3 className="footer-cta-title">
-                            Let's Build Something <span className="gradient-text-azure">Extraordinary</span> Together
-                        </h3>
-                        <p className="footer-cta-desc">
-                            Have a visionary product, innovative system, or engineering challenge? Let's connect and build scalable, high-performance solutions.
-                        </p>
-                    </div>
-                    <div className="footer-cta-actions">
-                        <Link to="/contact" className="btn btn-primary footer-cta-primary-btn">
-                            Initiate Conversation <ArrowUpRight size={16} />
-                        </Link>
-                        <button 
-                            onClick={openCommandPalette} 
-                            className="footer-cmd-trigger-btn"
-                            title="Open Command Palette (⌘K)"
-                        >
-                            <Terminal size={14} />
-                            <span>Quick Menu</span>
-                            <span className="footer-cmd-badge">⌘K</span>
-                        </button>
+
+                        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                            <Link to="/contact" className="editorial-btn-primary">
+                                INITIATE CONVERSATION <ArrowUpRight size={15} style={{ marginLeft: '6px' }} />
+                            </Link>
+                            <button 
+                                onClick={openCommandPalette} 
+                                className="editorial-badge"
+                                style={{ 
+                                    padding: '0.75rem 1.25rem', 
+                                    cursor: 'pointer', 
+                                    display: 'inline-flex', 
+                                    alignItems: 'center', 
+                                    gap: '0.6rem',
+                                    fontSize: '0.76rem'
+                                }}
+                                title="Open Command Palette (⌘K)"
+                            >
+                                <Terminal size={14} />
+                                <span>COMMAND MENU</span>
+                                <span style={{ fontFamily: 'monospace', opacity: 0.7, marginLeft: '4px' }}>⌘K</span>
+                            </button>
+                        </div>
                     </div>
                 </motion.div>
 
-                {/* Main 4-Column Footer Grid */}
-                <div className="footer-main-grid">
+                {/* Main 4-Column Editorial Footer Grid */}
+                <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+                    gap: '3.5rem 2rem',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                    paddingBottom: '4rem',
+                    marginBottom: '2.5rem'
+                }}>
                     
                     {/* Brand & Mission Column */}
-                    <div className="footer-brand-column">
-                        <NavLink to="/" className="footer-brand-link">
-                            <div className="footer-logo-box">
-                                <img src={vLogo} alt="Vivaswan Shetty Monogram" className="footer-logo-img" />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', textDecoration: 'none' }}>
+                            <div style={{
+                                width: '36px', height: '36px',
+                                background: 'rgba(255, 255, 255, 0.05)',
+                                border: '1px solid rgba(255, 255, 255, 0.15)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                padding: '4px'
+                            }}>
+                                <img src={vLogo} alt="Vivaswan Shetty Monogram" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                             </div>
-                            <span className="footer-logo-title">
-                                VIVASWAN <span className="footer-logo-dot">•</span>
+                            <span style={{ 
+                                fontFamily: 'var(--font-heading)', 
+                                fontWeight: 900, 
+                                fontSize: '1.15rem', 
+                                letterSpacing: '0.1em',
+                                color: '#ffffff',
+                                textTransform: 'uppercase'
+                            }}>
+                                VIVASWAN
                             </span>
                         </NavLink>
 
-                        <p className="footer-brand-bio">
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.7, margin: 0 }}>
                             Future Engineering Leader & Full-Stack Systems Architect building high-performance mobile, web, and distributed software systems.
                         </p>
 
                         {/* Location & Live Clock Badge */}
-                        <div className="footer-meta-pill">
-                            <Clock size={13} color="#38bdf8" />
-                            <span>Bengaluru, IN (IST):</span>
+                        <div className="editorial-badge" style={{ padding: '0.45rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', alignSelf: 'flex-start', fontSize: '0.72rem' }}>
+                            <Clock size={12} color="#f8fafc" />
+                            <span>BENGALURU, IN (IST):</span>
                             <strong style={{ color: '#fff', fontFamily: 'monospace' }}>{bengaluruTime || 'Live'}</strong>
                         </div>
                     </div>
@@ -175,20 +227,37 @@ const Footer = () => {
                     {footerSections.map((column, idx) => (
                         <motion.div
                             key={idx}
-                            className="footer-nav-column"
                             initial={{ opacity: 0, y: 20 }}
                             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                             transition={{ duration: 0.5, delay: 0.2 + idx * 0.08 }}
                         >
-                            <h4 className="footer-column-heading">{column.title}</h4>
-                            <ul className="footer-links-list">
+                            <h4 style={{ 
+                                margin: '0 0 1.25rem', 
+                                fontSize: '0.75rem', 
+                                fontFamily: 'var(--font-body)',
+                                fontWeight: 700, 
+                                textTransform: 'uppercase', 
+                                letterSpacing: '0.18em', 
+                                color: '#94a3b8' 
+                            }}>
+                                {column.title}
+                            </h4>
+                            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                                 {column.links.map((link, i) => (
                                     <li key={i}>
                                         <NavLink
                                             to={link.path}
-                                            className="footer-nav-link"
+                                            style={{
+                                                color: 'var(--text-muted)',
+                                                textDecoration: 'none',
+                                                fontSize: '0.86rem',
+                                                transition: 'color 0.2s ease',
+                                                display: 'inline-block'
+                                            }}
+                                            onMouseEnter={(e) => e.target.style.color = '#ffffff'}
+                                            onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
                                         >
-                                            <span className="footer-link-text">{link.name}</span>
+                                            {link.name}
                                         </NavLink>
                                     </li>
                                 ))}
@@ -198,62 +267,63 @@ const Footer = () => {
 
                     {/* Connect & Direct Contact Column */}
                     <motion.div
-                        className="footer-connect-column"
                         initial={{ opacity: 0, y: 20 }}
                         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                         transition={{ duration: 0.5, delay: 0.45 }}
                     >
-                        <h4 className="footer-column-heading">Connect & Socials</h4>
-                        <ul className="footer-connect-list">
-                            <li>
-                                <div className="footer-email-box">
-                                    <Mail size={14} color="var(--accent-azure)" style={{ flexShrink: 0 }} />
-                                    <a 
-                                        href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="footer-email-link"
-                                        title="Open Gmail Composer"
-                                    >
-                                        {contact.email}
-                                    </a>
-                                    <button
-                                        onClick={handleCopyEmail}
-                                        className="footer-copy-btn"
-                                        title="Copy Email Address"
-                                    >
-                                        {copied ? <CheckCheck size={13} color="#22c55e" /> : <Copy size={13} />}
-                                    </button>
-                                </div>
-                            </li>
-                            <li>
+                        <h4 style={{ 
+                            margin: '0 0 1.25rem', 
+                            fontSize: '0.75rem', 
+                            fontFamily: 'var(--font-body)',
+                            fontWeight: 700, 
+                            textTransform: 'uppercase', 
+                            letterSpacing: '0.18em', 
+                            color: '#94a3b8' 
+                        }}>
+                            Connect & Channels
+                        </h4>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                                <Mail size={13} color="#f8fafc" />
                                 <a 
-                                    href="https://www.google.com/maps/search/?api=1&query=Bengaluru%2C+India"
+                                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="footer-location-link"
+                                    style={{ color: '#ffffff', textDecoration: 'none', fontFamily: 'monospace' }}
                                 >
-                                    <MapPin size={14} color="var(--accent-azure)" style={{ flexShrink: 0 }} />
-                                    <span>Bengaluru, Karnataka, India</span>
+                                    {contact.email}
                                 </a>
-                            </li>
-                        </ul>
+                                <button
+                                    onClick={handleCopyEmail}
+                                    style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '2px' }}
+                                    title="Copy Email Address"
+                                >
+                                    {copied ? <CheckCheck size={13} color="#34d399" /> : <Copy size={13} />}
+                                </button>
+                            </div>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                                <MapPin size={13} color="#f8fafc" />
+                                <span>Bengaluru, Karnataka, IN</span>
+                            </div>
+                        </div>
 
                         {/* Social Buttons */}
-                        <div className="footer-social-row">
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
                             {socialLinks.map((social, i) => (
                                 <motion.a
                                     key={i}
                                     href={social.href}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="footer-social-circle"
-                                    whileHover={{ y: -4, scale: 1.1 }}
-                                    whileTap={{ scale: 0.92 }}
+                                    className="editorial-badge"
+                                    style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                    whileHover={{ scale: 1.1, borderColor: '#ffffff', backgroundColor: '#ffffff', color: '#020617' }}
+                                    whileTap={{ scale: 0.95 }}
                                     title={social.label}
-                                    style={{ '--social-hover-color': social.color }}
                                 >
-                                    <social.icon size={16} />
+                                    <social.icon size={15} />
                                 </motion.a>
                             ))}
                         </div>
@@ -263,31 +333,36 @@ const Footer = () => {
 
                 {/* Bottom Sub-Footer Bar */}
                 <motion.div
-                    className="footer-bottom-bar"
                     initial={{ opacity: 0 }}
                     animate={isInView ? { opacity: 1 } : { opacity: 0 }}
                     transition={{ duration: 0.6, delay: 0.5 }}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        gap: '1rem'
+                    }}
                 >
-                    <div className="footer-bottom-left">
-                        <p className="footer-copyright">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+                        <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
                             © {currentYear} <strong>Vivaswan Shetty</strong>. Built with precision, React 19 & Vite.
                         </p>
-                        <div className="footer-system-status">
-                            <span className="footer-status-dot" />
-                            <span>All Systems Operational</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.74rem', color: '#34d399', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>
+                            <span className="live-pulse-dot" />
+                            <span>ALL SYSTEMS OPERATIONAL</span>
                         </div>
                     </div>
 
-                    <div className="footer-bottom-right">
+                    <div>
                         <button
                             onClick={scrollToTop}
-                            className="footer-scroll-top-btn"
+                            className="editorial-btn-secondary"
+                            style={{ fontSize: '0.75rem', cursor: 'pointer' }}
                             title="Scroll smoothly back to top"
                         >
-                            <span>Back to top</span>
-                            <div className="footer-scroll-arrow-box">
-                                <ArrowUp size={14} />
-                            </div>
+                            <span>BACK TO TOP</span>
+                            <ArrowUp size={13} />
                         </button>
                     </div>
                 </motion.div>

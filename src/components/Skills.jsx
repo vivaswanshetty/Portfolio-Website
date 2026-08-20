@@ -17,21 +17,36 @@ const AnimatedProgressBar = ({ level, name, index }) => {
 
     return (
         <div ref={ref} style={{ marginBottom: '2rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem' }}>
-                <span style={{ fontWeight: 500, fontSize: '0.95rem' }}>{name}</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                <span style={{ 
+                    fontFamily: 'var(--font-body)', 
+                    fontWeight: 600, 
+                    fontSize: '0.85rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.14em',
+                    color: 'var(--text-main)'
+                }}>
+                    {name}
+                </span>
                 <motion.span
                     initial={{ opacity: 0 }}
                     animate={isInView ? { opacity: 1 } : { opacity: 0 }}
                     transition={{ delay: 0.4 + index * 0.1 }}
-                    style={{ color: 'var(--accent-primary)', fontSize: '0.9rem', fontWeight: 600 }}
+                    style={{ 
+                        color: 'var(--text-muted)', 
+                        fontSize: '0.82rem', 
+                        fontWeight: 700,
+                        fontFamily: 'var(--font-brand)',
+                        letterSpacing: '0.05em'
+                    }}
                 >
                     {level}%
                 </motion.span>
             </div>
             <div style={{
-                height: '8px',
-                background: 'rgba(255,255,255,0.06)',
-                borderRadius: '4px',
+                height: '6px',
+                background: 'rgba(255, 255, 255, 0.08)',
+                borderRadius: 0,
                 overflow: 'hidden',
                 position: 'relative'
             }}>
@@ -41,12 +56,12 @@ const AnimatedProgressBar = ({ level, name, index }) => {
                     transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.2 + index * 0.15 }}
                     style={{
                         height: '100%',
-                        background: 'linear-gradient(90deg, #00f2fe 0%, #38bdf8 35%, #818cf8 70%, #c084fc 100%)',
-                        backgroundSize: '200% 100%',
-                        borderRadius: '4px',
+                        background: '#f8fafc',
+                        borderRadius: 0,
                         position: 'relative'
                     }}
                 >
+                    {/* Continuous Shimmer Sweep Animation Preserved */}
                     <motion.div
                         style={{
                             position: 'absolute',
@@ -54,7 +69,7 @@ const AnimatedProgressBar = ({ level, name, index }) => {
                             left: 0,
                             right: 0,
                             bottom: 0,
-                            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)'
+                            background: 'linear-gradient(90deg, transparent, rgba(2, 6, 23, 0.5), transparent)'
                         }}
                         animate={{ x: ['-100%', '200%'] }}
                         transition={{
@@ -71,16 +86,16 @@ const AnimatedProgressBar = ({ level, name, index }) => {
 
 const getToolIcon = (toolName) => {
     const name = toolName.toLowerCase();
-    if (name.includes('vs code') || name.includes('visual studio')) return <Terminal size={14} color="var(--accent-primary)" style={{ flexShrink: 0 }} />;
-    if (name.includes('android')) return <Smartphone size={14} color="var(--accent-secondary)" style={{ flexShrink: 0 }} />;
-    if (name.includes('expo') || name.includes('eas')) return <Zap size={14} color="#f59e0b" style={{ flexShrink: 0 }} />;
-    if (name.includes('git')) return <Github size={14} color="#f33e2e" style={{ flexShrink: 0 }} />;
-    if (name.includes('figma')) return <Palette size={14} color="#a855f7" style={{ flexShrink: 0 }} />;
-    if (name.includes('vercel') || name.includes('railway')) return <Cloud size={14} color="#06b6d4" style={{ flexShrink: 0 }} />;
-    if (name.includes('mongodb') || name.includes('atlas')) return <Database size={14} color="#10b981" style={{ flexShrink: 0 }} />;
-    if (name.includes('postman')) return <Send size={14} color="#ff6c37" style={{ flexShrink: 0 }} />;
-    if (name.includes('notion')) return <FileText size={14} color="#ffffff" style={{ flexShrink: 0 }} />;
-    return <Wrench size={14} color="var(--accent-primary)" style={{ flexShrink: 0 }} />;
+    if (name.includes('vs code') || name.includes('visual studio')) return <Terminal size={14} color="var(--text-main)" style={{ flexShrink: 0 }} />;
+    if (name.includes('android')) return <Smartphone size={14} color="var(--text-main)" style={{ flexShrink: 0 }} />;
+    if (name.includes('expo') || name.includes('eas')) return <Zap size={14} color="var(--text-main)" style={{ flexShrink: 0 }} />;
+    if (name.includes('git')) return <Github size={14} color="var(--text-main)" style={{ flexShrink: 0 }} />;
+    if (name.includes('figma')) return <Palette size={14} color="var(--text-main)" style={{ flexShrink: 0 }} />;
+    if (name.includes('vercel') || name.includes('railway')) return <Cloud size={14} color="var(--text-main)" style={{ flexShrink: 0 }} />;
+    if (name.includes('mongodb') || name.includes('atlas')) return <Database size={14} color="var(--text-main)" style={{ flexShrink: 0 }} />;
+    if (name.includes('postman')) return <Send size={14} color="var(--text-main)" style={{ flexShrink: 0 }} />;
+    if (name.includes('notion')) return <FileText size={14} color="var(--text-main)" style={{ flexShrink: 0 }} />;
+    return <Wrench size={14} color="var(--text-main)" style={{ flexShrink: 0 }} />;
 };
 
 const Skills = () => {
@@ -94,7 +109,6 @@ const Skills = () => {
     });
 
     const headerY = useTransform(scrollYProgress, [0, 1], [0, 50]);
-    const bgY = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
     const technicalSkills = technical.map(skill => ({
         name: skill.name || skill,
@@ -102,117 +116,144 @@ const Skills = () => {
     }));
 
     return (
-        <div className="page-container" ref={ref}>
+        <div className="editorial-page-container" ref={ref}>
+            {/* Opening Editorial Header */}
             <motion.div
-                style={{
-                    textAlign: 'center',
-                    marginBottom: '5rem',
-                    position: 'relative'
-                }}
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+                className="editorial-page-header"
             >
                 <motion.div style={{ y: headerY }}>
-                    <span style={{
-                        display: 'inline-block',
-                        fontSize: '0.75rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.25em',
-                        color: 'var(--accent-primary)',
-                        marginBottom: '1rem',
-                        fontWeight: 600
-                    }}>
-                        Expertise
-                    </span>
-                    <h1 style={{ marginBottom: '1rem' }}>Skills</h1>
-                    <p style={{ maxWidth: '500px', margin: '0 auto' }}>
-                        Technologies and tools I use to bring ideas to life.
+                    <div className="editorial-eyebrow-container" style={{ marginBottom: '0.8rem' }}>
+                        <span className="editorial-eyebrow-text">
+                            SKILLS & EXPERTISE.
+                        </span>
+                        <div className="editorial-eyebrow-rule" />
+                    </div>
+                    <h1 className="editorial-page-title">
+                        TECHNICAL PROFICIENCY & STACK.
+                    </h1>
+                    <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
+                        Production-proven technologies, system paradigms, and engineering toolchains I use to build scalable digital products.
                     </p>
                 </motion.div>
-
-                <motion.div
-                    style={{
-                        position: 'absolute',
-                        top: '-80px',
-                        left: '60%',
-                        width: '300px',
-                        height: '300px',
-                        background: 'radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, transparent 70%)',
-                        filter: 'blur(60px)',
-                        y: bgY
-                    }}
-                />
             </motion.div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem', maxWidth: '1000px', margin: '0 auto' }}>
+            {/* 2-Column Editorial Grid Layout */}
+            <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', 
+                gap: '2.5rem', 
+                maxWidth: '1200px', 
+                margin: '0 auto' 
+            }}>
+                {/* Column 1: Technical Progress Bars Card */}
                 <motion.div
-                    initial={{ opacity: 0, x: -40 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -40 }}
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                     transition={{ duration: 0.7, delay: 0.1 }}
-                    className="card"
-                    style={{ padding: '2.8rem' }}
+                    className="editorial-card"
+                    style={{ padding: '2.5rem 2rem' }}
                 >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
-                        <div style={{
-                            width: '52px', height: '52px',
-                            background: 'rgba(59, 130, 246, 0.1)',
-                            borderRadius: '14px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}>
-                            <Cpu size={26} color="var(--accent-primary)" />
+                    <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'space-between',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                        paddingBottom: '1.25rem',
+                        marginBottom: '2.25rem' 
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                            <Cpu size={22} color="var(--text-main)" />
+                            <h2 style={{ 
+                                margin: 0, 
+                                fontSize: '1.2rem', 
+                                fontFamily: 'var(--font-heading)',
+                                fontWeight: 800,
+                                textTransform: 'uppercase',
+                                letterSpacing: '-0.01em',
+                                color: 'var(--text-main)'
+                            }}>
+                                CORE ENGINEERING
+                            </h2>
                         </div>
-                        <h2 style={{ margin: 0, fontSize: '1.4rem' }}>Technical</h2>
+                        <span style={{ 
+                            fontFamily: 'var(--font-body)', 
+                            fontSize: '0.72rem', 
+                            color: 'var(--text-subtle)', 
+                            letterSpacing: '0.15em' 
+                        }}>
+                            01 / METRICS
+                        </span>
                     </div>
 
-                    {technicalSkills.map((skill, idx) => (
-                        <AnimatedProgressBar key={idx} name={skill.name} level={skill.level} index={idx} />
-                    ))}
+                    <div>
+                        {technicalSkills.map((skill, idx) => (
+                            <AnimatedProgressBar key={idx} name={skill.name} level={skill.level} index={idx} />
+                        ))}
+                    </div>
                 </motion.div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                {/* Column 2: Domain Expertise & Toolchain */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                    {/* Domain Expertise Editorial Card */}
                     <motion.div
-                        initial={{ opacity: 0, x: 40 }}
-                        animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
+                        initial={{ opacity: 0, x: 30 }}
+                        animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
                         transition={{ duration: 0.7, delay: 0.2 }}
-                        className="card"
-                        style={{ padding: '2.2rem' }}
+                        className="editorial-card"
+                        style={{ padding: '2.25rem 2rem' }}
                     >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                            <div style={{
-                                width: '48px', height: '48px',
-                                background: 'rgba(139, 92, 246, 0.1)',
-                                borderRadius: '14px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}>
-                                <Globe size={24} color="var(--accent-secondary)" />
+                        <div style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'space-between',
+                            borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                            paddingBottom: '1.25rem',
+                            marginBottom: '1.75rem' 
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                                <Globe size={20} color="var(--text-main)" />
+                                <h3 style={{ 
+                                    margin: 0, 
+                                    fontSize: '1.15rem',
+                                    fontFamily: 'var(--font-heading)',
+                                    fontWeight: 800,
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '-0.01em',
+                                    color: 'var(--text-main)'
+                                }}>
+                                    DOMAIN EXPERTISE
+                                </h3>
                             </div>
-                            <h3 style={{ margin: 0, fontSize: '1.2rem' }}>Domain Expertise</h3>
+                            <span style={{ 
+                                fontFamily: 'var(--font-body)', 
+                                fontSize: '0.72rem', 
+                                color: 'var(--text-subtle)', 
+                                letterSpacing: '0.15em' 
+                            }}>
+                                02 / DOMAINS
+                            </span>
                         </div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
+
+                        <div className="editorial-badge-group">
                             {domain.map((item, idx) => (
                                 <motion.span
                                     key={idx}
-                                    style={{
-                                        padding: '0.6rem 1.2rem',
-                                        background: 'rgba(255,255,255,0.04)',
-                                        border: '1px solid rgba(255,255,255,0.08)',
-                                        borderRadius: '9999px',
-                                        fontSize: '0.9rem'
-                                    }}
-                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    className="editorial-badge"
+                                    initial={{ opacity: 0, scale: 0.85 }}
                                     animate={isInView ? { 
                                         opacity: 1, 
                                         scale: 1,
-                                        transition: { duration: 0.4, delay: 0.5 + idx * 0.06 }
-                                    } : { opacity: 0, scale: 0.8 }}
-                                    transition={{ duration: 0.12, ease: 'easeOut' }}
+                                        transition: { duration: 0.4, delay: 0.4 + idx * 0.05 }
+                                    } : { opacity: 0, scale: 0.85 }}
                                     whileHover={{
-                                        scale: 1.05,
-                                        background: 'rgba(139, 92, 246, 0.12)',
-                                        borderColor: 'var(--accent-secondary)',
-                                        transition: { duration: 0.12, ease: 'easeOut', delay: 0 }
+                                        scale: 1.04,
+                                        borderColor: '#ffffff',
+                                        backgroundColor: '#ffffff',
+                                        color: '#020617',
+                                        transition: { duration: 0.15 }
                                     }}
                                 >
                                     {item}
@@ -221,52 +262,64 @@ const Skills = () => {
                         </div>
                     </motion.div>
 
+                    {/* Tools & Workflow Editorial Card */}
                     <motion.div
-                        initial={{ opacity: 0, x: 40 }}
-                        animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
+                        initial={{ opacity: 0, x: 30 }}
+                        animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
                         transition={{ duration: 0.7, delay: 0.3 }}
-                        className="card"
-                        style={{ padding: '2.2rem' }}
+                        className="editorial-card"
+                        style={{ padding: '2.25rem 2rem' }}
                     >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-                            <div style={{
-                                width: '48px', height: '48px',
-                                background: 'rgba(96, 165, 250, 0.1)',
-                                borderRadius: '14px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}>
-                                <Wrench size={24} color="var(--accent-primary)" />
+                        <div style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'space-between',
+                            borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                            paddingBottom: '1.25rem',
+                            marginBottom: '1.75rem' 
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                                <Wrench size={20} color="var(--text-main)" />
+                                <h3 style={{ 
+                                    margin: 0, 
+                                    fontSize: '1.15rem',
+                                    fontFamily: 'var(--font-heading)',
+                                    fontWeight: 800,
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '-0.01em',
+                                    color: 'var(--text-main)'
+                                }}>
+                                    DEVELOPMENT TOOLCHAIN
+                                </h3>
                             </div>
-                            <h3 style={{ margin: 0, fontSize: '1.2rem' }}>Tools</h3>
+                            <span style={{ 
+                                fontFamily: 'var(--font-body)', 
+                                fontSize: '0.72rem', 
+                                color: 'var(--text-subtle)', 
+                                letterSpacing: '0.15em' 
+                            }}>
+                                03 / TOOLS
+                            </span>
                         </div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
+
+                        <div className="editorial-badge-group">
                             {tools.map((item, idx) => (
                                 <motion.span
                                     key={idx}
-                                    style={{
-                                        padding: '0.6rem 1.2rem',
-                                        background: 'rgba(255,255,255,0.04)',
-                                        border: '1px solid rgba(255,255,255,0.08)',
-                                        borderRadius: '9999px',
-                                        fontSize: '0.9rem',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '0.6rem'
-                                    }}
-                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    className="editorial-badge"
+                                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem' }}
+                                    initial={{ opacity: 0, scale: 0.85 }}
                                     animate={isInView ? { 
                                         opacity: 1, 
                                         scale: 1,
-                                        transition: { duration: 0.4, delay: 0.6 + idx * 0.06 }
-                                    } : { opacity: 0, scale: 0.8 }}
-                                    transition={{ duration: 0.12, ease: 'easeOut' }}
+                                        transition: { duration: 0.4, delay: 0.5 + idx * 0.05 }
+                                    } : { opacity: 0, scale: 0.85 }}
                                     whileHover={{
-                                        scale: 1.05,
-                                        background: 'rgba(59, 130, 246, 0.12)',
-                                        borderColor: 'var(--accent-primary)',
-                                        transition: { duration: 0.12, ease: 'easeOut', delay: 0 }
+                                        scale: 1.04,
+                                        borderColor: '#ffffff',
+                                        backgroundColor: '#ffffff',
+                                        color: '#020617',
+                                        transition: { duration: 0.15 }
                                     }}
                                 >
                                     {getToolIcon(item)}

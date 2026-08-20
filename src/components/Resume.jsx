@@ -1,13 +1,11 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
-import { Briefcase, Calendar, Award, GraduationCap, MapPin, ChevronRight } from 'lucide-react';
+import { Briefcase, Calendar, Award, GraduationCap, MapPin, ChevronRight, Download } from 'lucide-react';
 
 const TimelineItem = ({ job, index, isLeft }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-100px' });
-    const colors = ['#10b981', '#a855f7'];
-    const accentColor = colors[index % colors.length];
 
     return (
         <motion.div
@@ -22,52 +20,54 @@ const TimelineItem = ({ job, index, isLeft }) => {
             >
                 <motion.div
                     className="timeline-dot"
-                    style={{ background: accentColor, boxShadow: `0 0 15px ${accentColor}80` }}
-                    whileHover={{ scale: 1.4 }}
+                    style={{ background: '#ffffff', borderRadius: 0, border: '2px solid #030712', boxShadow: '0 0 10px rgba(255, 255, 255, 0.5)' }}
+                    whileHover={{ scale: 1.3 }}
                 />
 
                 <motion.div
-                    className="card"
-                    style={{ padding: '2rem', border: `1px solid ${accentColor}25` }}
-                    whileHover={{ y: -6, transition: { duration: 0.15, ease: 'easeOut' } }}
+                    className="editorial-card"
+                    style={{ padding: '2.25rem 2rem' }}
+                    whileHover={{ y: -5, transition: { duration: 0.15, ease: 'easeOut' } }}
                 >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
-                        <div style={{
-                            width: '36px', height: '36px',
-                            background: `${accentColor}18`,
-                            borderRadius: '10px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}>
-                            <Briefcase size={18} color={accentColor} />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.8rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '0.75rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <Briefcase size={16} color="var(--text-main)" />
+                            <h3 style={{ 
+                                fontSize: '1.15rem', 
+                                margin: 0, 
+                                fontFamily: 'var(--font-heading)',
+                                fontWeight: 800,
+                                textTransform: 'uppercase',
+                                color: '#ffffff'
+                            }}>
+                                {job.role}
+                            </h3>
                         </div>
-                        <h3 style={{ fontSize: '1.2rem', margin: 0 }}>{job.role}</h3>
+                        <span style={{ fontFamily: 'monospace', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                            0{index + 1}
+                        </span>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-                        <span style={{ color: accentColor, fontWeight: 600, fontSize: '0.95rem' }}>{job.company}</span>
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
+                        <span style={{ color: '#f8fafc', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                            {job.company}
+                        </span>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '0.4rem', letterSpacing: '0.05em' }}>
                             <Calendar size={12} /> {job.duration}
                         </span>
                     </div>
 
-                    <p style={{ fontSize: '0.9rem', lineHeight: 1.7, marginBottom: '1rem' }}>{job.description}</p>
+                    <p style={{ fontSize: '0.88rem', lineHeight: 1.7, color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+                        {job.description}
+                    </p>
 
                     {job.highlights && (
-                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <div className="editorial-badge-group">
                             {job.highlights.map((h, i) => (
                                 <span
                                     key={i}
-                                    style={{
-                                        fontSize: '0.72rem',
-                                        padding: '0.3rem 0.8rem',
-                                        background: `${accentColor}12`,
-                                        border: `1px solid ${accentColor}30`,
-                                        borderRadius: '9999px',
-                                        color: accentColor,
-                                        fontWeight: 600
-                                    }}
+                                    className="editorial-badge"
+                                    style={{ fontSize: '0.7rem', padding: '0.3rem 0.65rem' }}
                                 >
                                     {h}
                                 </span>
@@ -80,7 +80,6 @@ const TimelineItem = ({ job, index, isLeft }) => {
     );
 };
 
-
 const EducationCard = ({ edu, index }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: '-50px' });
@@ -88,20 +87,39 @@ const EducationCard = ({ edu, index }) => {
     return (
         <motion.div
             ref={ref}
-            className="card"
-            style={{ padding: '1.8rem', marginBottom: '1.2rem' }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            className="editorial-card"
+            style={{ padding: '2rem 2rem', marginBottom: '1.25rem' }}
+            initial={{ opacity: 0, y: 25 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            whileHover={{ y: -5, transition: { duration: 0.15, ease: 'easeOut' } }}
+            whileHover={{ y: -4, transition: { duration: 0.15, ease: 'easeOut' } }}
         >
-            <h3 style={{ fontSize: '1.1rem', marginBottom: '0.3rem' }}>{edu.degree}</h3>
-            <p style={{ color: 'var(--accent-primary)', fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: 500 }}>{edu.institution}</p>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                <h3 style={{ 
+                    fontSize: '1.1rem', 
+                    margin: 0,
+                    fontFamily: 'var(--font-heading)',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    color: '#ffffff'
+                }}>
+                    {edu.degree}
+                </h3>
+                <span style={{ fontFamily: 'monospace', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    EDU 0{index + 1}
+                </span>
+            </div>
+
+            <p style={{ color: '#f8fafc', fontSize: '0.9rem', marginBottom: '0.6rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                {edu.institution}
+            </p>
+            <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                 <Calendar size={12} /> {edu.year}
                 <MapPin size={12} style={{ marginLeft: '0.5rem' }} /> {edu.location || 'Bangalore, India'}
-            </span>
-            <p style={{ fontSize: '0.85rem', marginTop: '0.8rem', marginBottom: 0 }}>{edu.desc}</p>
+            </div>
+            <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+                {edu.desc}
+            </p>
         </motion.div>
     );
 };
@@ -114,21 +132,17 @@ const Resume = () => {
         offset: ['start start', 'end start']
     });
 
-    const headerY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+    const headerY = useTransform(scrollYProgress, [0, 1], [0, 80]);
     const headerOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     return (
-        <div className="page-container" ref={pageRef}>
+        <div className="editorial-page-container" ref={pageRef}>
+            {/* Opening Editorial Header */}
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                style={{
-                    textAlign: 'center',
-                    marginBottom: '5rem',
-                    position: 'relative'
-                }}
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+                className="editorial-page-header"
             >
                 <motion.div
                     style={{
@@ -136,26 +150,24 @@ const Resume = () => {
                         opacity: headerOpacity
                     }}
                 >
-                    <span style={{
-                        display: 'inline-block',
-                        fontSize: '0.75rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.25em',
-                        color: 'var(--accent-primary)',
-                        marginBottom: '1rem',
-                        fontWeight: 600
-                    }}>
-                        My Journey
-                    </span>
-                    <h1 style={{ marginBottom: '1rem' }}>Resume</h1>
-                    <p style={{ maxWidth: '500px', margin: '0 auto' }}>
-                        A timeline of my professional experience and education.
+                    <div className="editorial-eyebrow-container" style={{ marginBottom: '0.8rem' }}>
+                        <span className="editorial-eyebrow-text">
+                            CAREER TRACK & PEDIGREE.
+                        </span>
+                        <div className="editorial-eyebrow-rule" />
+                    </div>
+                    <h1 className="editorial-page-title">
+                        PROFESSIONAL TRAJECTORY & EXPERIENCE.
+                    </h1>
+                    <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
+                        Chronological record of engineering roles, production deliveries, academic qualifications, and verified honors.
                     </p>
                 </motion.div>
             </motion.div>
 
-            <div className="timeline-container">
-                <motion.div className="timeline-axis" />
+            {/* Timeline Component */}
+            <div className="timeline-container" style={{ maxWidth: '1000px', margin: '0 auto 5rem' }}>
+                <motion.div className="timeline-axis" style={{ background: 'rgba(255, 255, 255, 0.15)' }} />
 
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     {experience.map((job, idx) => (
@@ -164,173 +176,209 @@ const Resume = () => {
                 </div>
             </div>
 
+            {/* Education & Credentials Section */}
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                style={{ marginTop: '5rem', maxWidth: '800px', margin: '5rem auto 0' }}
+                style={{ maxWidth: '1000px', margin: '0 auto' }}
             >
-                <h2 style={{
-                    fontSize: '1.5rem',
-                    marginBottom: '2rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.8rem'
+                <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.85rem',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                    paddingBottom: '1.25rem',
+                    marginBottom: '2rem'
                 }}>
-                    <div style={{
-                        width: '40px', height: '40px',
-                        background: 'rgba(139, 92, 246, 0.1)',
-                        borderRadius: '10px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
+                    <GraduationCap size={22} color="var(--text-main)" />
+                    <h2 style={{ 
+                        margin: 0, 
+                        fontSize: '1.35rem', 
+                        fontFamily: 'var(--font-heading)',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        color: '#ffffff'
                     }}>
-                        <GraduationCap size={20} color="var(--accent-secondary)" />
-                    </div>
-                    Education
-                </h2>
+                        ACADEMIC QUALIFICATIONS
+                    </h2>
+                </div>
 
                 {education.map((edu, idx) => (
                     <EducationCard key={idx} edu={edu} index={idx} />
                 ))}
 
+                {/* Achievements & Certifications Grid */}
                 {achievements && (
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                    gap: '1.5rem',
-                    marginTop: '1.5rem',
-                    alignItems: 'stretch'
-                }}>
-                    {achievements && (
-                        <motion.div
-                            className="card"
-                            style={{ 
-                                padding: '1.8rem', 
-                                border: '1px solid rgba(245, 158, 11, 0.25)', 
-                                background: 'rgba(245, 158, 11, 0.03)',
-                                height: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                boxSizing: 'border-box'
-                            }}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: 0.3 }}
-                        >
-                            <h3 style={{ fontSize: '1.1rem', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#fbbf24' }}>
-                                <Award size={18} color="#f59e0b" /> Achievements & Honors
-                            </h3>
-                            <ul style={{ paddingLeft: '0', margin: 0, flex: 1 }}>
-                                {achievements.map((a, i) => (
-                                    <motion.li
-                                        key={i}
-                                        style={{
-                                            marginBottom: '0.8rem',
-                                            color: 'var(--text-muted)',
-                                            fontSize: '0.9rem',
-                                            display: 'flex',
-                                            alignItems: 'flex-start',
-                                            gap: '0.8rem'
-                                        }}
-                                        initial={{ opacity: 0, x: 20 }}
-                                        whileInView={{ opacity: 1, x: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: 0.4 + i * 0.1 }}
-                                    >
-                                        <ChevronRight size={18} color="#f59e0b" style={{ flexShrink: 0, marginTop: '2px' }} />
-                                        <span>{a}</span>
-                                    </motion.li>
-                                ))}
-                            </ul>
-                        </motion.div>
-                    )}
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+                        gap: '2rem',
+                        marginTop: '2rem',
+                        alignItems: 'stretch'
+                    }}>
+                        {achievements && (
+                            <motion.div
+                                className="editorial-card"
+                                style={{ 
+                                    padding: '2.25rem 2rem', 
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    boxSizing: 'border-box'
+                                }}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: 0.3 }}
+                            >
+                                <div style={{
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                                    paddingBottom: '1rem',
+                                    marginBottom: '1.25rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.6rem'
+                                }}>
+                                    <Award size={18} color="#f8fafc" />
+                                    <h3 style={{ 
+                                        margin: 0,
+                                        fontSize: '1.1rem', 
+                                        fontFamily: 'var(--font-heading)',
+                                        fontWeight: 800,
+                                        textTransform: 'uppercase',
+                                        color: '#ffffff' 
+                                    }}>
+                                        ACHIEVEMENTS & HONORS
+                                    </h3>
+                                </div>
+                                <ul style={{ paddingLeft: '0', margin: 0, flex: 1, listStyle: 'none' }}>
+                                    {achievements.map((a, i) => (
+                                        <motion.li
+                                            key={i}
+                                            style={{
+                                                marginBottom: '1rem',
+                                                color: 'var(--text-muted)',
+                                                fontSize: '0.88rem',
+                                                lineHeight: 1.6,
+                                                display: 'flex',
+                                                alignItems: 'flex-start',
+                                                gap: '0.8rem'
+                                            }}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: 0.4 + i * 0.1 }}
+                                        >
+                                            <ChevronRight size={16} color="#f8fafc" style={{ flexShrink: 0, marginTop: '3px' }} />
+                                            <span>{a}</span>
+                                        </motion.li>
+                                    ))}
+                                </ul>
+                            </motion.div>
+                        )}
 
-                    {portfolioData.resume.certifications && (
-                        <motion.div
-                            className="card"
-                            style={{ 
-                                padding: '1.8rem', 
-                                border: '1px solid rgba(168, 85, 247, 0.25)', 
-                                background: 'rgba(168, 85, 247, 0.03)',
-                                height: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                boxSizing: 'border-box'
-                            }}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: 0.4 }}
-                        >
-                            <h3 style={{ fontSize: '1.1rem', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#c084fc' }}>
-                                <Award size={18} color="#a855f7" /> Certifications & Credentials
-                            </h3>
-                            <ul style={{ paddingLeft: '0', margin: 0, flex: 1 }}>
-                                {portfolioData.resume.certifications.map((c, i) => (
-                                    <motion.li
-                                        key={i}
-                                        style={{
-                                            marginBottom: '0.8rem',
-                                            color: 'var(--text-muted)',
-                                            fontSize: '0.9rem',
-                                            display: 'flex',
-                                            alignItems: 'flex-start',
-                                            gap: '0.8rem'
-                                        }}
-                                        initial={{ opacity: 0, x: 20 }}
-                                        whileInView={{ opacity: 1, x: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: 0.4 + i * 0.1 }}
-                                    >
-                                        <ChevronRight size={18} color="#a855f7" style={{ flexShrink: 0, marginTop: '2px' }} />
-                                        <div>
-                                            {c.link ? (
-                                                <a 
-                                                    href={c.link} 
-                                                    target="_blank" 
-                                                    rel="noreferrer" 
-                                                    style={{ 
-                                                        color: 'white', 
-                                                        textDecoration: 'none', 
-                                                        fontWeight: 'bold', 
-                                                        transition: 'color 0.25s ease', 
-                                                        cursor: 'pointer' 
-                                                    }}
-                                                    onMouseEnter={(e) => e.target.style.color = '#c084fc'}
-                                                    onMouseLeave={(e) => e.target.style.color = 'white'}
-                                                >
-                                                    {c.name}
-                                                </a>
-                                            ) : (
-                                                <strong style={{ color: 'white' }}>{c.name}</strong>
-                                            )}
-                                            <span style={{ fontSize: '0.85rem' }}> — {c.issuer} ({c.year})</span>
-                                        </div>
-                                    </motion.li>
-                                ))}
-                            </ul>
-                        </motion.div>
-                    )}
-                </div>
+                        {portfolioData.resume.certifications && (
+                            <motion.div
+                                className="editorial-card"
+                                style={{ 
+                                    padding: '2.25rem 2rem', 
+                                    height: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    boxSizing: 'border-box'
+                                }}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: 0.4 }}
+                            >
+                                <div style={{
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                                    paddingBottom: '1rem',
+                                    marginBottom: '1.25rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.6rem'
+                                }}>
+                                    <Award size={18} color="#f8fafc" />
+                                    <h3 style={{ 
+                                        margin: 0,
+                                        fontSize: '1.1rem', 
+                                        fontFamily: 'var(--font-heading)',
+                                        fontWeight: 800,
+                                        textTransform: 'uppercase',
+                                        color: '#ffffff' 
+                                    }}>
+                                        CERTIFICATIONS & CREDENTIALS
+                                    </h3>
+                                </div>
+                                <ul style={{ paddingLeft: '0', margin: 0, flex: 1, listStyle: 'none' }}>
+                                    {portfolioData.resume.certifications.map((c, i) => (
+                                        <motion.li
+                                            key={i}
+                                            style={{
+                                                marginBottom: '1rem',
+                                                color: 'var(--text-muted)',
+                                                fontSize: '0.88rem',
+                                                lineHeight: 1.6,
+                                                display: 'flex',
+                                                alignItems: 'flex-start',
+                                                gap: '0.8rem'
+                                            }}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: 0.4 + i * 0.1 }}
+                                        >
+                                            <ChevronRight size={16} color="#f8fafc" style={{ flexShrink: 0, marginTop: '3px' }} />
+                                            <div>
+                                                {c.link ? (
+                                                    <a 
+                                                        href={c.link} 
+                                                        target="_blank" 
+                                                        rel="noreferrer" 
+                                                        style={{ 
+                                                            color: '#ffffff', 
+                                                            textDecoration: 'underline', 
+                                                            fontWeight: 600, 
+                                                            transition: 'color 0.2s ease', 
+                                                            cursor: 'pointer' 
+                                                        }}
+                                                    >
+                                                        {c.name}
+                                                    </a>
+                                                ) : (
+                                                    <strong style={{ color: '#ffffff' }}>{c.name}</strong>
+                                                )}
+                                                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.2rem' }}>
+                                                    {c.issuer} ({c.year})
+                                                </span>
+                                            </div>
+                                        </motion.li>
+                                    ))}
+                                </ul>
+                            </motion.div>
+                        )}
+                    </div>
                 )}
             </motion.div>
 
+            {/* Official PDF Download CTA */}
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                style={{ textAlign: 'center', marginTop: '4rem' }}
+                style={{ textAlign: 'center', marginTop: '5rem' }}
             >
                 <a
                     href="/resume.pdf"
                     download="Vivaswan_Shetty_Resume.pdf"
-                    className="btn btn-primary"
-                    style={{ padding: '0.85rem 2.2rem', fontSize: '1rem' }}
+                    className="editorial-btn-primary"
+                    style={{ padding: '1rem 2.5rem', fontSize: '0.85rem' }}
                 >
-                    <Award size={18} /> Download Official Resume (PDF)
+                    <Download size={16} style={{ marginRight: '8px' }} /> DOWNLOAD OFFICIAL RESUME (PDF)
                 </a>
             </motion.div>
         </div>

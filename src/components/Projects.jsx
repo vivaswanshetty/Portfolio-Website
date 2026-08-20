@@ -33,9 +33,9 @@ const ProjectCard = ({ project, index }) => {
             layout
             ref={ref}
             style={{ position: 'relative', y }}
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            exit={{ opacity: 0, scale: 0.96 }}
             transition={{
                 duration: 0.4,
                 delay: index * 0.08,
@@ -44,7 +44,7 @@ const ProjectCard = ({ project, index }) => {
         >
             <div
                 ref={tilt.ref}
-                className="card project-card"
+                className="editorial-card"
                 onClick={handleCardClick}
                 style={{
                     padding: 0,
@@ -63,7 +63,8 @@ const ProjectCard = ({ project, index }) => {
                         width: '100%',
                         height: '240px',
                         overflow: 'hidden',
-                        position: 'relative'
+                        position: 'relative',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.12)'
                     }}>
                         <motion.img
                             src={project.image}
@@ -73,13 +74,13 @@ const ProjectCard = ({ project, index }) => {
                                 height: '100%',
                                 objectFit: 'cover'
                             }}
-                            whileHover={{ scale: 1.06 }}
+                            whileHover={{ scale: 1.05 }}
                             transition={{ duration: 0.4 }}
                         />
                         <div style={{
                             position: 'absolute',
                             inset: 0,
-                            background: 'linear-gradient(to top, rgba(3, 7, 18, 0.6) 0%, transparent 60%)'
+                            background: 'linear-gradient(to top, rgba(3, 7, 18, 0.7) 0%, transparent 60%)'
                         }} />
 
                         {/* Top Category Badge */}
@@ -93,12 +94,14 @@ const ProjectCard = ({ project, index }) => {
                             <span style={{
                                 fontSize: '0.72rem',
                                 fontWeight: 700,
-                                padding: '0.3rem 0.75rem',
-                                borderRadius: '9999px',
-                                background: project.category === 'Mobile Apps' ? 'rgba(16, 185, 129, 0.25)' : 'rgba(56, 189, 248, 0.25)',
-                                border: project.category === 'Mobile Apps' ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(56, 189, 248, 0.4)',
-                                color: project.category === 'Mobile Apps' ? '#34d399' : '#38bdf8',
-                                backdropFilter: 'blur(10px)'
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.14em',
+                                padding: '0.35rem 0.8rem',
+                                borderRadius: 0,
+                                background: '#030712',
+                                border: '1px solid rgba(255, 255, 255, 0.25)',
+                                color: '#f8fafc',
+                                backdropFilter: 'blur(8px)'
                             }}>
                                 {project.category}
                             </span>
@@ -106,30 +109,47 @@ const ProjectCard = ({ project, index }) => {
                     </div>
                 )}
 
-                <div style={{ padding: '1.8rem', display: 'flex', flexDirection: 'column', flex: 1, boxSizing: 'border-box' }}>
+                <div style={{ padding: '2rem 1.8rem', display: 'flex', flexDirection: 'column', flex: 1, boxSizing: 'border-box' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.8rem', gap: '0.75rem', minHeight: '48px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
                             {project.logo && (
                                 <div style={{
                                     width: '38px',
                                     height: '38px',
-                                    borderRadius: '10px',
+                                    borderRadius: 0,
                                     overflow: 'hidden',
                                     background: 'rgba(255, 255, 255, 0.05)',
-                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    border: '1px solid rgba(255, 255, 255, 0.15)',
                                     flexShrink: 0,
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    padding: '3px'
+                                    padding: '4px'
                                 }}>
                                     <img src={project.logo} alt={`${project.title} logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                                 </div>
                             )}
                             <div>
-                                <h3 style={{ fontSize: '1.3rem', margin: 0, color: '#fff', lineHeight: 1.2 }}>{project.title}</h3>
+                                <h3 style={{ 
+                                    fontSize: '1.25rem', 
+                                    margin: 0, 
+                                    fontFamily: 'var(--font-heading)',
+                                    fontWeight: 800,
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '-0.01em',
+                                    color: '#ffffff', 
+                                    lineHeight: 1.2 
+                                }}>
+                                    {project.title}
+                                </h3>
                                 {project.tagline && (
-                                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.2rem' }}>
+                                    <span style={{ 
+                                        fontSize: '0.75rem', 
+                                        color: 'var(--text-muted)', 
+                                        display: 'block', 
+                                        marginTop: '0.25rem',
+                                        letterSpacing: '0.04em'
+                                    }}>
                                         {project.tagline}
                                     </span>
                                 )}
@@ -143,7 +163,7 @@ const ProjectCard = ({ project, index }) => {
                                     href={project.repo}
                                     target="_blank"
                                     rel="noreferrer"
-                                    whileHover={{ scale: 1.15, color: 'var(--accent-azure)' }}
+                                    whileHover={{ scale: 1.15, color: '#ffffff' }}
                                     style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', padding: '0.3rem', transition: 'color 0.2s' }}
                                     title="GitHub Repository"
                                 >
@@ -155,8 +175,8 @@ const ProjectCard = ({ project, index }) => {
                                     href={project.link}
                                     target="_blank"
                                     rel="noreferrer"
-                                    whileHover={{ scale: 1.15, color: 'var(--accent-cyan)' }}
-                                    style={{ color: 'var(--accent-azure)', display: 'flex', alignItems: 'center', padding: '0.3rem', transition: 'color 0.2s' }}
+                                    whileHover={{ scale: 1.15, color: '#ffffff' }}
+                                    style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', padding: '0.3rem', transition: 'color 0.2s' }}
                                     title="Live Preview"
                                 >
                                     <ExternalLink size={18} />
@@ -166,12 +186,12 @@ const ProjectCard = ({ project, index }) => {
                     </div>
 
                     <p style={{ 
-                        marginBottom: '1rem', 
-                        fontSize: '0.9rem', 
-                        lineHeight: 1.65, 
-                        color: 'var(--text-secondary)', 
+                        marginBottom: '1.25rem', 
+                        fontSize: '0.88rem', 
+                        lineHeight: 1.7, 
+                        color: 'var(--text-muted)', 
                         flex: 1,
-                        minHeight: '4.8rem',
+                        minHeight: '4.5rem',
                         display: '-webkit-box',
                         WebkitLineClamp: 3,
                         WebkitBoxOrient: 'vertical',
@@ -185,18 +205,19 @@ const ProjectCard = ({ project, index }) => {
                         display: 'flex',
                         gap: '0.45rem',
                         flexWrap: 'wrap',
-                        marginBottom: '1.25rem'
+                        marginBottom: '1.5rem'
                     }}>
                         {project.tech.slice(0, 3).map((t, i) => (
                             <span key={i} style={{
                                 fontSize: '0.72rem',
-                                padding: '0.25rem 0.6rem',
-                                background: 'rgba(56, 189, 248, 0.08)',
-                                border: '1px solid rgba(56, 189, 248, 0.2)',
-                                borderRadius: '6px',
-                                color: 'var(--accent-azure)',
+                                padding: '0.3rem 0.65rem',
+                                background: 'rgba(255, 255, 255, 0.04)',
+                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                borderRadius: 0,
+                                color: '#f8fafc',
                                 fontFamily: 'monospace',
-                                fontWeight: 500
+                                fontWeight: 600,
+                                letterSpacing: '0.04em'
                             }}>
                                 {t}
                             </span>
@@ -204,11 +225,11 @@ const ProjectCard = ({ project, index }) => {
                         {project.tech.length > 3 && (
                             <span style={{
                                 fontSize: '0.72rem',
-                                padding: '0.25rem 0.55rem',
-                                background: 'rgba(192, 132, 252, 0.1)',
-                                border: '1px solid rgba(192, 132, 252, 0.25)',
-                                borderRadius: '6px',
-                                color: '#c084fc',
+                                padding: '0.3rem 0.6rem',
+                                background: 'rgba(255, 255, 255, 0.04)',
+                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                borderRadius: 0,
+                                color: 'var(--text-muted)',
                                 fontFamily: 'monospace',
                                 fontWeight: 600
                             }}>
@@ -221,22 +242,32 @@ const ProjectCard = ({ project, index }) => {
                     <div style={{
                         marginTop: 'auto',
                         paddingTop: '1.2rem',
-                        borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between'
                     }}>
-                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                            <Layers size={14} color="var(--accent-azure)" />
+                        <span style={{ 
+                            fontSize: '0.76rem', 
+                            color: 'var(--text-muted)', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: '0.4rem',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.1em',
+                            fontWeight: 600
+                        }}>
+                            <Layers size={14} color="#f8fafc" />
                             <span>{project.metrics ? project.metrics[0].val : 'Deep Dive'}</span>
                         </span>
 
                         <Link
                             to={`/projects/${project.slug}`}
-                            className="case-study-cta-btn"
+                            className="editorial-btn-secondary"
+                            style={{ fontSize: '0.78rem' }}
                         >
-                            <span>Explore</span>
-                            <ArrowRight size={14} />
+                            <span>EXPLORE CASE STUDY</span>
+                            <ArrowRight size={13} />
                         </Link>
                     </div>
                 </div>
@@ -258,7 +289,7 @@ const Projects = () => {
         offset: ['start start', 'end start']
     });
 
-    const headerY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+    const headerY = useTransform(scrollYProgress, [0, 1], [0, 60]);
     const headerOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
     const categories = ['All', 'Mobile Apps', 'Full-Stack Web'];
@@ -285,58 +316,41 @@ const Projects = () => {
     });
 
     return (
-        <div className="page-container" ref={ref}>
+        <div className="editorial-page-container" ref={ref}>
+            {/* Opening Editorial Header */}
             <motion.div
-                style={{
-                    textAlign: 'center',
-                    marginBottom: '3.5rem',
-                    position: 'relative'
-                }}
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+                className="editorial-page-header"
             >
-                <motion.div
-                    style={{ y: headerY, opacity: headerOpacity }}
-                >
-                    <span style={{
-                        display: 'inline-block',
-                        fontSize: '0.75rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.25em',
-                        color: 'var(--accent-azure)',
-                        marginBottom: '1rem',
-                        fontWeight: 600
-                    }}>
-                        Engineering Portfolio
-                    </span>
-                    <h1 style={{ marginBottom: '1rem' }}>Featured Projects</h1>
-                    <p style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1.05rem', color: 'var(--text-secondary)' }}>
-                        Production-grade mobile and full-stack systems with detailed technical breakdowns and interactive UI galleries.
+                <motion.div style={{ y: headerY, opacity: headerOpacity }}>
+                    <div className="editorial-eyebrow-container" style={{ marginBottom: '0.8rem' }}>
+                        <span className="editorial-eyebrow-text">
+                            SELECTED WORKS & ARCHIVE.
+                        </span>
+                        <div className="editorial-eyebrow-rule" />
+                    </div>
+                    <h1 className="editorial-page-title">
+                        FEATURED PRODUCTION SYSTEMS.
+                    </h1>
+                    <p style={{ maxWidth: '640px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
+                        Production-grade mobile and full-stack applications with architecture breakdowns, performance metrics, and interactive design galleries.
                     </p>
                 </motion.div>
-
-                <motion.div
-                    style={{
-                        position: 'absolute',
-                        top: '-80px',
-                        left: '30%',
-                        width: '320px',
-                        height: '320px',
-                        background: 'radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, transparent 70%)',
-                        filter: 'blur(60px)'
-                    }}
-                />
             </motion.div>
 
             {/* Filter & Live Search Bar */}
-            <div style={{ maxWidth: '980px', margin: '0 auto 3rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ maxWidth: '1000px', margin: '0 auto 3.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     flexWrap: 'wrap',
-                    gap: '1rem'
+                    gap: '1.25rem'
                 }}>
-                    {/* Category Filter Pills */}
-                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    {/* Category Filter Rectangular Buttons */}
+                    <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
                         {categories.map((cat) => {
                             const isActive = activeCategory === cat;
                             return (
@@ -344,15 +358,18 @@ const Projects = () => {
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
                                     style={{
-                                        padding: '0.5rem 1.1rem',
-                                        borderRadius: '9999px',
-                                        fontSize: '0.85rem',
-                                        fontWeight: 600,
-                                        border: isActive ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid rgba(255, 255, 255, 0.08)',
-                                        background: isActive ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.03)',
-                                        color: isActive ? '#fff' : 'var(--text-muted)',
+                                        padding: '0.6rem 1.3rem',
+                                        borderRadius: 0,
+                                        fontSize: '0.78rem',
+                                        fontFamily: 'var(--font-body)',
+                                        fontWeight: 700,
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.14em',
+                                        border: isActive ? '1px solid #ffffff' : '1px solid rgba(255, 255, 255, 0.12)',
+                                        background: isActive ? '#f8fafc' : 'rgba(255, 255, 255, 0.03)',
+                                        color: isActive ? '#020617' : 'var(--text-muted)',
                                         cursor: 'pointer',
-                                        transition: 'all 0.2s ease'
+                                        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                                     }}
                                 >
                                     {cat}
@@ -361,28 +378,31 @@ const Projects = () => {
                         })}
                     </div>
 
-                    {/* Search Input */}
+                    {/* Search Input with Sharp Editorial Frame */}
                     <div style={{
                         position: 'relative',
                         minWidth: '260px',
                         flex: '1',
                         maxWidth: '360px'
                     }}>
-                        <Search size={16} color="var(--accent-azure)" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                        <Search size={15} color="#94a3b8" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Filter by tech or keyword..."
+                            placeholder="FILTER BY TECH OR KEYWORD..."
                             style={{
                                 width: '100%',
-                                padding: '0.55rem 2.2rem 0.55rem 2.5rem',
-                                borderRadius: '9999px',
-                                background: 'rgba(255, 255, 255, 0.03)',
-                                border: '1px solid rgba(255, 255, 255, 0.08)',
-                                color: '#fff',
-                                fontSize: '0.88rem',
-                                outline: 'none'
+                                padding: '0.65rem 2.2rem 0.65rem 2.4rem',
+                                borderRadius: 0,
+                                background: 'rgba(9, 14, 26, 0.6)',
+                                border: '1px solid rgba(255, 255, 255, 0.14)',
+                                color: '#ffffff',
+                                fontSize: '0.78rem',
+                                fontFamily: 'var(--font-body)',
+                                letterSpacing: '0.1em',
+                                outline: 'none',
+                                boxSizing: 'border-box'
                             }}
                         />
                         {searchQuery && (
@@ -408,7 +428,7 @@ const Projects = () => {
                 </div>
 
                 {/* Showing Count */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.76rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
                     <span>Showing {filteredProjects.length} of {projects.length} case studies</span>
                     {(searchQuery || activeCategory !== 'All') && (
                         <button
@@ -416,7 +436,7 @@ const Projects = () => {
                                 setActiveCategory('All');
                                 setSearchQuery('');
                             }}
-                            style={{ color: 'var(--accent-azure)', textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', fontSize: '0.82rem' }}
+                            style={{ color: '#f8fafc', textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', fontSize: '0.76rem', textTransform: 'uppercase', letterSpacing: '0.12em' }}
                         >
                             Reset filters
                         </button>
@@ -429,9 +449,9 @@ const Projects = () => {
                 layout
                 style={{ 
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 450px), 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 460px), 1fr))',
                     gap: '2.5rem',
-                    maxWidth: '980px',
+                    maxWidth: '1000px',
                     margin: '0 auto'
                 }}
             >
@@ -441,24 +461,22 @@ const Projects = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
+                            className="editorial-card"
                             style={{
                                 gridColumn: '1 / -1',
                                 textAlign: 'center',
-                                padding: '4rem 1rem',
-                                background: 'rgba(255, 255, 255, 0.02)',
-                                borderRadius: '1.25rem',
-                                border: '1px dashed rgba(56, 189, 248, 0.2)'
+                                padding: '4rem 1.5rem'
                             }}
                         >
-                            <Search size={32} color="var(--accent-azure)" style={{ margin: '0 auto 1rem', opacity: 0.6 }} />
-                            <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>No matching case studies found</h3>
+                            <Search size={32} color="#94a3b8" style={{ margin: '0 auto 1rem', opacity: 0.6 }} />
+                            <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem', textTransform: 'uppercase', fontFamily: 'var(--font-heading)' }}>No matching case studies found</h3>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
                                 Try searching for another keyword like "Expo", "Firebase", or "Socket.io".
                             </p>
                             <button
                                 onClick={() => { setActiveCategory('All'); setSearchQuery(''); }}
-                                className="btn btn-outline"
-                                style={{ padding: '0.5rem 1.2rem', fontSize: '0.85rem' }}
+                                className="editorial-btn-primary"
+                                style={{ margin: '0 auto' }}
                             >
                                 Clear Search
                             </button>
@@ -469,42 +487,6 @@ const Projects = () => {
                         ))
                     )}
                 </AnimatePresence>
-            </motion.div>
-
-            <motion.div
-                style={{
-                    marginTop: '5rem',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '1rem'
-                }}
-            >
-                {[...Array(3)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        style={{
-                            width: '60px',
-                            height: '2px',
-                            background: 'rgba(56, 189, 248, 0.2)',
-                            borderRadius: '1px',
-                            overflow: 'hidden'
-                        }}
-                        initial={{ scaleX: 0 }}
-                        animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
-                        transition={{ duration: 0.8, delay: 0.5 + i * 0.1 }}
-                    >
-                        <motion.div
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                background: 'var(--accent-cyan)'
-                            }}
-                            initial={{ x: '-100%' }}
-                            animate={{ x: '200%' }}
-                            transition={{ duration: 1.5, delay: 1 + i * 0.2, repeat: Infinity, repeatDelay: 2 }}
-                        />
-                    </motion.div>
-                ))}
             </motion.div>
         </div>
     );

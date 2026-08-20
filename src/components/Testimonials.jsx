@@ -11,12 +11,12 @@ const TestimonialCard = ({ testimonial, index }) => {
     return (
         <motion.div
             ref={ref}
-            initial={{ opacity: 0, y: 40 }}
-            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.6, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="card"
+            className="editorial-card"
             style={{ 
-                padding: '2.5rem', 
+                padding: '2.5rem 2rem', 
                 position: 'relative', 
                 overflow: 'hidden',
                 height: '100%',
@@ -26,52 +26,47 @@ const TestimonialCard = ({ testimonial, index }) => {
             }}
             whileHover={{ y: -5, transition: { duration: 0.15, ease: 'easeOut' } }}
         >
-            <motion.div
-                style={{
-                    position: 'absolute',
-                    top: '-30px',
-                    right: '-30px',
-                    width: '120px',
-                    height: '120px',
-                    background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent 70%)',
-                    borderRadius: '50%',
-                    filter: 'blur(20px)'
-                }}
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 4, repeat: Infinity }}
-            />
+            <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                paddingBottom: '1rem',
+                marginBottom: '1.5rem'
+            }}>
+                <Quote size={24} color="#f8fafc" style={{ opacity: 0.6, flexShrink: 0 }} />
 
-            <Quote size={32} color="var(--accent-primary)" style={{ marginBottom: '1.25rem', opacity: 0.3, flexShrink: 0 }} />
-
-            <motion.div
-                style={{ display: 'flex', gap: '0.25rem', marginBottom: '1.25rem', flexShrink: 0 }}
-                initial={{ opacity: 0 }}
-                animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-                transition={{ delay: 0.3 + index * 0.15 }}
-            >
-                {[...Array(5)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
-                        transition={{ delay: 0.4 + i * 0.05 + index * 0.15 }}
-                    >
-                        <Star size={16} fill="var(--accent-primary)" color="var(--accent-primary)" />
-                    </motion.div>
-                ))}
-            </motion.div>
+                <motion.div
+                    style={{ display: 'flex', gap: '0.25rem', flexShrink: 0 }}
+                    initial={{ opacity: 0 }}
+                    animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+                    transition={{ delay: 0.3 + index * 0.15 }}
+                >
+                    {[...Array(5)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
+                            transition={{ delay: 0.4 + i * 0.05 + index * 0.15 }}
+                        >
+                            <Star size={14} fill="#f8fafc" color="#f8fafc" />
+                        </motion.div>
+                    ))}
+                </motion.div>
+            </div>
 
             <motion.p
                 initial={{ opacity: 0 }}
                 animate={isInView ? { opacity: 1 } : { opacity: 0 }}
                 transition={{ delay: 0.3 + index * 0.15 }}
                 style={{ 
-                    fontStyle: 'italic', 
-                    fontSize: '1.05rem', 
+                    fontFamily: 'var(--font-body)',
+                    fontSize: '1rem', 
                     marginBottom: '2rem', 
-                    lineHeight: 1.7,
+                    lineHeight: 1.8,
+                    color: 'var(--text-main)',
                     flex: 1,
-                    minHeight: '6rem'
+                    minHeight: '5.5rem'
                 }}
             >
                 "{testimonial.content}"
@@ -85,25 +80,48 @@ const TestimonialCard = ({ testimonial, index }) => {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '1rem',
-                    paddingTop: '1.5rem',
+                    paddingTop: '1.25rem',
                     borderTop: '1px solid rgba(255,255,255,0.1)',
                     marginTop: 'auto'
                 }}
             >
                 <motion.div
                     style={{
-                        width: '50px', height: '50px', borderRadius: '50%',
-                        background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontWeight: 'bold', fontSize: '1.2rem', color: 'white'
+                        width: '42px', 
+                        height: '42px', 
+                        borderRadius: 0,
+                        background: '#f8fafc',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        fontWeight: 800, 
+                        fontSize: '1rem', 
+                        color: '#020617',
+                        fontFamily: 'var(--font-heading)'
                     }}
-                    whileHover={{ scale: 1.1 }}
+                    whileHover={{ scale: 1.08 }}
                 >
                     {testimonial.name.charAt(0)}
                 </motion.div>
                 <div>
-                    <h4 style={{ fontSize: '1rem', marginBottom: '0.2rem' }}>{testimonial.name}</h4>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--accent-primary)' }}>{testimonial.role}</span>
+                    <h4 style={{ 
+                        fontSize: '0.95rem', 
+                        marginBottom: '0.2rem', 
+                        fontFamily: 'var(--font-heading)',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        color: '#ffffff'
+                    }}>
+                        {testimonial.name}
+                    </h4>
+                    <span style={{ 
+                        fontSize: '0.75rem', 
+                        color: 'var(--text-muted)', 
+                        textTransform: 'uppercase', 
+                        letterSpacing: '0.1em' 
+                    }}>
+                        {testimonial.role}
+                    </span>
                 </div>
             </motion.div>
         </motion.div>
@@ -113,67 +131,70 @@ const TestimonialCard = ({ testimonial, index }) => {
 const Testimonials = () => {
     const { testimonials } = portfolioData;
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: '-100px' });
 
     return (
-        <div className="page-container" ref={ref}>
+        <div className="editorial-page-container" ref={ref}>
+            {/* Opening Editorial Header */}
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                style={{ textAlign: 'center', marginBottom: '4rem' }}
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+                className="editorial-page-header"
             >
-                <span style={{
-                    display: 'inline-block',
-                    fontSize: '0.75rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.2em',
-                    color: 'var(--accent-primary)',
-                    marginBottom: '1rem',
-                    fontWeight: 600
-                }}>
-                    Testimonials
-                </span>
-                <h1 style={{ marginBottom: '1rem' }}>What People Say</h1>
-                <p style={{ maxWidth: '500px', margin: '0 auto' }}>
-                    Feedback from colleagues and collaborators.
+                <div className="editorial-eyebrow-container" style={{ marginBottom: '0.8rem' }}>
+                    <span className="editorial-eyebrow-text">
+                        ENDORSEMENTS & COLLABORATIONS.
+                    </span>
+                    <div className="editorial-eyebrow-rule" />
+                </div>
+                <h1 className="editorial-page-title">
+                    WHAT PEERS & PARTNERS SAY.
+                </h1>
+                <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
+                    Direct feedback from engineering leaders, product collaborators, and teams I've partnered with.
                 </p>
             </motion.div>
 
-            <div className="grid grid-2" style={{ gap: '2rem', maxWidth: '1000px', margin: '0 auto' }}>
+            {/* Testimonials 2-Column Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '2.5rem', maxWidth: '1100px', margin: '0 auto' }}>
                 {testimonials.map((testimonial, index) => (
                     <TestimonialCard key={index} testimonial={testimonial} index={index} />
                 ))}
             </div>
 
+            {/* Bottom Callout Banner */}
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
+                className="editorial-card"
                 style={{
                     textAlign: 'center',
                     marginTop: '5rem',
-                    padding: '4rem',
-                    background: 'rgba(15, 23, 42, 0.5)',
-                    borderRadius: '1.5rem',
-                    border: '1px solid rgba(59, 130, 246, 0.1)',
-                    maxWidth: '800px',
+                    padding: '4rem 2rem',
+                    maxWidth: '850px',
                     margin: '5rem auto 0'
                 }}
             >
-                <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>Ready to work together?</h2>
-                <p style={{ marginBottom: '2rem', maxWidth: '400px', margin: '0 auto 2rem' }}>
-                    Let's create something amazing.
+                <div className="editorial-eyebrow-container" style={{ justifyContent: 'center', marginBottom: '1rem' }}>
+                    <span className="editorial-eyebrow-text">
+                        COLLABORATION READY
+                    </span>
+                </div>
+                <h2 style={{ fontSize: '2rem', marginBottom: '1rem', fontFamily: 'var(--font-heading)', fontWeight: 800, textTransform: 'uppercase', color: '#ffffff' }}>
+                    READY TO BUILD SOMETHING EXTRAORDINARY?
+                </h2>
+                <p style={{ marginBottom: '2.5rem', maxWidth: '500px', margin: '0 auto 2.5rem', color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                    Let's discuss technical architecture, system design, and product delivery.
                 </p>
                 <motion.div
-                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileHover={{ scale: 1.04, y: -2 }}
                     whileTap={{ scale: 0.98 }}
                     style={{ display: 'inline-block' }}
                 >
-                    <Link to="/contact" className="btn btn-primary">
-                        Get in Touch
+                    <Link to="/contact" className="editorial-btn-primary" style={{ padding: '0.9rem 2.2rem', fontSize: '0.85rem' }}>
+                        GET IN TOUCH →
                     </Link>
                 </motion.div>
             </motion.div>
