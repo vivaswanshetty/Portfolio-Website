@@ -195,13 +195,15 @@ const Footer = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                         <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', textDecoration: 'none' }}>
                             <div style={{
-                                width: '36px', height: '36px',
-                                background: 'rgba(255, 255, 255, 0.05)',
-                                border: '1px solid rgba(255, 255, 255, 0.15)',
+                                width: '38px', height: '38px',
+                                background: 'rgba(239, 68, 68, 0.08)',
+                                border: '1px solid rgba(239, 68, 68, 0.35)',
+                                borderRadius: '8px',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                padding: '4px'
+                                padding: '5px',
+                                boxShadow: '0 0 16px rgba(239, 68, 68, 0.2)'
                             }}>
-                                <img src={vLogo} alt="Vivaswan Shetty Monogram" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                <img src={vLogo} alt="Vivaswan Shetty Monogram" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 0 4px rgba(239, 68, 68, 0.6))' }} />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                                 <span style={{ 
