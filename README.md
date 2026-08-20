@@ -2,7 +2,7 @@
 
 A premium, minimalist, and responsive personal portfolio website showcasing engineering projects, academic milestones, skills, and work timeline. 
 
-🔗 **Live Link**: https://portfolio-website-17.vercel.app
+🔗 **Live Link**: https://vivaswanshetty.com
 
 ---
 
