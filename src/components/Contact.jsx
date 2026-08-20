@@ -84,11 +84,7 @@ const Contact = () => {
                     style={{ padding: '3rem 2.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
                 >
                     <div>
-                        <div style={{
-                            borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-                            paddingBottom: '1.25rem',
-                            marginBottom: '1.75rem'
-                        }}>
+                        <div style={{ marginBottom: '1.5rem' }}>
                             <span className="editorial-eyebrow-text" style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
                                 DIRECT CHANNELS
                             </span>
@@ -120,35 +116,32 @@ const Contact = () => {
                                 href={linkedin}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="editorial-badge"
-                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 1.2rem', textDecoration: 'none' }}
-                                whileHover={{ scale: 1.04, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.14)', color: '#ef4444' }}
+                                className="editorial-platform-badge"
+                                whileHover={{ scale: 1.04 }}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <Linkedin size={15} /> LINKEDIN
+                                <Linkedin size={15} /> <span>LINKEDIN</span>
                             </motion.a>
                             <motion.a
                                 href={github}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="editorial-badge"
-                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 1.2rem', textDecoration: 'none' }}
-                                whileHover={{ scale: 1.04, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.14)', color: '#ef4444' }}
+                                className="editorial-platform-badge"
+                                whileHover={{ scale: 1.04 }}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <Github size={15} /> GITHUB
+                                <Github size={15} /> <span>GITHUB</span>
                             </motion.a>
                             {instagram && (
                                 <motion.a
                                     href={instagram}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="editorial-badge"
-                                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 1.2rem', textDecoration: 'none' }}
-                                    whileHover={{ scale: 1.04, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.14)', color: '#ef4444' }}
+                                    className="editorial-platform-badge"
+                                    whileHover={{ scale: 1.04 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
-                                    <Instagram size={15} /> INSTAGRAM
+                                    <Instagram size={15} /> <span>INSTAGRAM</span>
                                 </motion.a>
                             )}
                             {x && (
@@ -156,12 +149,11 @@ const Contact = () => {
                                     href={x}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="editorial-badge"
-                                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 1.2rem', textDecoration: 'none' }}
-                                    whileHover={{ scale: 1.04, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.14)', color: '#ef4444' }}
+                                    className="editorial-platform-badge"
+                                    whileHover={{ scale: 1.04 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
-                                    <XIcon size={14} /> X / TWITTER
+                                    <XIcon size={14} /> <span>X / TWITTER</span>
                                 </motion.a>
                             )}
                         </div>
@@ -201,11 +193,7 @@ const Contact = () => {
                             <Mail size={36} color="#020617" />
                         </motion.div>
 
-                        <div style={{
-                            borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-                            paddingBottom: '1rem',
-                            marginBottom: '1.5rem'
-                        }}>
+                        <div style={{ marginBottom: '1.5rem' }}>
                             <span className="editorial-eyebrow-text" style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
                                 ELECTRONIC CORRESPONDENCE
                             </span>
