@@ -814,23 +814,49 @@ p {
   overflow: hidden;
 }
 
-.home-editorial-wrapper::after {
-  content: '';
+/* Unified Continuous Background Canvas for Entire Home Page */
+.home-editorial-bg-canvas {
   position: absolute;
-  top: 85vh;
+  top: 0;
   left: 0;
-  right: 0;
-  height: 180vh;
-  background-image: url('./assets/vivaswan_walking_bg.png');
-  background-size: cover;
-  background-position: center 60%;
-  background-repeat: no-repeat;
-  opacity: 0.16;
-  filter: blur(12px) saturate(130%);
+  width: 100%;
+  height: 100%;
   pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.home-editorial-bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 140vh;
+  min-height: 960px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* Continuous Scrim Gradient that Smoothly Merges All Home Sections */
+.home-editorial-scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 1;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0) 100%);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(3, 7, 18, 0.82) 0%,
+    rgba(3, 7, 18, 0.3) 12%,
+    rgba(3, 7, 18, 0.04) 32%,
+    rgba(3, 7, 18, 0.3) 50%,
+    rgba(3, 7, 18, 0.65) 68%,
+    rgba(3, 7, 18, 0.9) 85%,
+    rgba(3, 7, 18, 1) 100%
+  );
 }
 
 .editorial-hero-section {
@@ -843,45 +869,8 @@ p {
   padding: calc(var(--nav-height) + var(--nav-top-offset) + 0.5rem) 2.5rem 2.5rem;
   background-color: transparent;
   position: relative;
-  overflow: hidden;
   box-sizing: border-box;
-}
-
-/* Layer 0: Full-Hero Background Photo */
-.editorial-hero-bg-layer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.editorial-hero-bg-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 30%;
-  display: block;
-}
-
-/* Layer 1: Dark Scrim Gradient Overlay for Text Legibility */
-.editorial-hero-scrim {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgba(3, 7, 18, 0.82) 0%,
-    rgba(3, 7, 18, 0.35) 20%,
-    rgba(3, 7, 18, 0.05) 45%,
-    rgba(3, 7, 18, 0.4) 75%,
-    rgba(3, 7, 18, 0.9) 100%
-  );
+  z-index: 5;
 }
 
 /* Layer 2: Massive Ultra-Bold Display Wordmark Morphed Between Photo and Subject */
@@ -917,9 +906,11 @@ p {
 /* Layer 3: Foreground Cutout Subject Overlapping the Typography */
 .editorial-hero-cutout-layer {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: 140vh;
+  min-height: 960px;
   z-index: 3;
   pointer-events: none;
   overflow: hidden;
@@ -929,7 +920,7 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 30%;
+  object-position: center top;
   display: block;
 }
 

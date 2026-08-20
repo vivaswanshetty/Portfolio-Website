@@ -21,18 +21,6 @@ const Hero = () => {
             ref={containerRef}
             className="editorial-hero-section"
         >
-            {/* Layer 0: Full-Hero Background Photo (Walking Beach Scene) */}
-            <div className="editorial-hero-bg-layer">
-                <img 
-                    src={vivaswanBgImg} 
-                    alt="Vivaswan Shetty Background" 
-                    className="editorial-hero-bg-img"
-                />
-            </div>
-
-            {/* Layer 1: Dark Scrim Gradient Overlay for Contrast & Text Legibility */}
-            <div className="editorial-hero-scrim" />
-
             {/* Layer 2: Massive Ultra-Bold Display Typography Morphed Directly Into 3D Depth */}
             <motion.div 
                 className="editorial-hero-typography-layer"
@@ -339,6 +327,16 @@ const QuickLinks = () => {
 const Home = () => {
     return (
         <div className="home-editorial-wrapper">
+            {/* Continuous Unified Background Canvas for Entire Home Page */}
+            <div className="home-editorial-bg-canvas">
+                <img 
+                    src={vivaswanBgImg} 
+                    alt="Vivaswan Shetty Background" 
+                    className="home-editorial-bg-img"
+                />
+                <div className="home-editorial-scrim" />
+            </div>
+
             <Hero />
             <FeaturedSection />
             <QuickLinks />
