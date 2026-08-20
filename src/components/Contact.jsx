@@ -122,7 +122,7 @@ const Contact = () => {
                                 rel="noreferrer"
                                 className="editorial-badge"
                                 style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 1.2rem', textDecoration: 'none' }}
-                                whileHover={{ scale: 1.04, borderColor: '#ffffff', backgroundColor: '#ffffff', color: '#020617' }}
+                                whileHover={{ scale: 1.04, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.14)', color: '#ef4444' }}
                                 whileTap={{ scale: 0.98 }}
                             >
                                 <Linkedin size={15} /> LINKEDIN
@@ -133,7 +133,7 @@ const Contact = () => {
                                 rel="noreferrer"
                                 className="editorial-badge"
                                 style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 1.2rem', textDecoration: 'none' }}
-                                whileHover={{ scale: 1.04, borderColor: '#ffffff', backgroundColor: '#ffffff', color: '#020617' }}
+                                whileHover={{ scale: 1.04, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.14)', color: '#ef4444' }}
                                 whileTap={{ scale: 0.98 }}
                             >
                                 <Github size={15} /> GITHUB
@@ -145,7 +145,7 @@ const Contact = () => {
                                     rel="noreferrer"
                                     className="editorial-badge"
                                     style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 1.2rem', textDecoration: 'none' }}
-                                    whileHover={{ scale: 1.04, borderColor: '#ffffff', backgroundColor: '#ffffff', color: '#020617' }}
+                                    whileHover={{ scale: 1.04, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.14)', color: '#ef4444' }}
                                     whileTap={{ scale: 0.98 }}
                                 >
                                     <Instagram size={15} /> INSTAGRAM
@@ -158,7 +158,7 @@ const Contact = () => {
                                     rel="noreferrer"
                                     className="editorial-badge"
                                     style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 1.2rem', textDecoration: 'none' }}
-                                    whileHover={{ scale: 1.04, borderColor: '#ffffff', backgroundColor: '#ffffff', color: '#020617' }}
+                                    whileHover={{ scale: 1.04, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.14)', color: '#ef4444' }}
                                     whileTap={{ scale: 0.98 }}
                                 >
                                     <XIcon size={14} /> X / TWITTER

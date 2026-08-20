@@ -336,20 +336,19 @@ const Footer = () => {
                         </div>
 
                         {/* Social Buttons */}
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <div style={{ display: 'flex', gap: '0.65rem' }}>
                             {socialLinks.map((social, i) => (
                                 <motion.a
                                     key={i}
                                     href={social.href}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="editorial-badge"
-                                    style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                    whileHover={{ scale: 1.1, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.12)', color: '#ef4444' }}
+                                    className="editorial-social-btn"
+                                    whileHover={{ scale: 1.12, y: -2 }}
                                     whileTap={{ scale: 0.95 }}
                                     title={social.label}
                                 >
-                                    <social.icon size={15} />
+                                    <social.icon size={16} />
                                 </motion.a>
                             ))}
                         </div>

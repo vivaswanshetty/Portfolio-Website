@@ -1244,6 +1244,47 @@ p {
   color: #020617 !important;
 }
 
+/* Editorial Social Buttons (Footer & Social Grids with Vibrant Red Hover) */
+.editorial-social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50% !important;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f8fafc;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.editorial-social-btn svg,
+.editorial-social-btn svg path {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #f8fafc;
+}
+
+.editorial-social-btn:hover {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.16) !important;
+  color: #ef4444 !important;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.5) !important;
+}
+
+.editorial-social-btn:hover svg,
+.editorial-social-btn:hover svg path {
+  color: #ef4444 !important;
+}
+
+.editorial-social-btn:hover svg[fill="currentColor"],
+.editorial-social-btn:hover svg path[fill="currentColor"] {
+  fill: #ef4444 !important;
+}
+
 /* Time & Realtime Badges (Persistent Dark Glass with Red Accent on Hover) */
 .editorial-time-badge {
   display: inline-flex;
