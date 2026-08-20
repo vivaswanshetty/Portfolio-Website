@@ -154,7 +154,7 @@ const Skills = () => {
                     animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                     transition={{ duration: 0.7, delay: 0.1 }}
                     className="editorial-card"
-                    style={{ padding: '2.5rem 2rem' }}
+                    style={{ padding: '2.5rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}
                 >
                     <div style={{ 
                         display: 'flex', 

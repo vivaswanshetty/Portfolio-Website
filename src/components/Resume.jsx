@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
-import { Briefcase, Calendar, Award, GraduationCap, MapPin, ChevronRight, Download } from 'lucide-react';
+import { Briefcase, Calendar, Award, GraduationCap, MapPin, ChevronRight } from 'lucide-react';
 
 const TimelineItem = ({ job, index, isLeft }) => {
     const ref = useRef(null);
@@ -363,23 +363,6 @@ const Resume = () => {
                         )}
                     </div>
                 )}
-            </motion.div>
-
-            {/* Official PDF Download CTA */}
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                style={{ textAlign: 'center', marginTop: '5rem' }}
-            >
-                <a
-                    href="/resume.pdf"
-                    download="Vivaswan_Shetty_Resume.pdf"
-                    className="editorial-btn-primary"
-                    style={{ padding: '1rem 2.5rem', fontSize: '0.85rem' }}
-                >
-                    <Download size={16} style={{ marginRight: '8px' }} /> DOWNLOAD OFFICIAL RESUME (PDF)
-                </a>
             </motion.div>
         </div>
     );

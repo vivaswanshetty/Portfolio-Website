@@ -314,10 +314,11 @@ img {
 }
 
 .navbar-logo-dot {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 0;
-  background: #ffffff;
+  background: #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
   display: inline-block;
 }
 
@@ -828,14 +829,14 @@ p {
   top: 0;
   left: 0;
   width: 100%;
-  height: 140vh;
-  min-height: 960px;
+  height: 105vh;
+  min-height: 820px;
   object-fit: cover;
   object-position: center top;
   display: block;
 }
 
-/* Continuous Scrim Gradient that Smoothly Merges All Home Sections */
+/* Continuous Scrim Gradient that Smoothly Merges All Home Sections into Dark Canvas */
 .home-editorial-scrim {
   position: absolute;
   top: 0;
@@ -849,9 +850,10 @@ p {
     rgba(3, 7, 18, 0.82) 0%,
     rgba(3, 7, 18, 0.3) 12%,
     rgba(3, 7, 18, 0.04) 32%,
-    rgba(3, 7, 18, 0.3) 50%,
-    rgba(3, 7, 18, 0.65) 68%,
-    rgba(3, 7, 18, 0.9) 85%,
+    rgba(3, 7, 18, 0.25) 45%,
+    rgba(3, 7, 18, 0.6) 62%,
+    rgba(3, 7, 18, 0.92) 80%,
+    rgba(3, 7, 18, 1) 96%,
     rgba(3, 7, 18, 1) 100%
   );
 }
@@ -906,8 +908,8 @@ p {
   top: 0;
   left: 0;
   width: 100%;
-  height: 140vh;
-  min-height: 960px;
+  height: 105vh;
+  min-height: 820px;
   z-index: 3;
   pointer-events: none;
   overflow: hidden;
@@ -991,7 +993,7 @@ p {
 .editorial-cta-group {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.25rem;
   flex-wrap: wrap;
 }
 
@@ -1006,38 +1008,54 @@ p {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  padding: 0.95rem 2.4rem;
+  padding: 0.95rem 2.2rem;
   border-radius: 0 !important;
   border: 1px solid #f8fafc;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .editorial-btn-primary:hover {
   background: transparent;
   color: #ffffff;
   border-color: #ffffff;
-  transform: none;
-  box-shadow: none;
+  transform: translateY(-1px);
 }
 
+/* High-Contrast Editorial Glass Secondary Action Button */
 .editorial-btn-secondary {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  color: #cbd5e1;
+  gap: 0.5rem;
+  color: #ffffff;
   font-family: var(--font-body);
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.16em;
   text-decoration: none;
   cursor: pointer;
   position: relative;
-  transition: color 0.2s ease;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-cta-group .editorial-btn-secondary {
+  padding: 0.95rem 2rem;
+  background: rgba(3, 7, 18, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.editorial-cta-group .editorial-btn-secondary:hover {
+  background: #ffffff;
+  color: #020617;
+  border-color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .editorial-btn-secondary::after {
@@ -1053,8 +1071,8 @@ p {
   transition: transform 0.25s ease;
 }
 
-.editorial-btn-secondary:hover {
-  color: #ffffff;
+.editorial-cta-group .editorial-btn-secondary::after {
+  display: none;
 }
 
 .editorial-btn-secondary:hover::after {
@@ -1238,16 +1256,74 @@ p {
   background: rgba(9, 14, 26, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 2.25rem 1.75rem;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   height: 100%;
 }
 
 .editorial-card:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* QuickLink Cards with Red Editorial Highlight on Hover */
+.editorial-quicklink-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.25rem 1.75rem;
+  background: rgba(9, 14, 26, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0;
+  text-decoration: none;
+  color: #ffffff;
+  width: 100%;
+  height: 100%;
+  min-height: 175px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-quicklink-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #ef4444;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+}
+
+.editorial-quicklink-card:hover {
+  border-color: rgba(239, 68, 68, 0.45);
+  background: rgba(239, 68, 68, 0.04);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.7), 0 0 20px rgba(239, 68, 68, 0.1);
+  transform: translateY(-5px);
+}
+
+.editorial-quicklink-card:hover::before {
+  transform: scaleX(1);
+}
+
+.editorial-quicklink-card:hover .quicklink-arrow {
+  color: #ef4444;
+  transform: translateX(5px);
+}
+
+.editorial-quicklink-card:hover .quicklink-icon {
+  color: #ef4444;
+}
+
+.quicklink-arrow, .quicklink-icon {
+  transition: all 0.25s ease;
 }
 
 @media (max-width: 1100px) {

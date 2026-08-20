@@ -186,9 +186,10 @@ const FeaturedSection = () => {
         <section
             ref={ref}
             style={{
-                padding: '6rem 2.5rem',
+                padding: '9rem 2.5rem 6rem',
+                marginTop: '3rem',
                 maxWidth: '1300px',
-                margin: '0 auto',
+                margin: '3rem auto 0',
                 position: 'relative',
                 zIndex: 10
             }}
@@ -230,23 +231,7 @@ const QuickLinkCard = ({ link, idx, isInView }) => {
         >
             <Link
                 to={link.path}
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    padding: '2rem 1.5rem',
-                    background: 'rgba(9, 14, 26, 0.4)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    borderRadius: 0,
-                    textDecoration: 'none',
-                    color: 'white',
-                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                    width: '100%',
-                    height: '100%',
-                    minHeight: '160px',
-                    boxSizing: 'border-box'
-                }}
-                className="editorial-card"
+                className="editorial-quicklink-card"
             >
                 <div style={{
                     display: 'flex',
@@ -255,21 +240,23 @@ const QuickLinkCard = ({ link, idx, isInView }) => {
                     width: '100%',
                     marginBottom: '1.5rem'
                 }}>
-                    <link.icon size={22} color="var(--text-main)" />
-                    <ArrowRight size={16} color="var(--text-subtle)" />
+                    <link.icon size={22} className="quicklink-icon" color="var(--text-main)" />
+                    <ArrowRight size={16} className="quicklink-arrow" color="var(--text-subtle)" />
                 </div>
                 <div>
                     <span style={{ 
-                        fontWeight: 700, 
-                        fontSize: '1rem', 
+                        fontWeight: 800, 
+                        fontSize: '1.05rem', 
+                        fontFamily: 'var(--font-heading)',
                         textTransform: 'uppercase',
                         letterSpacing: '0.08em',
                         display: 'block',
-                        marginBottom: '0.25rem'
+                        marginBottom: '0.3rem',
+                        color: '#ffffff'
                     }}>
                         {link.label}
                     </span>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
                         {link.desc}
                     </span>
                 </div>
