@@ -104,9 +104,9 @@ const Footer = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             style={{
                 position: 'relative',
-                background: '#020617',
-                borderTop: '1px solid rgba(255, 255, 255, 0.12)',
-                padding: '6rem 0 3rem',
+                background: 'transparent',
+                borderTop: 'none',
+                padding: '3rem 0 3rem',
                 overflow: 'hidden'
             }}
         >
@@ -138,7 +138,6 @@ const Footer = () => {
                                 <span className="editorial-eyebrow-text">
                                     AVAILABLE FOR 2026 INITIATIVES
                                 </span>
-                                <div className="editorial-eyebrow-rule" />
                             </div>
                             <h3 style={{ 
                                 fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', 
