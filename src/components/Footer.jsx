@@ -124,7 +124,12 @@ const Footer = () => {
                         marginBottom: '5rem',
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: '2rem'
+                        gap: '2rem',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        background: 'rgba(9, 14, 26, 0.65)',
+                        backdropFilter: 'blur(20px)',
+                        borderTop: '2px solid #ef4444'
                     }}
                 >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '2rem' }}>
@@ -145,7 +150,7 @@ const Footer = () => {
                                 margin: '0 0 1rem',
                                 lineHeight: 1.15
                             }}>
-                                LET'S BUILD HIGH-IMPACT SYSTEMS TOGETHER.
+                                LET'S BUILD <span style={{ color: '#ef4444' }}>HIGH-IMPACT</span> SYSTEMS TOGETHER.
                             </h3>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
                                 Visionary platforms, high-performance distributed systems, or mobile engineering challenges.
@@ -199,16 +204,19 @@ const Footer = () => {
                             }}>
                                 <img src={vLogo} alt="Vivaswan Shetty Monogram" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                             </div>
-                            <span style={{ 
-                                fontFamily: 'var(--font-heading)', 
-                                fontWeight: 900, 
-                                fontSize: '1.15rem', 
-                                letterSpacing: '0.1em',
-                                color: '#ffffff',
-                                textTransform: 'uppercase'
-                            }}>
-                                VIVASWAN
-                            </span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                                <span style={{ 
+                                    fontFamily: 'var(--font-heading)', 
+                                    fontWeight: 900, 
+                                    fontSize: '1.15rem', 
+                                    letterSpacing: '0.1em',
+                                    color: '#ffffff',
+                                    textTransform: 'uppercase'
+                                }}>
+                                    VIVASWAN
+                                </span>
+                                <span className="navbar-logo-dot" />
+                            </div>
                         </NavLink>
 
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.7, margin: 0 }}>
@@ -217,6 +225,7 @@ const Footer = () => {
 
                         {/* Location & Live Clock Badge */}
                         <div className="editorial-badge" style={{ padding: '0.45rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', alignSelf: 'flex-start', fontSize: '0.72rem' }}>
+                            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ef4444', boxShadow: '0 0 8px #ef4444', display: 'inline-block' }} />
                             <Clock size={12} color="#f8fafc" />
                             <span>BENGALURU, IN (IST):</span>
                             <strong style={{ color: '#fff', fontFamily: 'monospace' }}>{bengaluruTime || 'Live'}</strong>
@@ -238,8 +247,12 @@ const Footer = () => {
                                 fontWeight: 700, 
                                 textTransform: 'uppercase', 
                                 letterSpacing: '0.18em', 
-                                color: '#94a3b8' 
+                                color: '#ffffff',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.4rem'
                             }}>
+                                <span style={{ color: '#ef4444', fontSize: '0.7rem' }}>0{idx + 1} /</span>
                                 {column.title}
                             </h4>
                             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -251,11 +264,17 @@ const Footer = () => {
                                                 color: 'var(--text-muted)',
                                                 textDecoration: 'none',
                                                 fontSize: '0.86rem',
-                                                transition: 'color 0.2s ease',
+                                                transition: 'all 0.2s ease',
                                                 display: 'inline-block'
                                             }}
-                                            onMouseEnter={(e) => e.target.style.color = '#ffffff'}
-                                            onMouseLeave={(e) => e.target.style.color = 'var(--text-muted)'}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.color = '#ef4444';
+                                                e.currentTarget.style.transform = 'translateX(4px)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.color = 'var(--text-muted)';
+                                                e.currentTarget.style.transform = 'translateX(0)';
+                                            }}
                                         >
                                             {link.name}
                                         </NavLink>
@@ -278,25 +297,33 @@ const Footer = () => {
                             fontWeight: 700, 
                             textTransform: 'uppercase', 
                             letterSpacing: '0.18em', 
-                            color: '#94a3b8' 
+                            color: '#ffffff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.4rem'
                         }}>
-                            Connect & Channels
+                            <span style={{ color: '#ef4444', fontSize: '0.7rem' }}>04 /</span>
+                            CONNECT & CHANNELS
                         </h4>
                         
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                                <Mail size={13} color="#f8fafc" />
+                                <Mail size={13} color="#ef4444" />
                                 <a 
                                     href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contact.email}`}
                                     target="_blank"
                                     rel="noreferrer"
-                                    style={{ color: '#ffffff', textDecoration: 'none', fontFamily: 'monospace' }}
+                                    style={{ color: '#ffffff', textDecoration: 'none', fontFamily: 'monospace', transition: 'color 0.2s ease' }}
+                                    onMouseEnter={(e) => e.currentTarget.style.color = '#ef4444'}
+                                    onMouseLeave={(e) => e.currentTarget.style.color = '#ffffff'}
                                 >
                                     {contact.email}
                                 </a>
                                 <button
                                     onClick={handleCopyEmail}
-                                    style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '2px' }}
+                                    style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '2px', transition: 'color 0.2s ease' }}
+                                    onMouseEnter={(e) => e.currentTarget.style.color = '#ef4444'}
+                                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
                                     title="Copy Email Address"
                                 >
                                     {copied ? <CheckCheck size={13} color="#34d399" /> : <Copy size={13} />}
@@ -304,7 +331,7 @@ const Footer = () => {
                             </div>
 
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                                <MapPin size={13} color="#f8fafc" />
+                                <MapPin size={13} color="#ef4444" />
                                 <span>Bengaluru, Karnataka, IN</span>
                             </div>
                         </div>
@@ -319,7 +346,7 @@ const Footer = () => {
                                     rel="noreferrer"
                                     className="editorial-badge"
                                     style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                    whileHover={{ scale: 1.1, borderColor: '#ffffff', backgroundColor: '#ffffff', color: '#020617' }}
+                                    whileHover={{ scale: 1.1, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.12)', color: '#ef4444' }}
                                     whileTap={{ scale: 0.95 }}
                                     title={social.label}
                                 >

@@ -83,7 +83,7 @@ const About = () => {
                     <div className="editorial-eyebrow-rule" />
                 </div>
                 <h1 className="editorial-page-title">
-                    {title}
+                    ABOUT <span style={{ color: '#ef4444' }}>ME</span>.
                 </h1>
             </motion.div>
 

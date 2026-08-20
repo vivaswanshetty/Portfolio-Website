@@ -90,7 +90,7 @@ const Hero = () => {
                     <div className="editorial-status-tag">
                         <span className="editorial-status-line">AVAILABLE FOR</span>
                         <span className="editorial-status-line highlight">HIGH-IMPACT ROLES</span>
-                        <span className="editorial-status-line">2026</span>
+                        <span className="editorial-status-line accent">2026</span>
                         <div className="editorial-status-rule" />
                     </div>
                 </motion.div>
@@ -200,7 +200,9 @@ const FeaturedSection = () => {
                 className="editorial-section-header"
             >
                 <span className="editorial-eyebrow-text">WHAT I DO.</span>
-                <h2 className="editorial-section-title">ENGINEERING CAPABILITIES</h2>
+                <h2 className="editorial-section-title">
+                    ENGINEERING <span style={{ color: '#ef4444' }}>CAPABILITIES</span>
+                </h2>
                 <div className="editorial-eyebrow-rule" />
             </motion.div>
 
