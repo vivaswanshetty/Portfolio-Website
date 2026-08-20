@@ -186,10 +186,9 @@ const FeaturedSection = () => {
         <section
             ref={ref}
             style={{
-                padding: '9rem 2.5rem 6rem',
-                marginTop: '3rem',
+                padding: '12rem 2.5rem 6rem',
                 maxWidth: '1300px',
-                margin: '3rem auto 0',
+                margin: '0 auto',
                 position: 'relative',
                 zIndex: 10
             }}
