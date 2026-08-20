@@ -5,8 +5,11 @@ import { ArrowDown, Code, Palette, Database, Layers, Terminal, Globe, Zap, Star,
 import { portfolioData } from '../data/portfolioData';
 import { useTiltEffect } from '../hooks/useScrollReveal';
 
+import vivaswanHeroImg from '../assets/vivaswan_hero.png';
+
 const Hero = () => {
     const containerRef = useRef(null);
+    const portraitTilt = useTiltEffect(8);
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ['start start', 'end start']
@@ -20,19 +23,18 @@ const Hero = () => {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: { staggerChildren: 0.12, delayChildren: 0.3 }
+            transition: { staggerChildren: 0.12, delayChildren: 0.25 }
         }
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 40 },
+        hidden: { opacity: 0, y: 35 },
         visible: {
             opacity: 1,
             y: 0,
             transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
         }
     };
-
 
     return (
         <section
@@ -43,186 +45,150 @@ const Hero = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                paddingTop: 'calc(var(--nav-height) + var(--nav-top-offset) + 1rem)',
-                paddingLeft: '2rem',
-                paddingRight: '2rem',
-                paddingBottom: '6rem',
+                paddingTop: 'calc(var(--nav-height) + var(--nav-top-offset) + 2rem)',
+                paddingLeft: '1.5rem',
+                paddingRight: '1.5rem',
+                paddingBottom: '5rem',
                 position: 'relative',
                 overflow: 'hidden'
             }}
         >
+            {/* Ambient Background Energy Blooms */}
             <motion.div
                 style={{
                     position: 'absolute',
-                    top: '15%',
+                    top: '12%',
                     left: '50%',
-                    width: '80%',
-                    height: '60%',
-                    background: 'radial-gradient(ellipse at center, rgba(59, 130, 246, 0.08) 0%, transparent 70%)',
-                    filter: 'blur(60px)',
+                    width: '85%',
+                    height: '65%',
+                    background: 'radial-gradient(ellipse at center, rgba(56, 189, 248, 0.08) 0%, rgba(168, 85, 247, 0.04) 50%, transparent 70%)',
+                    filter: 'blur(70px)',
                     transform: 'translate(-50%, 0%)',
                     y
                 }}
             />
 
             <motion.div
-                style={{ maxWidth: '900px', textAlign: 'center', position: 'relative', zIndex: 2, y, opacity, scale }}
+                className="hero-split-container"
+                style={{ y, opacity, scale }}
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
             >
-                <motion.div
-                    variants={itemVariants}
-                    style={{
-                        marginBottom: '2rem',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.75rem',
-                        padding: '0.6rem 1.5rem',
-                        borderRadius: '9999px',
-                        background: 'rgba(59, 130, 246, 0.08)',
-                        border: '1px solid rgba(59, 130, 246, 0.15)'
-                    }}
-                >
+                {/* Left Column: Vision, Identity & Actions */}
+                <div className="hero-text-column">
                     <motion.div
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        style={{
-                            width: '8px', height: '8px',
-                            borderRadius: '50%',
-                            background: '#22c55e'
-                        }}
-                    />
-                    <span style={{ fontSize: '0.85rem', color: 'var(--accent-primary)', fontWeight: 500 }}>
-                        Available for freelance work
-                    </span>
-                </motion.div>
+                        variants={itemVariants}
+                        className="hero-status-pill"
+                    >
+                        <span className="live-pulse-dot" />
+                        <span>Available for High-Impact Roles</span>
+                    </motion.div>
 
-                <motion.h1
-                    variants={itemVariants}
-                    style={{
-                        fontSize: 'clamp(2rem, 6vw, 4rem)',
-                        fontFamily: 'var(--font-brand)',
-                        fontWeight: 800,
-                        textTransform: 'uppercase',
-                        whiteSpace: 'nowrap',
-                        marginBottom: '1.5rem',
-                        lineHeight: 1.1,
-                        letterSpacing: '-0.035em',
-                        background: 'linear-gradient(135deg, #fff 0%, #94a3b8 40%, #fff 60%, #cbd5e1 100%)',
-                        backgroundSize: '200% auto',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        animation: 'gradient-shift 4s ease infinite'
-                    }}
-                >
-                    {portfolioData.hero.name}
-                </motion.h1>
+                    <motion.h1
+                        variants={itemVariants}
+                        className="hero-main-title"
+                    >
+                        {portfolioData.hero.name}
+                    </motion.h1>
 
-                <motion.p
-                    variants={itemVariants}
-                    style={{
-                        fontSize: 'clamp(1.3rem, 3vw, 2rem)',
-                        color: 'var(--accent-primary)',
-                        marginBottom: '1.5rem',
-                        fontWeight: 600,
-                        letterSpacing: '-0.01em'
-                    }}
-                >
-                    {portfolioData.hero.role}
-                </motion.p>
+                    <motion.p
+                        variants={itemVariants}
+                        className="hero-role-subheading"
+                    >
+                        {portfolioData.hero.role}
+                    </motion.p>
 
-                <motion.p
-                    variants={itemVariants}
-                    style={{
-                        fontSize: '1.15rem',
-                        color: 'var(--text-muted)',
-                        maxWidth: '550px',
-                        margin: '0 auto 2.5rem',
-                        lineHeight: 1.8
-                    }}
-                >
-                    {portfolioData.hero.tagline}
-                </motion.p>
+                    <motion.p
+                        variants={itemVariants}
+                        className="hero-bio-desc"
+                    >
+                        {portfolioData.hero.tagline}
+                    </motion.p>
 
-                <motion.div
+                    <motion.div
+                        variants={itemVariants}
+                        className="hero-cta-group"
+                    >
+                        <Link to="/projects" className="btn btn-primary" style={{ padding: '0.9rem 1.9rem', boxShadow: '0 0 25px rgba(56, 189, 248, 0.35)' }}>
+                            Explore Projects <ArrowRight size={16} />
+                        </Link>
+                        <Link to="/contact" className="btn btn-outline" style={{ padding: '0.9rem 1.8rem' }}>
+                            Contact Me
+                        </Link>
+                    </motion.div>
+
+                    <motion.div
+                        variants={itemVariants}
+                        className="hero-highlights-strip"
+                    >
+                        <span>React Native (Expo)</span>
+                        <span className="dot">•</span>
+                        <span>Full-Stack MERN</span>
+                        <span className="dot">•</span>
+                        <span>Gemini AI</span>
+                        <span className="dot">•</span>
+                        <span>Distributed Systems</span>
+                    </motion.div>
+                </div>
+
+                {/* Right Column: Cinematic Holographic Portrait Card */}
+                <motion.div 
                     variants={itemVariants}
-                    style={{
-                        display: 'flex',
-                        gap: '1rem',
-                        justifyContent: 'center',
-                        flexWrap: 'wrap',
-                        marginBottom: '4rem'
-                    }}
+                    className="hero-portrait-column"
                 >
-                    <Link to="/projects" className="btn btn-primary">View Projects</Link>
-                    <Link to="/contact" className="btn btn-outline">Contact Me</Link>
+                    <div className="hero-portrait-aura" />
+                    
+                    <div
+                        ref={portraitTilt.ref}
+                        className="hero-portrait-card"
+                        style={{ ...portraitTilt.style }}
+                        {...portraitTilt.handlers}
+                    >
+                        <div className="hero-portrait-image-wrapper">
+                            <img
+                                src={vivaswanHeroImg}
+                                alt="Vivaswan Shetty"
+                                className="hero-portrait-image"
+                            />
+                            
+                            {/* Top Floating Glass Badge */}
+                            <div className="hero-portrait-floating-badge-top">
+                                <span>⚡</span>
+                                <span>Future Engineering Leader</span>
+                            </div>
+
+                            {/* Bottom Floating Glass Badge */}
+                            <div className="hero-portrait-floating-badge-bottom">
+                                <span className="live-pulse-dot" />
+                                <span>Bengaluru, India (IST)</span>
+                            </div>
+                        </div>
+                    </div>
                 </motion.div>
             </motion.div>
 
+            {/* Floating Down Indicator */}
             <motion.div
                 style={{
                     position: 'absolute',
-                    bottom: '3rem',
+                    bottom: '2rem',
                     left: '50%',
                     transform: 'translateX(-50%)',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    gap: '0.5rem'
+                    gap: '0.5rem',
+                    zIndex: 2
                 }}
             >
                 <motion.div
-                    animate={{ y: [0, 14, 0] }}
+                    animate={{ y: [0, 12, 0] }}
                     transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
                 >
-                    <ArrowDown size={24} color="var(--text-muted)" />
+                    <ArrowDown size={22} color="var(--text-muted)" style={{ opacity: 0.6 }} />
                 </motion.div>
             </motion.div>
-
-            <motion.div
-                style={{
-                    position: 'absolute',
-                    top: '25%',
-                    right: '8%',
-                    width: '250px',
-                    height: '250px',
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle, rgba(59, 130, 246, 0.12), transparent 70%)',
-                    filter: 'blur(50px)',
-                    y: useTransform(scrollYProgress, [0, 1], [0, -80])
-                }}
-                animate={{ scale: [1, 1.15, 1] }}
-                transition={{ repeat: Infinity, duration: 10, ease: 'easeInOut' }}
-            />
-
-            <motion.div
-                style={{
-                    position: 'absolute',
-                    bottom: '25%',
-                    left: '5%',
-                    width: '180px',
-                    height: '180px',
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle, rgba(139, 92, 246, 0.1), transparent 70%)',
-                    filter: 'blur(40px)',
-                    y: useTransform(scrollYProgress, [0, 1], [0, 60])
-                }}
-                animate={{ scale: [1, 0.9, 1] }}
-                transition={{ repeat: Infinity, duration: 8, ease: 'easeInOut', delay: 2 }}
-            />
-
-            <motion.div
-                style={{
-                    position: 'absolute',
-                    top: '60%',
-                    left: '15%',
-                    width: '100px',
-                    height: '1px',
-                    background: 'linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent)',
-                    y: useTransform(scrollYProgress, [0, 1], [0, 40])
-                }}
-            />
         </section>
     );
 };
