@@ -55,39 +55,27 @@ const Starfield = () => {
                 }
 
                 .floating-orb {
-                    display: none;
+                    position: fixed;
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: -2;
+                    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
                 }
 
                 .orb-1 {
-                    width: 500px; height: 500px;
-                    background: radial-gradient(circle, rgba(0, 242, 254, 0.2), transparent 70%);
-                    top: 5%; left: -15%;
-                    filter: blur(100px);
-                    opacity: 0.5;
+                    width: 550px; height: 550px;
+                    background: radial-gradient(circle, rgba(239, 68, 68, 0.12) 0%, transparent 70%);
+                    top: 10%; left: -10%;
+                    filter: blur(120px);
+                    opacity: 0.7;
                 }
 
                 .orb-2 {
-                    width: 450px; height: 450px;
-                    background: radial-gradient(circle, rgba(139, 92, 246, 0.22), transparent 70%);
+                    width: 500px; height: 500px;
+                    background: radial-gradient(circle, rgba(239, 68, 68, 0.08) 0%, transparent 70%);
                     bottom: 15%; right: -10%;
-                    filter: blur(90px);
-                    opacity: 0.45;
-                }
-
-                .orb-3 {
-                    width: 350px; height: 350px;
-                    background: radial-gradient(circle, rgba(16, 185, 129, 0.16), transparent 70%);
-                    top: 40%; left: 55%;
-                    filter: blur(70px);
-                    opacity: 0.35;
-                }
-
-                .orb-4 {
-                    width: 280px; height: 280px;
-                    background: radial-gradient(circle, rgba(245, 158, 11, 0.14), transparent 70%);
-                    bottom: 5%; left: 10%;
-                    filter: blur(60px);
-                    opacity: 0.3;
+                    filter: blur(100px);
+                    opacity: 0.6;
                 }
 
                 .parallax-layer {
@@ -101,7 +89,7 @@ const Starfield = () => {
                 .parallax-line {
                     position: absolute;
                     width: 1px;
-                    background: linear-gradient(180deg, transparent, rgba(59, 130, 246, 0.2), transparent);
+                    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.06), transparent);
                     transform-origin: top center;
                 }
 
@@ -110,21 +98,15 @@ const Starfield = () => {
                     width: 600px;
                     height: 600px;
                     border-radius: 50%;
-                    background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
-                    filter: blur(80px);
+                    background: radial-gradient(circle, rgba(239, 68, 68, 0.05) 0%, transparent 65%);
+                    filter: blur(90px);
                     z-index: -1;
                     pointer-events: none;
                 }
 
-                @keyframes orb-float {
-                    0%, 100% { transform: translate(0, 0) scale(1); }
-                    33% { transform: translate(30px, -40px) scale(1.08); }
-                    66% { transform: translate(-15px, 25px) scale(0.95); }
-                }
-
                 @keyframes float-slow {
                     0%, 100% { transform: translate(0, 0); }
-                    50% { transform: translate(20px, -20px); }
+                    50% { transform: translate(15px, -15px); }
                 }
             `}</style>
 
@@ -134,41 +116,29 @@ const Starfield = () => {
             <div
                 className="floating-orb orb-1"
                 style={{
-                    transform: `translate(${mousePos.x * 0.3}px, ${-scrollY * 0.1}px) translateY(calc(var(--scroll-offset, 0px)))`,
+                    transform: `translate(${mousePos.x * 0.25}px, ${-scrollY * 0.08}px)`,
                 }}
             />
             <div
                 className="floating-orb orb-2"
                 style={{
-                    transform: `translate(${-mousePos.x * 0.2}px, ${scrollY * 0.15}px)`,
-                }}
-            />
-            <div
-                className="floating-orb orb-3"
-                style={{
-                    transform: `translate(${mousePos.x * 0.4}px, ${-scrollY * 0.08}px)`,
-                }}
-            />
-            <div
-                className="floating-orb orb-4"
-                style={{
-                    transform: `translate(${-mousePos.x * 0.25}px, ${scrollY * 0.1}px)`,
+                    transform: `translate(${-mousePos.x * 0.2}px, ${scrollY * 0.1}px)`,
                 }}
             />
 
             <div className="parallax-layer">
-                {[...Array(8)].map((_, i) => (
+                {[...Array(6)].map((_, i) => (
                     <div
                         key={i}
                         className="parallax-line"
                         style={{
-                            left: `${10 + i * 12}%`,
-                            height: `${150 + (i % 3) * 100}px`,
-                            top: `${20 + (i % 4) * 15}%`,
-                            opacity: 0.15 + (i % 3) * 0.05,
+                            left: `${15 + i * 14}%`,
+                            height: `${140 + (i % 3) * 80}px`,
+                            top: `${20 + (i % 3) * 20}%`,
+                            opacity: 0.12 + (i % 2) * 0.06,
                             transform: `translateY(${scrollY * (0.02 + i * 0.01)}px)`,
-                            animation: `float-slow ${6 + i}s ease-in-out infinite`,
-                            animationDelay: `${i * 0.5}s`
+                            animation: `float-slow ${7 + i}s ease-in-out infinite`,
+                            animationDelay: `${i * 0.6}s`
                         }}
                     />
                 ))}
@@ -177,9 +147,9 @@ const Starfield = () => {
             <div
                 className="parallax-glow"
                 style={{
-                    top: `${20 - scrollY * 0.05}%`,
-                    left: `${50 + mousePos.x * 0.3}%`,
-                    transform: `translate(-50%, -50%) translate(${mousePos.x}px, ${mousePos.y * 0.5}px)`,
+                    top: `${25 - scrollY * 0.04}%`,
+                    left: `${50 + mousePos.x * 0.2}%`,
+                    transform: `translate(-50%, -50%) translate(${mousePos.x}px, ${mousePos.y * 0.4}px)`,
                 }}
             />
         </>
