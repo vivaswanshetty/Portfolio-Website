@@ -107,7 +107,6 @@ const Contact = () => {
             });
 
             const data = await response.json();
-            console.log('Web3Forms transmission status:', data);
 
             if (data.success) {
                 setStatus('success');

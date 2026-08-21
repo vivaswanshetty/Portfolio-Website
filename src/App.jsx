@@ -17,6 +17,7 @@ const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
 const Terms = lazy(() => import('./components/Terms'));
 const NotFound = lazy(() => import('./components/NotFound'));
 
+import ErrorBoundary from './components/ErrorBoundary';
 import Footer from './components/Footer';
 import Starfield from './components/Starfield';
 import ScrollProgress from './components/ScrollProgress';
@@ -117,6 +118,9 @@ function App() {
     return (
         <ToastProvider>
             <Router>
+                <a href="#main-content" className="skip-to-content-link">
+                    Skip to content
+                </a>
                 <ScrollToTop />
                 <Starfield />
                 <SpotlightCursor />
@@ -127,8 +131,10 @@ function App() {
                 <Analytics />
                 <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
                     <Navbar />
-                    <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <AnimatedRoutes />
+                    <main id="main-content" tabIndex="-1" style={{ flex: 1, display: 'flex', flexDirection: 'column', outline: 'none' }}>
+                        <ErrorBoundary>
+                            <AnimatedRoutes />
+                        </ErrorBoundary>
                     </main>
                     <Footer />
                 </div>
