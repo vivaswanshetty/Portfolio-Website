@@ -53,9 +53,9 @@ const Hero = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <span>Full-Stack & Mobile Systems</span>
-                        <span>Bengaluru, IN • IST</span>
-                        <span>AI, Tech and Beyond</span>
+                        <span>Full-Stack & Mobile</span>
+                        <span>Bengaluru, IN</span>
+                        <span className="editorial-ticker-desktop">AI & Systems</span>
                     </motion.div>
 
                     <motion.div 
@@ -80,12 +80,12 @@ const Hero = () => {
                 >
                     {/* Bottom Left: Solid Rectangular Button + Text Link */}
                     <div className="editorial-cta-group">
-                        <MagneticWrapper>
+                        <MagneticWrapper className="editorial-cta-wrapper">
                             <Link to="/projects" className="editorial-btn-primary">
                                 VIEW PROJECTS
                             </Link>
                         </MagneticWrapper>
-                        <MagneticWrapper>
+                        <MagneticWrapper className="editorial-cta-wrapper">
                             <Link to="/contact" className="editorial-btn-secondary">
                                 GET IN TOUCH <ArrowRight size={14} />
                             </Link>
@@ -190,7 +190,7 @@ const FeaturedSection = () => {
 
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
                 gap: '1.25rem'
             }}>
                 {features.map((feature, idx) => (
@@ -312,7 +312,7 @@ const QuickLinks = () => {
 
                 <div style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
                     gap: '1.25rem'
                 }}>
                     {links.map((link, idx) => (

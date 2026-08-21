@@ -206,7 +206,7 @@ const Testimonials = () => {
             </motion.div>
 
             {/* Testimonials Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '2.5rem', maxWidth: '1100px', margin: '0 auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '2.5rem', maxWidth: '1100px', margin: '0 auto' }}>
                 {testimonials.map((testimonial, index) => (
                     <TestimonialCard key={index} testimonial={testimonial} index={index} />
                 ))}

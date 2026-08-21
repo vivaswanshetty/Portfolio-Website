@@ -297,7 +297,7 @@ const ProjectDetail = () => {
                     {/* Screenshot Grid */}
                     <div style={{ 
                         display: 'grid', 
-                        gridTemplateColumns: isMobileApp ? 'repeat(auto-fill, minmax(260px, 1fr))' : 'repeat(auto-fill, minmax(360px, 1fr))', 
+                        gridTemplateColumns: isMobileApp ? 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))' : 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', 
                         gap: '2rem' 
                     }}>
                         {filteredScreenshots.map((item, idx) => (
@@ -351,7 +351,7 @@ const ProjectDetail = () => {
             )}
 
             {/* Architecture & Engineering Deep-Dive */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '2.5rem', marginBottom: '5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '2.5rem', marginBottom: '5rem' }}>
                 {/* System Architecture */}
                 <motion.div
                     className="editorial-card"

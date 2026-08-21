@@ -1591,7 +1591,7 @@ p {
 @media (max-width: 1100px) {
   .editorial-split-grid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 }
 
@@ -1606,16 +1606,199 @@ p {
     font-size: clamp(3.4rem, 14.5vw, 9.5rem);
     transform: translate(-1vw, -4%);
   }
-  .editorial-bottom-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2rem;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS (PHONES & SMALL TABLETS <= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* 1. Hero Section Mobile Optimization */
+  .editorial-hero-section {
+    min-height: 100dvh !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding: calc(var(--nav-height) + 0.5rem) 1.15rem 1.15rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
   }
+
+  /* Position photo & cutout so Vivaswan's face is clearly framed in upper center without obstruction */
+  .home-editorial-bg-img,
+  .editorial-hero-cutout-img {
+    object-position: center 18% !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+  }
+
+  .editorial-hero-cutout-layer {
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+  }
+
+  .editorial-display-wordmark {
+    font-size: clamp(3rem, 15vw, 4.8rem) !important;
+    letter-spacing: -0.03em !important;
+    transform: translate(0, -6%) !important;
+    opacity: 0.85;
+  }
+
+  /* Compact single-row ticker */
+  .editorial-top-ticker {
+    font-size: 0.64rem !important;
+    letter-spacing: 0.12em !important;
+    padding-bottom: 0.4rem !important;
+    margin-bottom: 0.5rem !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+
+  .editorial-ticker-desktop {
+    display: none !important;
+  }
+
+  .editorial-eyebrow-container {
+    max-width: 290px !important;
+  }
+
+  .editorial-eyebrow-text {
+    font-size: 0.72rem !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0.14em !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .editorial-eyebrow-rule {
+    width: 36px !important;
+    height: 1.5px !important;
+  }
+
+  /* Bottom Row — Docked neatly at bottom, side-by-side buttons */
+  .editorial-bottom-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.55rem !important;
+    width: 100% !important;
+    padding-top: 0 !important;
+    margin-top: auto !important;
+    z-index: 20 !important;
+  }
+
+  .editorial-cta-group {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.55rem !important;
+    width: 100% !important;
+    align-items: stretch !important;
+  }
+
+  .editorial-cta-wrapper {
+    width: 100% !important;
+    display: block !important;
+  }
+
+  .editorial-cta-wrapper .editorial-btn-primary,
+  .editorial-cta-wrapper .editorial-btn-secondary,
+  .editorial-cta-group .editorial-btn-primary,
+  .editorial-cta-group .editorial-btn-secondary {
+    width: 100% !important;
+    padding: 0.82rem 0.4rem !important;
+    font-size: 0.74rem !important;
+    letter-spacing: 0.08em !important;
+    text-align: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    border-radius: 9999px !important;
+    white-space: nowrap !important;
+  }
+
   .editorial-status-tag {
-    align-items: flex-start;
-    text-align: left;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.45rem !important;
+    width: 100% !important;
+    padding: 0.35rem 0.75rem !important;
+    border-left: none !important;
+    border-bottom: 1px solid rgba(239, 68, 68, 0.4) !important;
+    background: rgba(3, 7, 18, 0.75) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+  }
+
+  .editorial-status-line {
+    font-size: 0.65rem !important;
+    letter-spacing: 0.1em !important;
+    display: inline !important;
+  }
+
+  .editorial-status-rule {
+    display: none !important;
+  }
+
+  /* 2. Global Page Containers on Mobile */
+  .editorial-page-container {
+    padding: calc(var(--nav-height) + 1.25rem) 1.15rem 4rem !important;
+  }
+
+  .editorial-page-title {
+    font-size: clamp(2.2rem, 8.5vw, 3.2rem) !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.025em !important;
+  }
+
+  .editorial-section-title {
+    font-size: clamp(1.7rem, 6.8vw, 2.3rem) !important;
+  }
+
+  .editorial-card {
+    padding: 1.75rem 1.25rem !important;
+    border-radius: 1rem !important;
+  }
+
+  /* 3. About Page Mobile */
+  .editorial-split-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .editorial-portrait-frame {
+    max-width: 280px !important;
+    margin: 0 auto 1.5rem !important;
+  }
+
+  .editorial-stat-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .editorial-stat-card {
+    padding: 1.25rem 1rem !important;
+  }
+
+  .editorial-stat-number {
+    font-size: 2rem !important;
+  }
+
+  /* 4. Inputs (Prevent iOS Auto-Zoom on Focus) */
+  .editorial-input,
+  .editorial-textarea {
+    font-size: 16px !important;
+    padding: 0.8rem 1rem !important;
+  }
+
+  /* 5. Mobile Navbar */
+  .navbar-logo-text {
+    font-size: 1.1rem !important;
   }
 }
+
 
 /* Cards */
 .card {

@@ -143,7 +143,7 @@ const Skills = () => {
             {/* 2-Column Editorial Grid Layout */}
             <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', 
                 gap: '2.5rem', 
                 maxWidth: '1200px', 
                 margin: '0 auto' 

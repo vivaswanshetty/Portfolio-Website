@@ -158,7 +158,7 @@ const Contact = () => {
             <motion.div
                 style={{ 
                     display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', 
                     alignItems: 'stretch', 
                     gap: '2.5rem', 
                     maxWidth: '1150px', 
