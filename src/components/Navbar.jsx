@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, User, FolderGit2, FileText, Mail, Menu, X, Code, Search } from 'lucide-react';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const toggleBtnRef = useRef(null);
+    const firstNavLinkRef = useRef(null);
+    const menuContainerRef = useRef(null);
+    const prevIsOpenRef = useRef(false);
 
     const navLinks = [
         { name: 'Home', path: '/', icon: Home },
@@ -17,6 +21,63 @@ const Navbar = () => {
     const openCommandPalette = () => {
         window.dispatchEvent(new CustomEvent('open-command-palette'));
     };
+
+    // Focus management when menu opens/closes
+    useEffect(() => {
+        if (isOpen) {
+            // Move focus to first nav link inside mobile menu
+            const timer = setTimeout(() => {
+                firstNavLinkRef.current?.focus();
+            }, 50);
+            return () => clearTimeout(timer);
+        } else if (prevIsOpenRef.current) {
+            // Return focus to toggle button when closed
+            toggleBtnRef.current?.focus();
+        }
+        prevIsOpenRef.current = isOpen;
+    }, [isOpen]);
+
+    // Escape key listener & Focus Trap while open
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                setIsOpen(false);
+                return;
+            }
+
+            if (e.key === 'Tab') {
+                const focusableInMenu = menuContainerRef.current
+                    ? Array.from(menuContainerRef.current.querySelectorAll('a[href], button:not([disabled])'))
+                    : [];
+                
+                const allFocusable = [...focusableInMenu, toggleBtnRef.current].filter(Boolean);
+                if (allFocusable.length === 0) return;
+
+                const firstEl = allFocusable[0];
+                const lastEl = allFocusable[allFocusable.length - 1];
+
+                if (e.shiftKey) {
+                    // Shift + Tab (backward)
+                    if (document.activeElement === firstEl) {
+                        e.preventDefault();
+                        lastEl.focus();
+                    }
+                } else {
+                    // Tab (forward)
+                    if (document.activeElement === lastEl) {
+                        e.preventDefault();
+                        firstEl.focus();
+                    }
+                }
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen]);
 
     return (
         <>
@@ -95,10 +156,13 @@ const Navbar = () => {
                     </motion.button>
 
                     <motion.button
+                        ref={toggleBtnRef}
                         onClick={() => setIsOpen(!isOpen)}
                         className="mobile-toggle"
                         whileTap={{ scale: 0.9 }}
-                        aria-label="Toggle menu"
+                        aria-expanded={isOpen}
+                        aria-controls="mobile-navigation-menu"
+                        aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
                     >
                         <AnimatePresence mode="wait">
                             {isOpen ? (
@@ -119,6 +183,11 @@ const Navbar = () => {
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
+                        ref={menuContainerRef}
+                        id="mobile-navigation-menu"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Mobile Navigation"
                         initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
                         animate={{ opacity: 1, backdropFilter: 'blur(20px)' }}
                         exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
@@ -135,6 +204,7 @@ const Navbar = () => {
                                     transition={{ delay: idx * 0.06 }}
                                 >
                                     <NavLink
+                                        ref={idx === 0 ? firstNavLinkRef : null}
                                         to={link.path}
                                         onClick={() => setIsOpen(false)}
                                         className={({ isActive }) => `mobile-menu-link ${isActive ? 'active' : ''}`}
