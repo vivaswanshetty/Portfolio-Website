@@ -87,24 +87,27 @@ const Contact = () => {
         try {
             const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
 
+            if (!accessKey || accessKey === 'your_key_here' || accessKey === 'YOUR_ACCESS_KEY_HERE') {
+                setStatus('error');
+                setErrorMessage('Web3Forms Access Key is missing or unconfigured in .env.local.');
+                return;
+            }
+
+            const formPayload = new FormData();
+            formPayload.append('access_key', accessKey);
+            formPayload.append('name', formData.name.trim());
+            formPayload.append('email', formData.email.trim());
+            formPayload.append('subject', formData.subject.trim() || `Portfolio Inquiry from ${formData.name.trim()}`);
+            formPayload.append('message', formData.message.trim());
+            formPayload.append('from_name', 'Vivaswan Shetty Portfolio');
+
             const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    access_key: accessKey || 'YOUR_ACCESS_KEY_HERE',
-                    name: formData.name.trim(),
-                    email: formData.email.trim(),
-                    subject: formData.subject.trim() || `Portfolio Inquiry from ${formData.name.trim()}`,
-                    message: formData.message.trim(),
-                    from_name: 'Vivaswan Shetty Portfolio',
-                    botcheck: ''
-                })
+                body: formPayload
             });
 
             const data = await response.json();
+            console.log('Web3Forms transmission status:', data);
 
             if (data.success) {
                 setStatus('success');
@@ -112,9 +115,10 @@ const Contact = () => {
                 setErrors({});
             } else {
                 setStatus('error');
-                setErrorMessage(data.message || 'Submission failed. Please check your connection or reach out via direct email.');
+                setErrorMessage(data.message || 'Submission failed. Please verify your Web3Forms key and connection.');
             }
         } catch (err) {
+            console.error('Transmission error:', err);
             setStatus('error');
             setErrorMessage('Network error while transmitting message. Please try again or email directly.');
         }
