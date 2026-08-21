@@ -9,9 +9,9 @@ import { portfolioData } from '../data/portfolioData';
 import { useToast } from '../context/ToastContext';
 
 // Project Logos
-import elevatexBolt from '../assets/logos/elevatex-bolt.png';
-import elevatexLogo from '../assets/logos/elevatex-logo.png';
-import conqueroneLogo from '../assets/logos/conquerone-logo.png';
+import elevatexBolt from '../assets/logos/elevatex-bolt.webp';
+import elevatexLogo from '../assets/logos/elevatex-logo.webp';
+import conqueroneLogo from '../assets/logos/conquerone-logo.webp';
 import portfolioLogo from '../assets/logos/portfolio-logo.svg';
 
 const XIcon = ({ size = 16, color = 'currentColor' }) => (
@@ -67,7 +67,10 @@ export const CommandPalette = () => {
         { id: 'projects', category: 'Navigation', title: 'All Projects', subtitle: 'Browse all case studies & works', icon: FolderGit2, action: () => navigate('/projects') },
         { id: 'skills', category: 'Navigation', title: 'Skills & Tech Stack', subtitle: 'React Native, TypeScript, Node.js', icon: Code, action: () => navigate('/skills') },
         { id: 'resume', category: 'Navigation', title: 'Resume & Experience', subtitle: 'BMSCE, certifications, timeline', icon: FileText, action: () => navigate('/resume') },
-        { id: 'testimonials', category: 'Navigation', title: 'Testimonials', subtitle: 'Feedback & quotes', icon: Star, action: () => navigate('/testimonials') },
+        ...(portfolioData.testimonials && portfolioData.testimonials.length > 0
+            ? [{ id: 'testimonials', category: 'Navigation', title: 'Testimonials', subtitle: 'Feedback & quotes', icon: Star, action: () => navigate('/testimonials') }]
+            : []
+        ),
         { id: 'contact', category: 'Navigation', title: 'Contact', subtitle: 'Get in touch directly', icon: Mail, action: () => navigate('/contact') },
         { id: 'privacy', category: 'Legal & Info', title: 'Privacy Policy', subtitle: 'Data protection & transparency', icon: ShieldCheck, action: () => navigate('/privacy') },
         { id: 'terms', category: 'Legal & Info', title: 'Terms of Service', subtitle: 'Licensing & usage terms', icon: Scale, action: () => navigate('/terms') },
@@ -282,7 +285,7 @@ export const CommandPalette = () => {
                                                     padding: item.image ? '3px' : '0'
                                                 }}>
                                                     {item.image ? (
-                                                        <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                                        <img src={item.image} alt={item.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                                                     ) : (
                                                         <item.icon size={16} />
                                                     )}

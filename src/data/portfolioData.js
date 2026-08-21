@@ -4,15 +4,15 @@
 // Update this file with your references to change the website content.
 // No coding updates are required in the components.
 // -----------------------------------------------------------------------------
-import elevatexImg from '../assets/elevatex.png';
-import elevatexMobileCoverImg from '../assets/elevatex-mobile-cover.png';
-import conqueroneImg from '../assets/conquerone.png';
-import portfolioCoverImg from '../assets/portfolio-cover.png';
+import elevatexImg from '../assets/elevatex.webp';
+import elevatexMobileCoverImg from '../assets/elevatex-mobile-cover.webp';
+import conqueroneImg from '../assets/conquerone.webp';
+import portfolioCoverImg from '../assets/portfolio-cover.webp';
 
 // Project Logos
-import elevatexLogo from '../assets/logos/elevatex-logo.png';
-import elevatexBolt from '../assets/logos/elevatex-bolt.png';
-import conqueroneLogo from '../assets/logos/conquerone-logo.png';
+import elevatexLogo from '../assets/logos/elevatex-logo.webp';
+import elevatexBolt from '../assets/logos/elevatex-bolt.webp';
+import conqueroneLogo from '../assets/logos/conquerone-logo.webp';
 import portfolioLogo from '../assets/logos/portfolio-logo.svg';
 
 export const portfolioData = {
@@ -286,24 +286,32 @@ export const portfolioData = {
     // ----------------------------------------------------
     // TESTIMONIALS SECTION
     // ----------------------------------------------------
+    // TODO: Replace with real testimonials when ready (name, role, company, photoUrl, linkedinUrl, quote)
+    // NOTE: If this array is empty ([]), the testimonials section & nav links hide automatically.
     testimonials: [
         {
-            quote: "Vivaswan demonstrates remarkable technical proficiency and architectural maturity. His ability to lead development on complex full-stack and mobile applications while solving deep systems challenges is exceptional.",
-            author: "Academic Mentor",
-            role: "Department of Computer Science & Engineering",
-            company: "BMS College of Engineering"
+            name: "Academic Mentor",
+            role: "Professor & Systems Advisor",
+            company: "BMS College of Engineering",
+            photoUrl: "", // Optional: url to avatar image
+            linkedinUrl: "", // Optional: e.g. "https://www.linkedin.com/in/..."
+            quote: "Vivaswan demonstrates remarkable technical proficiency and architectural maturity. His ability to lead development on complex full-stack and mobile applications while solving deep systems challenges is exceptional."
         },
         {
-            quote: "Working with Vivaswan on ElevateX was inspiring. He has an acute sense of UI/UX aesthetics combined with rock-solid full-stack engineering principles. He delivers production-grade code rapidly and thoughtfully.",
-            author: "Engineering Collaborator",
-            role: "Core Developer",
-            company: "ElevateX Team"
+            name: "Engineering Collaborator",
+            role: "Core Full-Stack Developer",
+            company: "ElevateX Team",
+            photoUrl: "",
+            linkedinUrl: "",
+            quote: "Working with Vivaswan on ElevateX was inspiring. He has an acute sense of UI/UX aesthetics combined with rock-solid full-stack engineering principles. He delivers production-grade code rapidly and thoughtfully."
         },
         {
-            quote: "ConquerONE stands out as a masterclass in offline-first mobile engineering. The seamless background synchronization, Gemini AI fallback integration, and clean haptic flows showcase his high engineering standards.",
-            author: "Peer Reviewer",
-            role: "Mobile Systems Reviewer",
-            company: "Developer Community"
+            name: "Mobile Systems Reviewer",
+            role: "Lead Mobile Architect",
+            company: "Developer Community",
+            photoUrl: "",
+            linkedinUrl: "",
+            quote: "ConquerONE stands out as a masterclass in offline-first mobile engineering. The seamless background synchronization, Gemini AI fallback integration, and clean haptic flows showcase his high engineering standards."
         }
     ],
 

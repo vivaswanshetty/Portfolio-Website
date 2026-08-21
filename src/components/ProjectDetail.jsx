@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { projectScreenshots } from '../data/projectScreenshots';
+import MagneticWrapper from './MagneticWrapper';
 
 const ProjectDetail = () => {
     const { slug } = useParams();
@@ -133,7 +134,7 @@ const ProjectDetail = () => {
                             justifyContent: 'center',
                             padding: '6px'
                         }}>
-                            <img src={project.logo} alt={`${project.title} Logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                            <img src={project.logo} alt={`${project.title} Logo`} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                         </div>
                     )}
                     <h1 className="editorial-page-title" style={{ margin: 0 }}>
@@ -159,15 +160,17 @@ const ProjectDetail = () => {
                 {/* Primary Action Buttons */}
                 <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '3.5rem' }}>
                     {project.link && project.link !== "/" && (
-                        <a
-                            href={project.link}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="editorial-btn-primary"
-                        >
-                            <ExternalLink size={15} style={{ marginRight: '8px' }} />
-                            {isMobileApp ? "VIEW PROJECT & RELEASES" : "LAUNCH LIVE WEB APP"}
-                        </a>
+                        <MagneticWrapper>
+                            <a
+                                href={project.link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="editorial-btn-primary"
+                            >
+                                <ExternalLink size={15} style={{ marginRight: '8px' }} />
+                                {isMobileApp ? "VIEW PROJECT & RELEASES" : "LAUNCH LIVE WEB APP"}
+                            </a>
+                        </MagneticWrapper>
                     )}
                     {project.repo && (
                         <a
@@ -222,6 +225,7 @@ const ProjectDetail = () => {
                             <img 
                                 src={project.image} 
                                 alt={`${project.title} Official Cover`} 
+                                loading="lazy"
                                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                             />
                         </div>

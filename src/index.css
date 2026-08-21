@@ -3131,3 +3131,43 @@ input:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   EDITORIAL CONTACT FORM STYLES
+   ========================================================================== */
+
+.editorial-input,
+.editorial-textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  padding: 0.85rem 1.15rem;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.editorial-input:focus,
+.editorial-textarea:focus {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.04);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
+}
+
+.editorial-input::placeholder,
+.editorial-textarea::placeholder {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.editorial-input.error,
+.editorial-textarea.error {
+  border-color: #f87171 !important;
+  background: rgba(239, 68, 68, 0.08);
+}
+

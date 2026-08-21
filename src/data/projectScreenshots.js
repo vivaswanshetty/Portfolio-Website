@@ -3,46 +3,46 @@
 // -----------------------------------------------------------------------------
 
 // ConquerONE Screenshots
-import c1Home from '../assets/projects/conquerone/Home.jpeg';
-import c1ActiveWorkout from '../assets/projects/conquerone/Actice Workout Screen.jpeg';
-import c1WorkoutOverview from '../assets/projects/conquerone/Workout overview.jpeg';
-import c1AiScreen from '../assets/projects/conquerone/AI Screen.jpeg';
-import c1Overview from '../assets/projects/conquerone/Overview.jpeg';
-import c1RestDay from '../assets/projects/conquerone/Rest Day View.jpeg';
-import c1Settings from '../assets/projects/conquerone/Settings.jpeg';
-import c1Connectors from '../assets/projects/conquerone/Additonal Connectors.jpeg';
+import c1Home from '../assets/projects/conquerone/Home.webp';
+import c1ActiveWorkout from '../assets/projects/conquerone/Actice Workout Screen.webp';
+import c1WorkoutOverview from '../assets/projects/conquerone/Workout overview.webp';
+import c1AiScreen from '../assets/projects/conquerone/AI Screen.webp';
+import c1Overview from '../assets/projects/conquerone/Overview.webp';
+import c1RestDay from '../assets/projects/conquerone/Rest Day View.webp';
+import c1Settings from '../assets/projects/conquerone/Settings.webp';
+import c1Connectors from '../assets/projects/conquerone/Additonal Connectors.webp';
 
 // ElevateX Mobile Screenshots
-import emHome from '../assets/projects/elevatex-mobile/Home.jpeg';
-import emFeed from '../assets/projects/elevatex-mobile/Feed.jpeg';
-import emExplore from '../assets/projects/elevatex-mobile/Explore Tasks.jpeg';
-import emCreateTask from '../assets/projects/elevatex-mobile/Create Task.jpeg';
-import emLobby from '../assets/projects/elevatex-mobile/Lobby.jpeg';
-import emDuels from '../assets/projects/elevatex-mobile/Duels.jpeg';
-import emChat from '../assets/projects/elevatex-mobile/Chat.jpeg';
-import emAiAssistant from '../assets/projects/elevatex-mobile/AI Assistant.jpeg';
-import emProfile from '../assets/projects/elevatex-mobile/Profile.jpeg';
+import emHome from '../assets/projects/elevatex-mobile/Home.webp';
+import emFeed from '../assets/projects/elevatex-mobile/Feed.webp';
+import emExplore from '../assets/projects/elevatex-mobile/Explore Tasks.webp';
+import emCreateTask from '../assets/projects/elevatex-mobile/Create Task.webp';
+import emLobby from '../assets/projects/elevatex-mobile/Lobby.webp';
+import emDuels from '../assets/projects/elevatex-mobile/Duels.webp';
+import emChat from '../assets/projects/elevatex-mobile/Chat.webp';
+import emAiAssistant from '../assets/projects/elevatex-mobile/AI Assistant.webp';
+import emProfile from '../assets/projects/elevatex-mobile/Profile.webp';
 
 // ElevateX Web Screenshots
-import ewOpportunities from '../assets/projects/elevatex-web/Open opportunities.png';
-import ewLeaderboard from '../assets/projects/elevatex-web/Leaderboard.png';
-import ewResonance from '../assets/projects/elevatex-web/Resonance Chamber.png';
-import ewAlchemy from '../assets/projects/elevatex-web/Alchemy Lab.png';
-import ewCreateTask from '../assets/projects/elevatex-web/Create Task.png';
-import ewProductivity from '../assets/projects/elevatex-web/Productivity.png';
-import ewProfile from '../assets/projects/elevatex-web/Profile.png';
-import ewChat from '../assets/projects/elevatex-web/Chat.png';
-import ewSubscription from '../assets/projects/elevatex-web/Subscription.png';
-import ewUserSearch from '../assets/projects/elevatex-web/User Search.png';
-import ewWallet from '../assets/projects/elevatex-web/Wallet.png';
-import ewActivity from '../assets/projects/elevatex-web/Activity.png';
+import ewOpportunities from '../assets/projects/elevatex-web/Open opportunities.webp';
+import ewLeaderboard from '../assets/projects/elevatex-web/Leaderboard.webp';
+import ewResonance from '../assets/projects/elevatex-web/Resonance Chamber.webp';
+import ewAlchemy from '../assets/projects/elevatex-web/Alchemy Lab.webp';
+import ewCreateTask from '../assets/projects/elevatex-web/Create Task.webp';
+import ewProductivity from '../assets/projects/elevatex-web/Productivity.webp';
+import ewProfile from '../assets/projects/elevatex-web/Profile.webp';
+import ewChat from '../assets/projects/elevatex-web/Chat.webp';
+import ewSubscription from '../assets/projects/elevatex-web/Subscription.webp';
+import ewUserSearch from '../assets/projects/elevatex-web/User Search.webp';
+import ewWallet from '../assets/projects/elevatex-web/Wallet.webp';
+import ewActivity from '../assets/projects/elevatex-web/Activity.webp';
 
 // Portfolio Screenshots
-import pHome from '../assets/projects/portfolio/Home.png';
-import pAbout from '../assets/projects/portfolio/About.png';
-import pProjects from '../assets/projects/portfolio/Projects.png';
-import pSkills from '../assets/projects/portfolio/Skills.png';
-import pContact from '../assets/projects/portfolio/Contact.png';
+import pHome from '../assets/projects/portfolio/Home.webp';
+import pAbout from '../assets/projects/portfolio/About.webp';
+import pProjects from '../assets/projects/portfolio/Projects.webp';
+import pSkills from '../assets/projects/portfolio/Skills.webp';
+import pContact from '../assets/projects/portfolio/Contact.webp';
 
 export const projectScreenshots = {
     'conquerone': [

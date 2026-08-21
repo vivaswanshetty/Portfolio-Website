@@ -3,10 +3,11 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowDown, Code, Cpu, Zap, Globe, User, Briefcase, Mail } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
-import vivaswanBgImg from '../assets/vivaswan_walking_bg.png';
-import vivaswanCutoutImg from '../assets/vivaswan_walking_cutout.png';
+import vivaswanBgImg from '../assets/vivaswan_walking_bg.webp';
+import vivaswanCutoutImg from '../assets/vivaswan_walking_cutout.webp';
 
-import archiveBg from '../assets/archive_bg.jpg';
+import archiveBg from '../assets/archive_bg.webp';
+import MagneticWrapper from './MagneticWrapper';
 
 const Hero = () => {
     const containerRef = useRef(null);
@@ -79,12 +80,16 @@ const Hero = () => {
                 >
                     {/* Bottom Left: Solid Rectangular Button + Text Link */}
                     <div className="editorial-cta-group">
-                        <Link to="/projects" className="editorial-btn-primary">
-                            VIEW PROJECTS
-                        </Link>
-                        <Link to="/contact" className="editorial-btn-secondary">
-                            GET IN TOUCH <ArrowRight size={14} />
-                        </Link>
+                        <MagneticWrapper>
+                            <Link to="/projects" className="editorial-btn-primary">
+                                VIEW PROJECTS
+                            </Link>
+                        </MagneticWrapper>
+                        <MagneticWrapper>
+                            <Link to="/contact" className="editorial-btn-secondary">
+                                GET IN TOUCH <ArrowRight size={14} />
+                            </Link>
+                        </MagneticWrapper>
                     </div>
 
                     {/* Bottom Right: Editorial Status Tag */}

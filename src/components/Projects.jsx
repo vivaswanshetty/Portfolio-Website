@@ -69,6 +69,7 @@ const ProjectCard = ({ project, index }) => {
                         <motion.img
                             src={project.image}
                             alt={project.title}
+                            loading="lazy"
                             style={{
                                 width: '100%',
                                 height: '100%',
@@ -126,7 +127,7 @@ const ProjectCard = ({ project, index }) => {
                                     justifyContent: 'center',
                                     padding: '4px'
                                 }}>
-                                    <img src={project.logo} alt={`${project.title} logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                    <img src={project.logo} alt={`${project.title} logo`} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                                 </div>
                             )}
                             <div>

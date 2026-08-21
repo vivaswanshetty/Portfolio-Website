@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
-import portraitImg from '../assets/vivaswan_portrait.jpg';
+import portraitImg from '../assets/vivaswan_portrait.webp';
 
 const AnimatedCounter = ({ value, duration = 2000 }) => {
     const [count, setCount] = useState(0);
@@ -99,6 +99,7 @@ const About = () => {
                         <img
                             src={portraitImg}
                             alt="Vivaswan Shetty"
+                            loading="lazy"
                             className="editorial-portrait-img"
                         />
                     </div>

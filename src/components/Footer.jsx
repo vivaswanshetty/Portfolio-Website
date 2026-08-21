@@ -7,7 +7,8 @@ import {
 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { useToast } from '../context/ToastContext';
-import vLogo from '../assets/logos/v-logo.png';
+import vLogo from '../assets/logos/v-logo.webp';
+import MagneticWrapper from './MagneticWrapper';
 
 const XIcon = ({ size = 15, color = 'currentColor' }) => (
     <svg viewBox="0 0 24 24" width={size} height={size} fill={color} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
@@ -83,7 +84,10 @@ const Footer = () => {
             links: [
                 { name: "Privacy Policy", path: "/privacy" },
                 { name: "Terms of Service", path: "/terms" },
-                { name: "Testimonials", path: "/testimonials" },
+                ...(portfolioData.testimonials && portfolioData.testimonials.length > 0 
+                    ? [{ name: "Testimonials", path: "/testimonials" }] 
+                    : []
+                ),
                 { name: "Contact Hub", path: "/contact" }
             ]
         }
@@ -157,9 +161,11 @@ const Footer = () => {
                         </div>
 
                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                            <Link to="/contact" className="editorial-btn-primary">
-                                INITIATE CONVERSATION <ArrowUpRight size={15} style={{ marginLeft: '6px' }} />
-                            </Link>
+                            <MagneticWrapper>
+                                <Link to="/contact" className="editorial-btn-primary">
+                                    INITIATE CONVERSATION <ArrowUpRight size={15} style={{ marginLeft: '6px' }} />
+                                </Link>
+                            </MagneticWrapper>
                             <button 
                                 onClick={openCommandPalette} 
                                 className="editorial-badge"
@@ -203,7 +209,7 @@ const Footer = () => {
                                 padding: '5px',
                                 boxShadow: '0 0 16px rgba(239, 68, 68, 0.2)'
                             }}>
-                                <img src={vLogo} alt="Vivaswan Shetty Monogram" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 0 4px rgba(239, 68, 68, 0.6))' }} />
+                                <img src={vLogo} alt="Vivaswan Shetty Monogram" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 0 4px rgba(239, 68, 68, 0.6))' }} />
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                                 <span style={{ 
