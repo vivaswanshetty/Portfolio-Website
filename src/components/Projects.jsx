@@ -81,7 +81,7 @@ const ProjectCard = ({ project, index }) => {
                         <div style={{
                             position: 'absolute',
                             inset: 0,
-                            background: 'linear-gradient(to top, rgba(3, 7, 18, 0.7) 0%, transparent 60%)'
+                            background: 'linear-gradient(to top, #060709 0%, transparent 60%)'
                         }} />
 
                         {/* Top Category Badge */}
@@ -99,8 +99,8 @@ const ProjectCard = ({ project, index }) => {
                                 letterSpacing: '0.14em',
                                 padding: '0.35rem 0.8rem',
                                 borderRadius: '9999px',
-                                background: '#030712',
-                                border: '1px solid rgba(255, 255, 255, 0.25)',
+                                background: 'rgba(13, 15, 23, 0.85)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
                                 color: '#f8fafc',
                                 backdropFilter: 'blur(8px)'
                             }}>
@@ -396,8 +396,8 @@ const Projects = () => {
                                 width: '100%',
                                 padding: '0.65rem 2.2rem 0.65rem 2.6rem',
                                 borderRadius: '9999px',
-                                background: 'rgba(9, 14, 26, 0.6)',
-                                border: '1px solid rgba(255, 255, 255, 0.14)',
+                                background: 'rgba(13, 15, 23, 0.75)',
+                                border: '1px solid rgba(255, 255, 255, 0.12)',
                                 color: '#ffffff',
                                 fontSize: '0.78rem',
                                 fontFamily: 'var(--font-body)',

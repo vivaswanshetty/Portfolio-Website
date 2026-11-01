@@ -250,9 +250,7 @@ const Skills = () => {
                                     } : { opacity: 0, scale: 0.85 }}
                                     whileHover={{
                                         scale: 1.04,
-                                        borderColor: '#ffffff',
-                                        backgroundColor: '#ffffff',
-                                        color: '#020617',
+                                        y: -2,
                                         transition: { duration: 0.15 }
                                     }}
                                 >
@@ -316,9 +314,7 @@ const Skills = () => {
                                     } : { opacity: 0, scale: 0.85 }}
                                     whileHover={{
                                         scale: 1.04,
-                                        borderColor: '#ffffff',
-                                        backgroundColor: '#ffffff',
-                                        color: '#020617',
+                                        y: -2,
                                         transition: { duration: 0.15 }
                                     }}
                                 >

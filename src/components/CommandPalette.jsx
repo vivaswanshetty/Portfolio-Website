@@ -156,7 +156,7 @@ export const CommandPalette = () => {
                         alignItems: 'flex-start',
                         justifyContent: 'center',
                         padding: '12vh 1rem 2rem',
-                        background: 'rgba(2, 6, 23, 0.75)',
+                        background: 'rgba(6, 7, 9, 0.80)',
                         backdropFilter: 'blur(12px)',
                         WebkitBackdropFilter: 'blur(12px)'
                     }}
@@ -171,11 +171,11 @@ export const CommandPalette = () => {
                         style={{
                             width: '100%',
                             maxWidth: '640px',
-                            background: 'rgba(3, 7, 18, 0.96)',
+                            background: 'rgba(13, 15, 23, 0.96)',
                             backdropFilter: 'blur(30px)',
                             WebkitBackdropFilter: 'blur(30px)',
-                            border: '1px solid rgba(255, 255, 255, 0.16)',
-                            borderTop: '2px solid #ef4444',
+                            border: '1px solid rgba(255, 255, 255, 0.14)',
+                            borderTop: '2px solid rgba(239, 68, 68, 0.9)',
                             borderRadius: '1.25rem',
                             boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 30px rgba(239, 68, 68, 0.1)',
                             overflow: 'hidden',
@@ -332,7 +332,7 @@ export const CommandPalette = () => {
                             alignItems: 'center',
                             justifyContent: 'space-between',
                             padding: '0.75rem 1.25rem',
-                            background: 'rgba(2, 6, 23, 0.8)',
+                            background: 'rgba(6, 7, 9, 0.9)',
                             borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                             fontSize: '0.72rem',
                             color: 'var(--text-muted)',

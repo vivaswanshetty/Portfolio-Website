@@ -96,7 +96,10 @@ const Hero = () => {
 
                     {/* Bottom Right: Editorial Status Tag */}
                     <div className="editorial-status-tag">
-                        <span className="editorial-status-line">AVAILABLE FOR</span>
+                        <div className="editorial-status-header">
+                            <span className="editorial-status-beacon" aria-hidden="true" />
+                            <span className="editorial-status-line">AVAILABLE FOR</span>
+                        </div>
                         <span className="editorial-status-line highlight">HIGH-IMPACT ROLES</span>
                         <span className="editorial-status-line accent">2026</span>
                     </div>

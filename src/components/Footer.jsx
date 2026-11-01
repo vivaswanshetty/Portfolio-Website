@@ -133,9 +133,9 @@ const Footer = () => {
                         gap: '2rem',
                         position: 'relative',
                         overflow: 'hidden',
-                        background: 'rgba(9, 14, 26, 0.65)',
+                        background: 'rgba(13, 15, 23, 0.75)',
                         backdropFilter: 'blur(20px)',
-                        borderTop: '2px solid #ef4444'
+                        borderTop: '2px solid rgba(239, 68, 68, 0.85)'
                     }}
                 >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '2rem' }}>

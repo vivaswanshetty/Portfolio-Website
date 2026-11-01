@@ -40,7 +40,7 @@ class ErrorBoundary extends Component {
                 }}>
                     <div style={{
                         maxWidth: '560px',
-                        background: 'rgba(9, 14, 26, 0.75)',
+                        background: 'rgba(13, 15, 23, 0.85)',
                         border: '1px solid rgba(239, 68, 68, 0.3)',
                         borderRadius: '1.25rem',
                         padding: '3rem 2rem',
