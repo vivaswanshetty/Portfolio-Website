@@ -41,7 +41,7 @@ export const portfolioData = {
     about: {
         title: "About Me",
         tagline: "Visionary. Builder. Leader.",
-        description: "I am currently pursuing my B.E degree in Computer Science & Engineering from BMS College of Engineering, Bengaluru - 560019, with a focus on blending technical depth with entrepreneurial vision. My journey is defined by a relentless drive to innovate and lead teams towards impactful technology solutions. I believe in the power of code to solve real-world problems and creating sustainable business models around them.",
+        description: "I'm Vivaswan Shetty, a 20-year-old Computer Science & Engineering student at BMS College of Engineering, Bengaluru, driven by a fascination with technology, product innovation, and entrepreneurship. I build digital products, explore emerging technologies, and turn ideas into tangible solutions. From developing web platforms and mobile applications to building ventures, my focus lies at the intersection of engineering, business, and human experience. I believe great products emerge when technical thinking meets bold vision and disciplined execution. My goal is to build technology that solves meaningful problems, creates lasting value, and scales into something bigger than an idea.",
         highlights: [
             "Aspiring Tech Entrepreneur",
             "Full Stack Developer",
