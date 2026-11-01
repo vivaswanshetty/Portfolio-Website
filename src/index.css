@@ -1087,6 +1087,7 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.65rem;
   background: #ffffff;
   color: #060709;
   font-family: var(--font-body);

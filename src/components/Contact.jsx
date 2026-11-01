@@ -117,9 +117,9 @@ const Contact = () => {
                 setErrorMessage(data.message || 'Submission failed. Please verify your Web3Forms key and connection.');
             }
         } catch (err) {
-            console.error('Transmission error:', err);
+            console.error('Submission error:', err);
             setStatus('error');
-            setErrorMessage('Network error while transmitting message. Please try again or email directly.');
+            setErrorMessage('Network error while sending message. Please try again or email directly.');
         }
     };
 
@@ -206,7 +206,7 @@ const Contact = () => {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
                                 <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444', boxShadow: '0 0 10px #ef4444' }} />
                                 <span style={{ fontSize: '0.74rem', fontFamily: 'var(--font-heading)', fontWeight: 700, letterSpacing: '0.1em', color: '#ffffff', textTransform: 'uppercase' }}>
-                                    RAPID TRANSMISSION GUARANTEE
+                                    RAPID RESPONSE GUARANTEE
                                 </span>
                             </div>
                             <p style={{ margin: 0, fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
@@ -329,7 +329,7 @@ const Contact = () => {
                                     className="editorial-btn-primary"
                                     style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', padding: '0.85rem 1.75rem' }}
                                 >
-                                    <RefreshCw size={15} /> SEND ANOTHER TRANSMISSION
+                                    <RefreshCw size={15} /> SEND ANOTHER MESSAGE
                                 </button>
                             </MagneticWrapper>
                         </motion.div>
@@ -338,7 +338,7 @@ const Contact = () => {
                         <div>
                             <div style={{ marginBottom: '1.5rem' }}>
                                 <span className="editorial-eyebrow-text" style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-                                    ELECTRONIC TRANSMISSION
+                                    DIRECT MESSAGE
                                 </span>
                             </div>
 
@@ -469,10 +469,14 @@ const Contact = () => {
                                             disabled={status === 'submitting'}
                                             className="editorial-btn-primary"
                                             style={{
-                                                width: '100%',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
                                                 justifyContent: 'center',
-                                                padding: '0.95rem 1.5rem',
-                                                fontSize: '0.84rem',
+                                                gap: '0.65rem',
+                                                padding: '0.90rem 2rem',
+                                                fontSize: '0.82rem',
+                                                fontWeight: 700,
+                                                letterSpacing: '0.14em',
                                                 opacity: status === 'submitting' ? 0.75 : 1,
                                                 cursor: status === 'submitting' ? 'not-allowed' : 'pointer'
                                             }}
@@ -480,12 +484,12 @@ const Contact = () => {
                                             {status === 'submitting' ? (
                                                 <>
                                                     <Loader2 size={16} className="animate-spin" style={{ animation: 'spin 1s linear infinite' }} />
-                                                    <span>TRANSMITTING MESSAGE...</span>
+                                                    <span>SENDING MESSAGE...</span>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <Send size={16} />
-                                                    <span>TRANSMIT INQUIRY</span>
+                                                    <Send size={15} style={{ display: 'inline-block', verticalAlign: 'middle', transform: 'translateY(-0.5px)' }} />
+                                                    <span>SEND MESSAGE</span>
                                                 </>
                                             )}
                                         </button>
