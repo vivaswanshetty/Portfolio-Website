@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { 
     Github, Linkedin, Mail, MapPin, ArrowUpRight, Instagram, 
@@ -17,6 +17,8 @@ const XIcon = ({ size = 15, color = 'currentColor' }) => (
 );
 
 const Footer = () => {
+    const location = useLocation();
+    const isContactPage = location.pathname === '/contact';
     const currentYear = new Date().getFullYear();
     const { contact } = portfolioData;
     const ref = useRef(null);
@@ -107,66 +109,68 @@ const Footer = () => {
             style={{
                 position: 'relative',
                 background: 'transparent',
-                borderTop: 'none',
-                padding: '3rem 0 3rem',
+                borderTop: isContactPage ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
+                padding: isContactPage ? '4.5rem 0 3rem' : '3rem 0 3rem',
                 overflow: 'hidden'
             }}
         >
             <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', position: 'relative', zIndex: 2 }}>
                 
-                {/* Pre-Footer Editorial Callout Card */}
-                <motion.div 
-                    className="editorial-card"
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    style={{
-                        padding: '3.5rem 3rem',
-                        marginBottom: '5rem',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '2rem',
-                        position: 'relative',
-                        overflow: 'hidden',
-                        background: 'rgba(13, 15, 23, 0.75)',
-                        backdropFilter: 'blur(20px)',
-                        borderTop: '2px solid rgba(239, 68, 68, 0.85)'
-                    }}
-                >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '2rem' }}>
-                        <div style={{ maxWidth: '650px' }}>
-                            <div className="editorial-eyebrow-container" style={{ marginBottom: '1rem' }}>
-                                <span className="editorial-eyebrow-text">
-                                    AVAILABLE FOR 2026 INITIATIVES
-                                </span>
+                {/* Pre-Footer Editorial Callout Card (hidden on /contact to prevent duplicate CTA loop) */}
+                {!isContactPage && (
+                    <motion.div 
+                        className="editorial-card"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        style={{
+                            padding: '3.5rem 3rem',
+                            marginBottom: '5rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '2rem',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            background: 'rgba(13, 15, 23, 0.75)',
+                            backdropFilter: 'blur(20px)',
+                            borderTop: '2px solid rgba(239, 68, 68, 0.85)'
+                        }}
+                    >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '2rem' }}>
+                            <div style={{ maxWidth: '650px' }}>
+                                <div className="editorial-eyebrow-container" style={{ marginBottom: '1rem' }}>
+                                    <span className="editorial-eyebrow-text">
+                                        AVAILABLE FOR 2026 INITIATIVES
+                                    </span>
+                                </div>
+                                <h3 style={{ 
+                                    fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', 
+                                    fontFamily: 'var(--font-heading)',
+                                    fontWeight: 900,
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '-0.02em',
+                                    color: '#ffffff',
+                                    margin: '0 0 1rem',
+                                    lineHeight: 1.15
+                                }}>
+                                    LET'S BUILD <span style={{ color: '#ef4444' }}>HIGH-IMPACT</span> SYSTEMS TOGETHER.
+                                </h3>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
+                                    Visionary platforms, high-performance distributed systems, or mobile engineering challenges.
+                                </p>
                             </div>
-                            <h3 style={{ 
-                                fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', 
-                                fontFamily: 'var(--font-heading)',
-                                fontWeight: 900,
-                                textTransform: 'uppercase',
-                                letterSpacing: '-0.02em',
-                                color: '#ffffff',
-                                margin: '0 0 1rem',
-                                lineHeight: 1.15
-                            }}>
-                                LET'S BUILD <span style={{ color: '#ef4444' }}>HIGH-IMPACT</span> SYSTEMS TOGETHER.
-                            </h3>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
-                                Visionary platforms, high-performance distributed systems, or mobile engineering challenges.
-                            </p>
-                        </div>
 
-                        <div>
-                            <MagneticWrapper>
-                                <Link to="/contact" className="editorial-btn-primary">
-                                    INITIATE CONVERSATION <ArrowUpRight size={15} style={{ marginLeft: '6px' }} />
-                                </Link>
-                            </MagneticWrapper>
+                            <div>
+                                <MagneticWrapper>
+                                    <Link to="/contact" className="editorial-btn-primary">
+                                        INITIATE CONVERSATION <ArrowUpRight size={15} style={{ marginLeft: '6px' }} />
+                                    </Link>
+                                </MagneticWrapper>
+                            </div>
                         </div>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                )}
 
                 {/* Main 4-Column Editorial Footer Grid */}
                 <div style={{ 

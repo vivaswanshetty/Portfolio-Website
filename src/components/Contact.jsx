@@ -143,16 +143,17 @@ const Contact = () => {
                         <span className="editorial-eyebrow-text">
                             COMMUNICATIONS & INQUIRIES.
                         </span>
+                        <div className="editorial-eyebrow-rule" />
                     </div>
                     <h1 
                         className="editorial-page-title"
                         style={{
-                            display: 'inline-flex',
+                            display: 'flex',
                             alignItems: 'baseline',
                             flexWrap: 'nowrap',
                             gap: 'clamp(0.08rem, 0.4vw, 0.35rem)',
-                            marginBottom: '1.5rem',
-                            paddingTop: '0.85rem',
+                            margin: '0.75rem 0 1.25rem',
+                            paddingTop: '0.5rem',
                             paddingBottom: '0.5rem'
                         }}
                     >
