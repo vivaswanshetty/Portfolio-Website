@@ -3,7 +3,7 @@ import { NavLink, Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { 
     Github, Linkedin, Mail, MapPin, ArrowUpRight, Instagram, 
-    Copy, ArrowUp, Clock, Terminal, Sparkles, CheckCheck
+    Copy, ArrowUp, Clock, Sparkles, CheckCheck
 } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { useToast } from '../context/ToastContext';
@@ -45,10 +45,6 @@ const Footer = () => {
 
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    const openCommandPalette = () => {
-        window.dispatchEvent(new CustomEvent('open-command-palette'));
     };
 
     const handleCopyEmail = (e) => {
@@ -162,29 +158,12 @@ const Footer = () => {
                             </p>
                         </div>
 
-                        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        <div>
                             <MagneticWrapper>
                                 <Link to="/contact" className="editorial-btn-primary">
                                     INITIATE CONVERSATION <ArrowUpRight size={15} style={{ marginLeft: '6px' }} />
                                 </Link>
                             </MagneticWrapper>
-                            <button 
-                                onClick={openCommandPalette} 
-                                className="editorial-badge"
-                                style={{ 
-                                    padding: '0.75rem 1.25rem', 
-                                    cursor: 'pointer', 
-                                    display: 'inline-flex', 
-                                    alignItems: 'center', 
-                                    gap: '0.6rem',
-                                    fontSize: '0.76rem'
-                                }}
-                                title="Open Command Palette (⌘K)"
-                            >
-                                <Terminal size={14} />
-                                <span>COMMAND MENU</span>
-                                <span style={{ fontFamily: 'monospace', opacity: 0.7, marginLeft: '4px' }}>⌘K</span>
-                            </button>
                         </div>
                     </div>
                 </motion.div>

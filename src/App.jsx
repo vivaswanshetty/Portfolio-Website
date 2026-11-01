@@ -22,7 +22,6 @@ import Footer from './components/Footer';
 import Starfield from './components/Starfield';
 import ScrollProgress from './components/ScrollProgress';
 import ScrollToTop from './components/ScrollToTop';
-import CommandPalette from './components/CommandPalette';
 import SpotlightCursor from './components/SpotlightCursor';
 import CookieBanner from './components/CookieBanner';
 import { ToastProvider } from './context/ToastContext';
@@ -125,7 +124,6 @@ function App() {
                 <Starfield />
                 <SpotlightCursor />
                 <ScrollProgress />
-                <CommandPalette />
                 <CookieBanner />
                 <ToastContainer />
                 <Analytics />

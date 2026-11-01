@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, User, FolderGit2, FileText, Mail, Menu, X, Code, Search } from 'lucide-react';
+import { Home, User, FolderGit2, FileText, Mail, Menu, X, Code } from 'lucide-react';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -17,10 +17,6 @@ const Navbar = () => {
         { name: 'Skills', path: '/skills', icon: Code },
         { name: 'Resume', path: '/resume', icon: FileText },
     ];
-
-    const openCommandPalette = () => {
-        window.dispatchEvent(new CustomEvent('open-command-palette'));
-    };
 
     // Focus management when menu opens/closes
     useEffect(() => {
@@ -126,19 +122,8 @@ const Navbar = () => {
                     ))}
                 </div>
 
-                {/* Right Side Actions: Command Palette & Contact */}
+                {/* Right Side Actions: Contact */}
                 <div className="desktop-only navbar-actions">
-                    <motion.button
-                        onClick={openCommandPalette}
-                        className="navbar-cmd-btn"
-                        whileHover={{ scale: 1.04 }}
-                        whileTap={{ scale: 0.96 }}
-                        title="Search & Commands (⌘K / Ctrl+K)"
-                    >
-                        <Search size={13} className="navbar-cmd-icon" />
-                        <span className="navbar-cmd-shortcut">⌘K</span>
-                    </motion.button>
-
                     <NavLink to="/contact" className="navbar-contact-btn">
                         <span>Contact</span>
                     </NavLink>
@@ -146,15 +131,6 @@ const Navbar = () => {
 
                 {/* Mobile Right Controls */}
                 <div className="mobile-actions">
-                    <motion.button
-                        onClick={openCommandPalette}
-                        className="mobile-cmd-btn"
-                        whileTap={{ scale: 0.92 }}
-                        title="Search & Commands"
-                    >
-                        <Search size={17} />
-                    </motion.button>
-
                     <motion.button
                         ref={toggleBtnRef}
                         onClick={() => setIsOpen(!isOpen)}

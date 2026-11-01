@@ -410,7 +410,6 @@ export const portfolioData = {
     // ----------------------------------------------------
     contact: {
         email: "vivaswanprofessional@gmail.com",
-        phone: "+91 9741634863",
         location: "Bengaluru, India",
         linkedin: "https://www.linkedin.com/in/vivaswanshetty",
         github: "https://github.com/vivaswanshetty",

@@ -396,39 +396,6 @@ img {
   gap: 0.5rem;
 }
 
-.navbar-cmd-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.45rem 0.75rem;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.navbar-cmd-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: #ef4444;
-  color: #ffffff;
-  box-shadow: 0 0 12px rgba(239, 68, 68, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
-
-.navbar-cmd-icon {
-  color: #f8fafc;
-}
-
-.navbar-cmd-shortcut {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  font-family: monospace;
-}
-
 .navbar-contact-btn {
   display: inline-flex;
   align-items: center;
@@ -461,19 +428,6 @@ img {
   display: none;
   align-items: center;
   gap: 0.4rem;
-}
-
-.mobile-cmd-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #f8fafc;
-  cursor: pointer;
 }
 
 .mobile-toggle {
@@ -2997,18 +2951,6 @@ button:focus-visible,
 input:focus-visible {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
-}
-
-/* Custom Scrollbar for Command Palette */
-.command-palette-scroll::-webkit-scrollbar {
-  width: 4px;
-}
-.command-palette-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 4px;
-}
-.command-palette-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(239, 68, 68, 0.5);
 }
 
 /* ==========================================================================
