@@ -37,7 +37,7 @@ const ProjectDetail = () => {
     }
 
     const screenshots = projectScreenshots[slug] || [];
-    const isMobileApp = project.category === "Mobile Apps" || slug === "elevatex-mobile" || slug === "conquerone";
+    const isMobileApp = project.category === "Mobile Apps" || slug === "elevatex-mobile" || slug === "conquerone" || slug === "medfind";
 
     // Categories in screenshots
     const screenshotCategories = ['All', ...new Set(screenshots.map(s => s.category))];
@@ -327,11 +327,26 @@ const ProjectDetail = () => {
                                     </span>
                                 </div>
 
-                                <div style={{ position: 'relative', overflow: 'hidden', width: '100%', aspectRatio: isMobileApp ? '9/16' : '16/10' }}>
+                                <div style={{ 
+                                    position: 'relative', 
+                                    overflow: 'hidden', 
+                                    width: '100%', 
+                                    aspectRatio: isMobileApp ? '9/18.5' : '16/9.5',
+                                    background: '#04050a',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
                                     <img 
                                         src={item.src} 
                                         alt={item.title} 
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                                        style={{ 
+                                            width: '100%', 
+                                            height: '100%', 
+                                            objectFit: isMobileApp ? 'contain' : 'cover', 
+                                            objectPosition: 'top center',
+                                            display: 'block' 
+                                        }}
                                         loading="lazy" 
                                     />
                                 </div>
@@ -518,12 +533,14 @@ const ProjectDetail = () => {
                             onClick={(e) => e.stopPropagation()}
                             style={{
                                 width: '100%',
-                                maxWidth: '1000px',
+                                maxWidth: isMobileApp ? '480px' : '1150px',
                                 background: '#030712',
                                 border: '1px solid rgba(255, 255, 255, 0.2)',
                                 position: 'relative',
                                 display: 'flex',
-                                flexDirection: 'column'
+                                flexDirection: 'column',
+                                borderRadius: isMobileApp ? '16px' : '4px',
+                                overflow: 'hidden'
                             }}
                         >
                             {/* Close button */}
@@ -594,8 +611,8 @@ const ProjectDetail = () => {
                                 </>
                             )}
 
-                            <div style={{ width: '100%', maxHeight: '70vh', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#020617' }}>
-                                <img src={selectedImage.src} alt={selectedImage.title} style={{ maxWidth: '100%', maxHeight: '70vh', objectFit: 'contain' }} />
+                            <div style={{ width: '100%', maxHeight: '76vh', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#020617', padding: isMobileApp ? '1.25rem 1rem' : '0.5rem' }}>
+                                <img src={selectedImage.src} alt={selectedImage.title} style={{ maxWidth: '100%', maxHeight: '74vh', objectFit: 'contain', borderRadius: isMobileApp ? '12px' : '2px' }} />
                             </div>
 
                             <div style={{ padding: '1.5rem 2rem', borderTop: '1px solid rgba(255, 255, 255, 0.12)' }}>

@@ -37,6 +37,22 @@ import ewUserSearch from '../assets/projects/elevatex-web/User Search.webp';
 import ewWallet from '../assets/projects/elevatex-web/Wallet.webp';
 import ewActivity from '../assets/projects/elevatex-web/Activity.webp';
 
+// RV Tours & Travels Screenshots
+import rvHome from '../assets/projects/rv-tours/Home.webp';
+import rvFleet from '../assets/projects/rv-tours/Fleet.webp';
+import rvPlan from '../assets/projects/rv-tours/Plan-Your-Trip.webp';
+import rvTours from '../assets/projects/rv-tours/Tour-Packages.webp';
+import rvOperations from '../assets/projects/rv-tours/Operations.webp';
+
+// MedFind Screenshots
+import mfHomeDark from '../assets/projects/medfind/Home-Dark.webp';
+import mfHomeLight from '../assets/projects/medfind/Home-Light.webp';
+import mfSearch from '../assets/projects/medfind/Search-Medicines.webp';
+import mfDecayDark from '../assets/projects/medfind/Freshness-Scale-Dark.webp';
+import mfDecayLight from '../assets/projects/medfind/Freshness-Scale-Light.webp';
+import mfNearbyCare from '../assets/projects/medfind/Nearby-Care.webp';
+import mfEmergency from '../assets/projects/medfind/Emergency-Screen.webp';
+
 // Portfolio Screenshots
 import pHome from '../assets/projects/portfolio/Home.webp';
 import pAbout from '../assets/projects/portfolio/About.webp';
@@ -45,8 +61,22 @@ import pSkills from '../assets/projects/portfolio/Skills.webp';
 import pContact from '../assets/projects/portfolio/Contact.webp';
 
 export const projectScreenshots = {
-    'medfind': [],
-    'rv-tours-and-travels': [],
+    'medfind': [
+        { src: mfHomeDark, title: "Emergency Dashboard (Dark Mode)", category: "Core UI", description: "Real-time medicine search bar, emergency SOS quick dialer banner, and category access." },
+        { src: mfHomeLight, title: "Emergency Dashboard (Light Mode)", category: "Core UI", description: "High-contrast daylight theme with clean typography and fast facility directory cards." },
+        { src: mfSearch, title: "Medicine & Pharmacy Inventory Search", category: "Search & Inventory", description: "Dosage formulation isolation (tablets, suspensions) with stock verification status and pharmacy locations." },
+        { src: mfDecayDark, title: "Stock Freshness & Decay Matrix (Dark)", category: "Inventory Architecture", description: "Transparent 4-tier stock decay engine (Recent ≤30m, Aging ≤2h, Stale >2h, Unreported) preventing phantom stock claims." },
+        { src: mfDecayLight, title: "Stock Freshness & Decay Matrix (Light)", category: "Inventory Architecture", description: "Clear daylight verification metrics showing real audit decay timestamps." },
+        { src: mfNearbyCare, title: "Nearby Healthcare & Geolocation Discovery", category: "Healthcare Geolocation", description: "Privacy-preserving OpenStreetMap Overpass queries with coordinate truncation to 2 decimals (~1km radius)." },
+        { src: mfEmergency, title: "Global Emergency Directory & Native Dialer", category: "Emergency Services", description: "Curated emergency helpline numbers across 87 countries with intent-based native dialer invocation." }
+    ],
+    'rv-tours-and-travels': [
+        { src: rvHome, title: "Vintage Departure Manifest & Hero Stage", category: "Brand & Hero", description: "Vintage aviation and railway luxury boarding pass design with split-flap departure board and liquid glass aesthetics." },
+        { src: rvFleet, title: "Executive Fleet Lineup & Specs", category: "Fleet Showcase", description: "Comprehensive vehicle specifications for Toyota Etios, Innova Crysta, and Force Tempo Traveller with luggage and passenger capacity." },
+        { src: rvPlan, title: "Serverless Trip Planner & Boarding Pass Booking", category: "Booking Engine", description: "Interactive booking form dispatch generating unique trip manifest codes (RV-YYYYMMDD-XXXX) with direct WhatsApp routing." },
+        { src: rvTours, title: "Pilgrimage Circuits & Coastal Tour Packages", category: "Tour Packages", description: "Curated itineraries for temple circuits, coastal exploration, and multi-day bespoke travel routes." },
+        { src: rvOperations, title: "Operational Coverage & Chauffeur Network", category: "Operations", description: "Regional route coverage, airport pickup protocols, transparent per-kilometer fare manifests, and 24/7 helpline." }
+    ],
     'conquerone': [
         { src: c1Home, title: "Training Dashboard & Streak Tracker", category: "Core UI", description: "Daily program routine, weekly split progress, rank tier status, and automated active day streak." },
         { src: c1ActiveWorkout, title: "Active Workout & Live Set Timer", category: "Training Engine", description: "Live rest countdowns, automated rep & weight logging, progressive overload prompts, and haptic feedback." },
