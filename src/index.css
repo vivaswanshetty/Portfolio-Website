@@ -915,6 +915,76 @@ p {
   z-index: 5;
 }
 
+/* Layer 1: Studio Atmospheric Backlight */
+.editorial-hero-backlight-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 50%,
+    rgba(239, 68, 68, 0.16) 0%,
+    rgba(245, 158, 11, 0.07) 28%,
+    rgba(239, 68, 68, 0.03) 52%,
+    transparent 72%
+  );
+}
+
+.editorial-hero-backlight-layer::before {
+  content: '';
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(520px, 85vw);
+  height: min(520px, 85vw);
+  background: radial-gradient(
+    circle at center,
+    rgba(239, 68, 68, 0.28) 0%,
+    rgba(244, 63, 94, 0.12) 38%,
+    transparent 70%
+  );
+  filter: blur(55px);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: studioGlowPulse 8s ease-in-out infinite alternate;
+}
+
+.editorial-hero-backlight-layer::after {
+  content: '';
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(980px, 92vw);
+  height: 200px;
+  background: radial-gradient(
+    ellipse 65% 100% at 50% 50%,
+    rgba(239, 68, 68, 0.10) 0%,
+    rgba(245, 158, 11, 0.04) 45%,
+    transparent 75%
+  );
+  filter: blur(45px);
+  pointer-events: none;
+}
+
+@keyframes studioGlowPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 1;
+  }
+}
+
 /* Layer 2: Massive Ultra-Bold Display Wordmark Morphed Between Photo and Subject */
 .editorial-hero-typography-layer {
   position: absolute;
@@ -941,6 +1011,7 @@ p {
   letter-spacing: -0.04em;
   line-height: 0.8;
   color: #ffffff;
+  text-shadow: 0 0 80px rgba(239, 68, 68, 0.25);
   text-align: center;
   white-space: nowrap;
   user-select: none;
@@ -974,7 +1045,8 @@ p {
   object-fit: contain;
   object-position: center bottom;
   display: block;
-  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.85));
+  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.85))
+          drop-shadow(0 0 40px rgba(239, 68, 68, 0.18));
 }
 
 /* Layer 10: Content Overlay Wrapper */
@@ -1675,6 +1747,18 @@ p {
     height: 100% !important;
     min-height: 100dvh !important;
     align-items: flex-end !important;
+  }
+
+  .editorial-hero-backlight-layer::before {
+    top: 38% !important;
+    width: 280px !important;
+    height: 280px !important;
+    filter: blur(40px) !important;
+  }
+
+  .editorial-hero-backlight-layer::after {
+    top: 42% !important;
+    height: 120px !important;
   }
 
   .editorial-display-wordmark {

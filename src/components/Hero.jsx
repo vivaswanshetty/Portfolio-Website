@@ -23,6 +23,9 @@ const Hero = () => {
             ref={containerRef}
             className="editorial-hero-section"
         >
+            {/* Layer 1: Studio Atmospheric Backlight */}
+            <div className="editorial-hero-backlight-layer" />
+
             {/* Layer 2: Massive Ultra-Bold Display Typography Morphed Directly Into 3D Depth */}
             <motion.div 
                 className="editorial-hero-typography-layer"
