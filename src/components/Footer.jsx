@@ -362,10 +362,6 @@ const Footer = () => {
                         <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
                             © {currentYear} <strong>Vivaswan Shetty</strong>. Built with precision, React 19 & Vite.
                         </p>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.74rem', color: '#34d399', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>
-                            <span className="live-pulse-dot" />
-                            <span>ALL SYSTEMS OPERATIONAL</span>
-                        </div>
                     </div>
 
                     <div>
