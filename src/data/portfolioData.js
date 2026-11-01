@@ -413,7 +413,7 @@ export const portfolioData = {
         location: "Bengaluru, India",
         linkedin: "https://www.linkedin.com/in/vivaswanshetty",
         github: "https://github.com/vivaswanshetty",
-        instagram: "https://instagram.com/vivaswan.shetty",
+        instagram: "https://www.instagram.com/vivaswanshettyy",
         x: "https://x.com/vivaswanshetty",
         tagline: "Always open to collaborating on high-impact projects, tech startups, and visionary engineering challenges."
     }
