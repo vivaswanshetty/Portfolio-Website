@@ -45,6 +45,8 @@ import pSkills from '../assets/projects/portfolio/Skills.webp';
 import pContact from '../assets/projects/portfolio/Contact.webp';
 
 export const projectScreenshots = {
+    'medfind': [],
+    'rv-tours-and-travels': [],
     'conquerone': [
         { src: c1Home, title: "Training Dashboard & Streak Tracker", category: "Core UI", description: "Daily program routine, weekly split progress, rank tier status, and automated active day streak." },
         { src: c1ActiveWorkout, title: "Active Workout & Live Set Timer", category: "Training Engine", description: "Live rest countdowns, automated rep & weight logging, progressive overload prompts, and haptic feedback." },

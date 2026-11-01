@@ -13,6 +13,8 @@ import elevatexBolt from '../assets/logos/elevatex-bolt.webp';
 import elevatexLogo from '../assets/logos/elevatex-logo.webp';
 import conqueroneLogo from '../assets/logos/conquerone-logo.webp';
 import portfolioLogo from '../assets/logos/portfolio-logo.svg';
+import medfindLogo from '../assets/logos/medfind-logo.webp';
+import rvToursLogo from '../assets/logos/rv-tours-logo.webp';
 
 const XIcon = ({ size = 16, color = 'currentColor' }) => (
     <svg viewBox="0 0 24 24" width={size} height={size} fill={color} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
@@ -76,6 +78,8 @@ export const CommandPalette = () => {
         { id: 'terms', category: 'Legal & Info', title: 'Terms of Service', subtitle: 'Licensing & usage terms', icon: Scale, action: () => navigate('/terms') },
 
         // Featured Case Studies with Custom Logos
+        { id: 'case-medfind', category: 'Case Studies', title: 'MedFind', subtitle: 'React Native, Honest Stock Freshness & Emergency Care', image: medfindLogo, action: () => navigate('/projects/medfind') },
+        { id: 'case-rv-tours', category: 'Case Studies', title: 'RV Tours & Travels', subtitle: 'Next.js 16, React 19 Luxury Chauffeur & Travel Platform', image: rvToursLogo, action: () => navigate('/projects/rv-tours-and-travels') },
         { id: 'case-elevatex-web', category: 'Case Studies', title: 'ElevateX Web Platform', subtitle: 'MERN, Socket.io, Razorpay Escrow Case Study', image: elevatexBolt, action: () => navigate('/projects/elevatex-web') },
         { id: 'case-elevatex-mobile', category: 'Case Studies', title: 'ElevateX Mobile App', subtitle: 'React Native, Multiplayer 1v1 Duels Case Study', image: elevatexLogo, action: () => navigate('/projects/elevatex-mobile') },
         { id: 'case-conquerone', category: 'Case Studies', title: 'ConquerONE (AI Fitness)', subtitle: 'Gemini AI 6-Model Cascade & Health Connect', image: conqueroneLogo, action: () => navigate('/projects/conquerone') },

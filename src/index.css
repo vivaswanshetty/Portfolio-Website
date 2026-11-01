@@ -953,22 +953,28 @@ p {
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
-  height: 140vh;
-  min-height: 960px;
+  height: 100%;
   z-index: 3;
   pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   overflow: hidden;
-  mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 95%);
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 95%);
+  mask-image: linear-gradient(to bottom, black 0%, black 78%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 78%, transparent 100%);
 }
 
 .editorial-hero-cutout-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
+  height: clamp(520px, 80vh, 880px);
+  width: auto;
+  max-width: 90vw;
+  object-fit: contain;
+  object-position: center bottom;
   display: block;
+  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.85));
 }
 
 /* Layer 10: Content Overlay Wrapper */
@@ -1658,17 +1664,17 @@ p {
     box-sizing: border-box !important;
   }
 
-  /* Position photo & cutout so Vivaswan's face is clearly framed in upper center without obstruction */
-  .home-editorial-bg-img,
+  /* Position cutout so Vivaswan's face is clearly framed in upper center without obstruction */
   .editorial-hero-cutout-img {
-    object-position: center 18% !important;
-    height: 100dvh !important;
-    min-height: 100dvh !important;
+    height: clamp(380px, 64vh, 560px) !important;
+    max-width: 96vw !important;
+    object-position: center bottom !important;
   }
 
   .editorial-hero-cutout-layer {
-    height: 100dvh !important;
+    height: 100% !important;
     min-height: 100dvh !important;
+    align-items: flex-end !important;
   }
 
   .editorial-display-wordmark {

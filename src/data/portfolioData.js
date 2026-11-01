@@ -8,12 +8,16 @@ import elevatexImg from '../assets/elevatex.webp';
 import elevatexMobileCoverImg from '../assets/elevatex-mobile-cover.webp';
 import conqueroneImg from '../assets/conquerone.webp';
 import portfolioCoverImg from '../assets/portfolio-cover.webp';
+import medfindImg from '../assets/medfind.webp';
+import rvToursImg from '../assets/rv-tours.webp';
 
 // Project Logos
 import elevatexLogo from '../assets/logos/elevatex-logo.webp';
 import elevatexBolt from '../assets/logos/elevatex-bolt.webp';
 import conqueroneLogo from '../assets/logos/conquerone-logo.webp';
 import portfolioLogo from '../assets/logos/portfolio-logo.svg';
+import medfindLogo from '../assets/logos/medfind-logo.webp';
+import rvToursLogo from '../assets/logos/rv-tours-logo.webp';
 
 export const portfolioData = {
     // ----------------------------------------------------
@@ -72,6 +76,20 @@ export const portfolioData = {
         ],
         experience: [
             {
+                role: "Lead Mobile Architect",
+                company: "MedFind (Healthcare Discovery System)",
+                duration: "2026",
+                description: "Architected an Android-first emergency medicine discovery client with React Native 0.88, Expo SDK 58, and TypeScript. Implemented an honest 4-tier stock freshness decay engine, OpenStreetMap Overpass live radius queries with coordinate privacy rounding, emergency direct dialer across 87 countries, and offline-first medicine expiry notifications.",
+                highlights: ["React Native 0.88", "Expo SDK 58", "OpenStreetMap", "TypeScript", "Supabase", "AsyncStorage"]
+            },
+            {
+                role: "Full-Stack Architect & Consultant",
+                company: "RV Tours & Travels (Udupi, Karnataka)",
+                duration: "2026 - Present",
+                description: "Designed and deployed a luxury travel booking platform with Next.js 16 (App Router + Turbopack), React 19, and Tailwind CSS v4. Created a vintage departure manifest aesthetic with split-flap counters, ticket-stub CTAs, macOS liquid glass header, serverless booking dispatch with unique manifest IDs, and structured WhatsApp deep links.",
+                highlights: ["Next.js 16", "React 19", "Turbopack", "Tailwind CSS v4", "TypeScript", "Vercel Edge"]
+            },
+            {
                 role: "Creator & Lead Developer",
                 company: "ConquerONE (AI Fitness Mobile App)",
                 duration: "2026 - Present",
@@ -105,6 +123,78 @@ export const portfolioData = {
     // PROJECTS SECTION
     // ----------------------------------------------------
     projects: [
+        {
+            slug: "medfind",
+            title: "MedFind",
+            category: "Mobile Apps",
+            tagline: "Emergency-Aware Medicine Discovery & Verified Care Access",
+            logo: medfindLogo,
+            image: medfindImg,
+            problem: "MedFind is an Android-first mobile discovery application engineered to eliminate critical information friction when searching for prescribed medicines across local community pharmacies and locating emergency healthcare services. Rather than relying on unverified claims of 'live' inventory, MedFind introduces an honest 4-tier stock freshness system (Recent ≤30 mins, Aging ≤2h, Stale >2h, Unreported) with strict dosage formulation isolation (e.g., tablet vs. suspension). It includes a worldwide emergency directory across 87 countries with intent-based native dialer launching, privacy-preserving nearby pharmacy discovery via OpenStreetMap Overpass API, an offline-first 'My Medicine Box' tracker with 30-day expiry push alerts, and a rapid dispensary portal for pharmacy staff.",
+            tech: [
+                "React Native 0.88",
+                "Expo SDK 58",
+                "TypeScript (Strict)",
+                "Expo Router",
+                "OpenStreetMap Overpass API",
+                "Supabase",
+                "AsyncStorage",
+                "Expo Notifications & Haptics",
+                "React Native Reanimated v4"
+            ],
+            impact: "Eliminates wasted travel during urgent medical emergencies, safeguards patient location privacy via 2-decimal GPS truncation (~1km radius), provides verified emergency dialing across 87 countries, and ensures reliable offline access to personal medicine regimens.",
+            link: "https://github.com/vivaswanshetty/MedFind",
+            repo: "https://github.com/vivaswanshetty/MedFind",
+            metrics: [
+                { label: "Stock Freshness", val: "4-Tier Timestamp Engine" },
+                { label: "Emergency Directory", val: "87 Countries (112/911)" },
+                { label: "Privacy Protection", val: "OSM ~1km Precision" },
+                { label: "Offline Cache", val: "AsyncStorage + Local Push" }
+            ],
+            architecture: "Android-first Expo Router architecture built with strict TypeScript and offline-first device persistence via AsyncStorage. Integrates live OpenStreetMap Overpass queries with coordinate rounding and 24-hour local caching to query nearby healthcare facilities without leaking exact user GPS locations. Backed by Supabase cloud inventory synchronization with an instant fallback to verified local emergency records and dispensary audit logs.",
+            challenges: [
+                "Honest Stock Freshness & Decay Algorithm: Engineered a transparent 4-tier snapshot decay engine (Recent, Aging, Stale, Unreported) preventing misleading 'in-stock' claims during urgent prescription searches.",
+                "Privacy-Preserving Geolocation Queries: Built coordinate truncation down to 2 decimals (~1km radius) and secondary mirror fallbacks for OpenStreetMap Overpass API calls to shield user location privacy.",
+                "Global Emergency Directory & Native Dialer: Curated government-verified emergency numbers across 87 countries with intent-based native dialer invocation, avoiding accidental automatic dialing.",
+                "Offline-First Refill & Expiry Daemon: Implemented local AsyncStorage persistence capped at 30 items for device safety, scheduling device push notifications 30 days prior to medicine expiration."
+            ]
+        },
+        {
+            slug: "rv-tours-and-travels",
+            title: "RV Tours & Travels",
+            category: "Full-Stack Web",
+            tagline: "Vintage Luxury Chauffeur, Outstation Travels & Coastal Tour Platform",
+            logo: rvToursLogo,
+            image: rvToursImg,
+            problem: "RV Tours & Travels is a bespoke web platform created for boutique transportation operator R Ramesh based in Udupi, Karnataka. Replaces generic travel aggregators with a tactile vintage-railway and aviation aesthetic ('Vintage Boarding Pass & Departure Manifest') blended with modern macOS liquid glass ergonomics. Features real-time split-flap status indicators, ticket-stub boarding pass action buttons with dashed perforation lines and cutout notches, full fleet specs (Toyota Etios, Innova Crysta, Force Tempo Traveller), temple and coastal pilgrimage tour circuits, serverless booking dispatch (/api/contact) generating unique manifest codes (RV-YYYYMMDD-XXXX), and direct WhatsApp dispatch.",
+            tech: [
+                "Next.js 16 (Turbopack)",
+                "React 19",
+                "TypeScript (Strict)",
+                "Tailwind CSS v4",
+                "Motion (Framer Motion)",
+                "Serverless API Routes",
+                "Next.js Image Optimization",
+                "Vercel Edge Platform",
+                "Lucide React"
+            ],
+            impact: "Powers direct production client bookings for coastal Karnataka and South India pilgrimage circuits, achieving sub-second Turbopack page navigation, 100/100 Lighthouse SEO scores, and structured WhatsApp booking manifests.",
+            link: "https://rvtravelsudupi.com",
+            repo: "https://github.com/vivaswanshetty/RV-Tours-and-Travels",
+            metrics: [
+                { label: "Framework", val: "Next.js 16 + React 19" },
+                { label: "Design System", val: "macOS Liquid Glass UI" },
+                { label: "Dispatch Engine", val: "WhatsApp Manifest Deep-Links" },
+                { label: "Lighthouse Score", val: "100 SEO & Performance" }
+            ],
+            architecture: "Production Next.js 16 App Router platform with Turbopack and React 19 Server Components. Leverages Tailwind CSS v4 design tokens, serverless API route handlers with request validation, unique trip manifest generation (RV-YYYYMMDD-XXXX), dynamic XML sitemaps, and optimized Next.js WebP/AVIF image delivery deployed on Vercel.",
+            challenges: [
+                "Vintage Departure Board & Ticket-Stub UI: Engineered split-flap typography and boarding pass action buttons with CSS mask cutouts, dashed perforation lines, and tactile hover lifts.",
+                "macOS Liquid Glass Capsule Navigation: Crafted a floating glassmorphic header with specular highlights, backdrop blur filters, and accessible mobile drawer interaction.",
+                "Structured WhatsApp Booking Deep-Links: Built dynamic deep-linking service generating pre-filled trip manifests and instant quote requests directly to the operator's WhatsApp line.",
+                "Zero-Middleware High-Speed Performance: Optimized vehicle fleet showcases and destination galleries achieving sub-second page loads without heavy client-side bundles."
+            ]
+        },
         {
             slug: "elevatex-web",
             title: "ElevateX Web Platform",

@@ -3,8 +3,7 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowDown, Code, Cpu, Zap, Globe, User, Briefcase, Mail } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
-import vivaswanBgImg from '../assets/vivaswan_walking_bg.webp';
-import vivaswanCutoutImg from '../assets/vivaswan_walking_cutout.webp';
+import vivaswanCutoutImg from '../assets/vivaswan_hero_cutout.webp';
 
 import archiveBg from '../assets/archive_bg.webp';
 import MagneticWrapper from './MagneticWrapper';
@@ -327,16 +326,6 @@ const QuickLinks = () => {
 const Home = () => {
     return (
         <div className="home-editorial-wrapper">
-            {/* Continuous Unified Background Canvas for Entire Home Page */}
-            <div className="home-editorial-bg-canvas">
-                <img 
-                    src={vivaswanBgImg} 
-                    alt="Vivaswan Shetty Background" 
-                    className="home-editorial-bg-img"
-                />
-                <div className="home-editorial-scrim" />
-            </div>
-
             <Hero />
             <FeaturedSection />
             <QuickLinks />

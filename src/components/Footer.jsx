@@ -73,9 +73,11 @@ const Footer = () => {
         {
             title: "Featured Systems",
             links: [
-                { name: "ElevateX Mobile", path: "/projects/elevatex-mobile" },
-                { name: "ElevateX Web", path: "/projects/elevatex-web" },
+                { name: "MedFind", path: "/projects/medfind" },
+                { name: "RV Tours & Travels", path: "/projects/rv-tours-and-travels" },
                 { name: "ConquerONE", path: "/projects/conquerone" },
+                { name: "ElevateX Web", path: "/projects/elevatex-web" },
+                { name: "ElevateX Mobile", path: "/projects/elevatex-mobile" },
                 { name: "Developer Portfolio", path: "/projects/portfolio" }
             ]
         },
