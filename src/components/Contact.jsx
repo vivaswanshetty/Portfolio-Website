@@ -147,11 +147,13 @@ const Contact = () => {
                     <h1 
                         className="editorial-page-title"
                         style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 'clamp(0.4rem, 1.4vw, 1rem)',
-                            marginBottom: '1.2rem',
-                            flexWrap: 'wrap'
+                            display: 'inline-flex',
+                            alignItems: 'baseline',
+                            flexWrap: 'nowrap',
+                            gap: 'clamp(0.08rem, 0.4vw, 0.35rem)',
+                            marginBottom: '1.5rem',
+                            paddingTop: '0.85rem',
+                            paddingBottom: '0.5rem'
                         }}
                     >
                         {['C', 'O', 'N', 'N', 'E', 'C', 'T'].map((letter, i) => (
@@ -162,23 +164,56 @@ const Contact = () => {
                                     fontFamily: "var(--font-heading), 'Outfit', sans-serif",
                                     fontWeight: 900,
                                     textTransform: 'uppercase',
-                                    color: '#ffffff'
+                                    color: '#ffffff',
+                                    transformOrigin: '50% 70%'
                                 }}
                                 animate={{
-                                    y: [0, -8, 0],
-                                    opacity: [0.85, 1, 0.85]
+                                    y: [0, -22, 0, 10, 0],
+                                    x: [0, 7, 0, -7, 0],
+                                    rotate: [0, -6, 0, 5, 0],
+                                    scale: [1, 1.08, 1, 0.96, 1],
+                                    opacity: [0.88, 1, 0.88, 0.82, 0.88]
                                 }}
                                 transition={{
-                                    duration: 2.2,
+                                    duration: 2.8,
                                     repeat: Infinity,
-                                    delay: i * 0.14,
+                                    delay: i * 0.16,
                                     ease: 'easeInOut'
                                 }}
                             >
                                 {letter}
                             </motion.span>
                         ))}
-                        <span style={{ color: '#ef4444' }}>.</span>
+                        <motion.span
+                            style={{
+                                display: 'inline-block',
+                                color: '#ef4444',
+                                fontFamily: "var(--font-heading), 'Outfit', sans-serif",
+                                fontWeight: 900,
+                                transformOrigin: 'center center'
+                            }}
+                            animate={{
+                                y: [0, -26, 0, 12, 0],
+                                x: [0, 9, 0, -9, 0],
+                                rotate: [0, 15, 0, -12, 0],
+                                scale: [1, 1.35, 1, 0.9, 1],
+                                filter: [
+                                    'drop-shadow(0 0 0px rgba(239, 68, 68, 0))',
+                                    'drop-shadow(0 0 16px rgba(239, 68, 68, 0.95))',
+                                    'drop-shadow(0 0 0px rgba(239, 68, 68, 0))',
+                                    'drop-shadow(0 0 0px rgba(239, 68, 68, 0))',
+                                    'drop-shadow(0 0 0px rgba(239, 68, 68, 0))'
+                                ]
+                            }}
+                            transition={{
+                                duration: 2.8,
+                                repeat: Infinity,
+                                delay: 7 * 0.16,
+                                ease: 'easeInOut'
+                            }}
+                        >
+                            .
+                        </motion.span>
                     </h1>
                     <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
                         Open for technical leadership, production engineering collaborations, and high-impact systems development.
