@@ -41,6 +41,7 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden; /* Prevents horizontal overflow without breaking fixed positioning */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -3485,14 +3486,18 @@ input:focus-visible {
 .lightbox-overlay {
   position: fixed;
   inset: 0;
-  z-index: 100000;
-  background: rgba(3, 7, 18, 0.94);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  z-index: 999999;
+  background: rgba(3, 7, 18, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1.5rem;
+  transform: translateZ(0);
+  will-change: opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .lightbox-content {

@@ -385,7 +385,7 @@ export const portfolioData = {
             company: "BMS College of Engineering",
             photoUrl: "", // Optional: url to avatar image
             linkedinUrl: "", // Optional: e.g. "https://www.linkedin.com/in/..."
-            quote: "Vivaswan demonstrates remarkable technical proficiency and architectural maturity. His ability to lead development on complex full-stack and mobile applications while solving deep systems challenges is exceptional."
+            quote: "This guy is absolutely insane man like his communication skills, his way of carrying himself, his confidence and his problem solving skills are top notch. The fact that he's just 20 and already has this vision and execution capability is just mind-blowing."
         },
         {
             name: "Engineering Collaborator",

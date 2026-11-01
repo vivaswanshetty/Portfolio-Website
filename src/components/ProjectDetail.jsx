@@ -21,16 +21,24 @@ const ProjectDetail = () => {
         window.scrollTo(0, 0);
     }, [slug]);
 
-    // Lock background scroll when lightbox modal is open
+    // Lock background scroll when lightbox modal is open without layout shift
     useEffect(() => {
-        if (selectedImage) {
-            const originalOverflow = document.body.style.overflow;
-            document.body.style.overflow = 'hidden';
-            return () => {
-                document.body.style.overflow = originalOverflow;
-            };
+        if (!selectedImage) return;
+
+        const originalOverflow = document.body.style.overflow;
+        const originalPaddingRight = document.body.style.paddingRight;
+        const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+        document.body.style.overflow = 'hidden';
+        if (scrollBarWidth > 0) {
+            document.body.style.paddingRight = `${scrollBarWidth}px`;
         }
-    }, [selectedImage]);
+
+        return () => {
+            document.body.style.overflow = originalOverflow;
+            document.body.style.paddingRight = originalPaddingRight;
+        };
+    }, [!!selectedImage]);
 
     const projectIndex = portfolioData.projects.findIndex(p => p.slug === slug);
     const project = portfolioData.projects[projectIndex];
@@ -50,6 +58,7 @@ const ProjectDetail = () => {
 
     const screenshots = projectScreenshots[slug] || [];
     const isMobileApp = project.category === "Mobile Apps" || slug === "elevatex-mobile" || slug === "conquerone" || slug === "medfind";
+    const isModalPortrait = isMobileApp && selectedImage?.category !== "Official Cover & Brand";
 
     // Categories in screenshots
     const screenshotCategories = ['All', ...new Set(screenshots.map(s => s.category))];
@@ -63,16 +72,18 @@ const ProjectDetail = () => {
 
     // Lightbox navigation
     const handleNextImage = (e) => {
-        e.stopPropagation();
-        const currentIdx = screenshots.findIndex(s => s.src === selectedImage.src);
-        const nextIdx = (currentIdx + 1) % screenshots.length;
+        if (e && e.stopPropagation) e.stopPropagation();
+        if (!screenshots.length) return;
+        const currentIdx = screenshots.findIndex(s => s.src === selectedImage?.src);
+        const nextIdx = currentIdx === -1 ? 0 : (currentIdx + 1) % screenshots.length;
         setSelectedImage(screenshots[nextIdx]);
     };
 
     const handlePrevImage = (e) => {
-        e.stopPropagation();
-        const currentIdx = screenshots.findIndex(s => s.src === selectedImage.src);
-        const prevIdx = (currentIdx - 1 + screenshots.length) % screenshots.length;
+        if (e && e.stopPropagation) e.stopPropagation();
+        if (!screenshots.length) return;
+        const currentIdx = screenshots.findIndex(s => s.src === selectedImage?.src);
+        const prevIdx = currentIdx <= 0 ? screenshots.length - 1 : currentIdx - 1;
         setSelectedImage(screenshots[prevIdx]);
     };
 
@@ -526,19 +537,23 @@ const ProjectDetail = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
+                            transition={{ duration: 0.18, ease: 'easeOut' }}
                             onClick={() => setSelectedImage(null)}
                             style={{
                                 position: 'fixed',
                                 inset: 0,
-                                background: 'rgba(3, 7, 18, 0.96)',
-                                backdropFilter: 'blur(24px)',
-                                WebkitBackdropFilter: 'blur(24px)',
+                                background: 'rgba(3, 7, 18, 0.95)',
+                                backdropFilter: 'blur(12px)',
+                                WebkitBackdropFilter: 'blur(12px)',
                                 zIndex: 999999,
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 padding: '1.5rem',
-                                boxSizing: 'border-box'
+                                boxSizing: 'border-box',
+                                transform: 'translateZ(0)',
+                                willChange: 'opacity',
+                                WebkitBackfaceVisibility: 'hidden'
                             }}
                         >
                             {/* Fixed Close Button at top-right of screen */}
@@ -649,45 +664,47 @@ const ProjectDetail = () => {
 
                             {/* Center Modal Card */}
                             <motion.div
-                                initial={{ scale: 0.96, opacity: 0 }}
+                                initial={{ scale: 0.98, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale: 0.96, opacity: 0 }}
-                                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                                exit={{ scale: 0.98, opacity: 0 }}
+                                transition={{ duration: 0.18, ease: 'easeOut' }}
                                 onClick={(e) => e.stopPropagation()}
                                 style={{
                                     width: '100%',
-                                    maxWidth: isMobileApp ? '420px' : '1080px',
-                                    maxHeight: 'calc(100vh - 4rem)',
+                                    maxWidth: isModalPortrait ? '420px' : '1080px',
+                                    maxHeight: 'calc(100vh - 3.5rem)',
                                     background: '#060709',
                                     border: '1px solid rgba(255, 255, 255, 0.16)',
-                                    borderRadius: isMobileApp ? '24px' : '12px',
+                                    borderRadius: isModalPortrait ? '24px' : '12px',
                                     position: 'relative',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     overflow: 'hidden',
-                                    boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 30px rgba(239, 68, 68, 0.1)'
+                                    boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 30px rgba(239, 68, 68, 0.1)',
+                                    transform: 'translateZ(0)',
+                                    willChange: 'transform, opacity'
                                 }}
                             >
                                 <div style={{
-                                    flex: '1 1 auto',
-                                    minHeight: 0,
+                                    width: '100%',
+                                    height: isModalPortrait ? 'min(64vh, 580px)' : 'min(66vh, 600px)',
                                     overflow: 'hidden',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     background: '#030406',
-                                    padding: isMobileApp ? '1.5rem 1.5rem 1rem' : '1rem'
+                                    padding: isModalPortrait ? '1.25rem 1.25rem 0.75rem' : '1rem'
                                 }}>
                                     <img 
                                         src={selectedImage.src} 
                                         alt={selectedImage.title} 
                                         style={{ 
                                             maxWidth: '100%', 
-                                            maxHeight: isMobileApp ? '62vh' : '68vh',
+                                            maxHeight: '100%',
                                             objectFit: 'contain', 
-                                            borderRadius: isMobileApp ? '16px' : '4px',
+                                            borderRadius: isModalPortrait ? '16px' : '4px',
                                             display: 'block',
-                                            boxShadow: isMobileApp ? '0 12px 36px rgba(0, 0, 0, 0.7)' : 'none'
+                                            boxShadow: isModalPortrait ? '0 12px 36px rgba(0, 0, 0, 0.7)' : 'none'
                                         }} 
                                     />
                                 </div>
