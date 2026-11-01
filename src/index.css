@@ -369,16 +369,19 @@ img {
   border-radius: 9999px;
   display: flex;
   align-items: center;
-  transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .navbar-link:hover {
-  color: #ffffff;
+  color: #ef4444;
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.75), 0 0 20px rgba(239, 68, 68, 0.4);
 }
 
-.navbar-link.active {
+.navbar-link.active,
+.navbar-link.active:hover {
   color: #060709;
   font-weight: 700;
+  text-shadow: none;
 }
 
 .navbar-active-pill {
