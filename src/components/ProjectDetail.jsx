@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -19,6 +20,17 @@ const ProjectDetail = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [slug]);
+
+    // Lock background scroll when lightbox modal is open
+    useEffect(() => {
+        if (selectedImage) {
+            const originalOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            return () => {
+                document.body.style.overflow = originalOverflow;
+            };
+        }
+    }, [selectedImage]);
 
     const projectIndex = portfolioData.projects.findIndex(p => p.slug === slug);
     const project = portfolioData.projects[projectIndex];
@@ -505,133 +517,205 @@ const ProjectDetail = () => {
                 </Link>
             </div>
 
-            {/* Lightbox Modal */}
-            <AnimatePresence>
-                {selectedImage && (
-                    <motion.div
-                        className="lightbox-overlay"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setSelectedImage(null)}
-                        style={{
-                            position: 'fixed',
-                            inset: 0,
-                            background: 'rgba(3, 7, 18, 0.95)',
-                            backdropFilter: 'blur(16px)',
-                            zIndex: 10000,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: '2rem'
-                        }}
-                    >
+            {/* Lightbox Modal rendered via Portal directly into document.body */}
+            {typeof document !== 'undefined' && createPortal(
+                <AnimatePresence>
+                    {selectedImage && (
                         <motion.div
-                            initial={{ scale: 0.95, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            onClick={(e) => e.stopPropagation()}
+                            className="lightbox-overlay"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setSelectedImage(null)}
                             style={{
-                                width: '100%',
-                                maxWidth: isMobileApp ? '480px' : '1150px',
-                                background: '#030712',
-                                border: '1px solid rgba(255, 255, 255, 0.2)',
-                                position: 'relative',
+                                position: 'fixed',
+                                inset: 0,
+                                background: 'rgba(3, 7, 18, 0.96)',
+                                backdropFilter: 'blur(24px)',
+                                WebkitBackdropFilter: 'blur(24px)',
+                                zIndex: 999999,
                                 display: 'flex',
-                                flexDirection: 'column',
-                                borderRadius: isMobileApp ? '16px' : '4px',
-                                overflow: 'hidden'
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: '1.5rem',
+                                boxSizing: 'border-box'
                             }}
                         >
-                            {/* Close button */}
+                            {/* Fixed Close Button at top-right of screen */}
                             <button 
                                 onClick={() => setSelectedImage(null)} 
                                 style={{
-                                    position: 'absolute',
-                                    top: '1rem',
-                                    right: '1rem',
-                                    background: 'none',
-                                    border: 'none',
+                                    position: 'fixed',
+                                    top: '1.5rem',
+                                    right: '1.5rem',
+                                    width: '42px',
+                                    height: '42px',
+                                    borderRadius: '50%',
+                                    background: 'rgba(255, 255, 255, 0.08)',
+                                    border: '1px solid rgba(255, 255, 255, 0.2)',
                                     color: '#ffffff',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
                                     cursor: 'pointer',
-                                    zIndex: 10
+                                    zIndex: 1000000,
+                                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = '#ef4444';
+                                    e.currentTarget.style.borderColor = '#ef4444';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
                                 }}
                                 title="Close (Esc)"
+                                aria-label="Close lightbox"
                             >
-                                <X size={22} />
+                                <X size={20} />
                             </button>
 
-                            {/* Prev / Next buttons */}
+                            {/* Floating Prev / Next Controls outside the card */}
                             {screenshots.length > 1 && (
                                 <>
                                     <button 
                                         onClick={handlePrevImage} 
                                         style={{
-                                            position: 'absolute',
-                                            left: '1rem',
+                                            position: 'fixed',
+                                            left: '1.5rem',
                                             top: '50%',
                                             transform: 'translateY(-50%)',
-                                            background: '#030712',
+                                            background: 'rgba(255, 255, 255, 0.08)',
                                             border: '1px solid rgba(255, 255, 255, 0.2)',
-                                            color: '#fff',
-                                            width: '40px',
-                                            height: '40px',
+                                            color: '#ffffff',
+                                            width: '44px',
+                                            height: '44px',
+                                            borderRadius: '50%',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                             cursor: 'pointer',
-                                            zIndex: 10
+                                            zIndex: 1000000,
+                                            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                                            e.currentTarget.style.transform = 'translateY(-50%) scale(1.08)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                                            e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
                                         }}
                                         title="Previous (Left Arrow)"
+                                        aria-label="Previous screenshot"
                                     >
                                         <ChevronLeft size={22} />
                                     </button>
                                     <button 
                                         onClick={handleNextImage} 
                                         style={{
-                                            position: 'absolute',
-                                            right: '1rem',
+                                            position: 'fixed',
+                                            right: '1.5rem',
                                             top: '50%',
                                             transform: 'translateY(-50%)',
-                                            background: '#030712',
+                                            background: 'rgba(255, 255, 255, 0.08)',
                                             border: '1px solid rgba(255, 255, 255, 0.2)',
-                                            color: '#fff',
-                                            width: '40px',
-                                            height: '40px',
+                                            color: '#ffffff',
+                                            width: '44px',
+                                            height: '44px',
+                                            borderRadius: '50%',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                             cursor: 'pointer',
-                                            zIndex: 10
+                                            zIndex: 1000000,
+                                            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                                            e.currentTarget.style.transform = 'translateY(-50%) scale(1.08)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                                            e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
                                         }}
                                         title="Next (Right Arrow)"
+                                        aria-label="Next screenshot"
                                     >
                                         <ChevronRight size={22} />
                                     </button>
                                 </>
                             )}
 
-                            <div style={{ width: '100%', maxHeight: '76vh', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#020617', padding: isMobileApp ? '1.25rem 1rem' : '0.5rem' }}>
-                                <img src={selectedImage.src} alt={selectedImage.title} style={{ maxWidth: '100%', maxHeight: '74vh', objectFit: 'contain', borderRadius: isMobileApp ? '12px' : '2px' }} />
-                            </div>
-
-                            <div style={{ padding: '1.5rem 2rem', borderTop: '1px solid rgba(255, 255, 255, 0.12)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.4rem' }}>
-                                    <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#fff', fontFamily: 'var(--font-heading)', textTransform: 'uppercase' }}>
-                                        {selectedImage.title}
-                                    </h3>
-                                    <span className="editorial-badge" style={{ padding: '0.2rem 0.6rem', fontSize: '0.7rem' }}>
-                                        {selectedImage.category}
-                                    </span>
+                            {/* Center Modal Card */}
+                            <motion.div
+                                initial={{ scale: 0.96, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.96, opacity: 0 }}
+                                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                                onClick={(e) => e.stopPropagation()}
+                                style={{
+                                    width: '100%',
+                                    maxWidth: isMobileApp ? '420px' : '1080px',
+                                    maxHeight: 'calc(100vh - 4rem)',
+                                    background: '#060709',
+                                    border: '1px solid rgba(255, 255, 255, 0.16)',
+                                    borderRadius: isMobileApp ? '24px' : '12px',
+                                    position: 'relative',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    overflow: 'hidden',
+                                    boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 30px rgba(239, 68, 68, 0.1)'
+                                }}
+                            >
+                                <div style={{
+                                    flex: '1 1 auto',
+                                    minHeight: 0,
+                                    overflow: 'hidden',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    background: '#030406',
+                                    padding: isMobileApp ? '1.5rem 1.5rem 1rem' : '1rem'
+                                }}>
+                                    <img 
+                                        src={selectedImage.src} 
+                                        alt={selectedImage.title} 
+                                        style={{ 
+                                            maxWidth: '100%', 
+                                            maxHeight: isMobileApp ? '62vh' : '68vh',
+                                            objectFit: 'contain', 
+                                            borderRadius: isMobileApp ? '16px' : '4px',
+                                            display: 'block',
+                                            boxShadow: isMobileApp ? '0 12px 36px rgba(0, 0, 0, 0.7)' : 'none'
+                                        }} 
+                                    />
                                 </div>
-                                <p style={{ margin: 0, fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                                    {selectedImage.description}
-                                </p>
-                            </div>
+
+                                <div style={{
+                                    flexShrink: 0,
+                                    padding: '1.2rem 1.8rem',
+                                    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                                    background: 'rgba(6, 7, 9, 0.95)'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.4rem' }}>
+                                        <h3 style={{ margin: 0, fontSize: '1rem', color: '#ffffff', fontFamily: 'var(--font-heading)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                                            {selectedImage.title}
+                                        </h3>
+                                        <span className="editorial-badge" style={{ padding: '0.2rem 0.55rem', fontSize: '0.68rem', flexShrink: 0 }}>
+                                            {selectedImage.category}
+                                        </span>
+                                    </div>
+                                    <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>
+                                        {selectedImage.description}
+                                    </p>
+                                </div>
+                            </motion.div>
                         </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
         </div>
     );
 };
