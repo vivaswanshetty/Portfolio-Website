@@ -144,8 +144,41 @@ const Contact = () => {
                             COMMUNICATIONS & INQUIRIES.
                         </span>
                     </div>
-                    <h1 className="editorial-page-title">
-                        INITIATE DIALOGUE & <span style={{ color: '#ef4444' }}>COLLABORATE</span>.
+                    <h1 
+                        className="editorial-page-title"
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 'clamp(0.4rem, 1.4vw, 1rem)',
+                            marginBottom: '1.2rem',
+                            flexWrap: 'wrap'
+                        }}
+                    >
+                        {['C', 'O', 'N', 'N', 'E', 'C', 'T'].map((letter, i) => (
+                            <motion.span
+                                key={i}
+                                style={{
+                                    display: 'inline-block',
+                                    fontFamily: "var(--font-heading), 'Outfit', sans-serif",
+                                    fontWeight: 900,
+                                    textTransform: 'uppercase',
+                                    color: '#ffffff'
+                                }}
+                                animate={{
+                                    y: [0, -8, 0],
+                                    opacity: [0.85, 1, 0.85]
+                                }}
+                                transition={{
+                                    duration: 2.2,
+                                    repeat: Infinity,
+                                    delay: i * 0.14,
+                                    ease: 'easeInOut'
+                                }}
+                            >
+                                {letter}
+                            </motion.span>
+                        ))}
+                        <span style={{ color: '#ef4444' }}>.</span>
                     </h1>
                     <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
                         Open for technical leadership, production engineering collaborations, and high-impact systems development.
@@ -518,41 +551,6 @@ const Contact = () => {
                         </div>
                     )}
                 </motion.div>
-            </motion.div>
-
-            {/* Subtle Animated Letter Marquee */}
-            <motion.div
-                style={{
-                    marginTop: '6rem',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '2.5rem'
-                }}
-            >
-                {['C', 'O', 'N', 'N', 'E', 'C', 'T'].map((letter, i) => (
-                    <motion.span
-                        key={i}
-                        style={{
-                            fontSize: '0.9rem',
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '0.2em',
-                            color: '#ffffff',
-                            opacity: 0.25
-                        }}
-                        animate={{
-                            y: [0, -5, 0],
-                            opacity: [0.2, 0.5, 0.2]
-                        }}
-                        transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            delay: i * 0.3
-                        }}
-                    >
-                        {letter}
-                    </motion.span>
-                ))}
             </motion.div>
         </div>
     );
