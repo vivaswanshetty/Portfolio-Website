@@ -5938,6 +5938,18 @@ body.about-valley-route {
   background-color: #000000 !important;
 }
 
+html.about-valley-locked-html,
+body.about-valley-locked {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+body.about-valley-locked .site-footer {
+  display: none !important;
+}
+
 body.valley-loading .navbar-main {
   opacity: 0 !important;
   pointer-events: none !important;

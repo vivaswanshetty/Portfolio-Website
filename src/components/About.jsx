@@ -104,7 +104,7 @@ const About = () => {
     const [loaded, setLoaded] = useState(false);
     const [introDone, setIntroDone] = useState(false);
     const [isDiving, setIsDiving] = useState(false);
-    const [heroScrolledRatio, setHeroScrolledRatio] = useState(0);
+    const [storyEntered, setStoryEntered] = useState(false);
 
     // Mount persistent Three.js Night Valley Engine for /about
     useEffect(() => {
@@ -128,32 +128,37 @@ const About = () => {
         });
         valleyEngineRef.current = engine;
 
-        // Backstop in case reduced motion / low-FPS stalls first frame callback
         const backstop = setTimeout(() => {
             setLoaded(true);
             setIntroDone(true);
             document.body.classList.remove('valley-loading');
         }, 2800);
 
-        const onScroll = () => {
-            const vh = window.innerHeight || 900;
-            const ratio = Math.max(0, Math.min(1, window.scrollY / (vh * 0.72)));
-            setHeroScrolledRatio(ratio);
-            engine.setScrollDim(ratio);
-        };
-
-        onScroll();
-        window.addEventListener('scroll', onScroll, { passive: true });
-
         return () => {
             clearTimeout(backstop);
-            window.removeEventListener('scroll', onScroll);
-            document.body.classList.remove('about-valley-route', 'valley-loading');
+            document.body.classList.remove('about-valley-route', 'about-valley-locked', 'valley-loading');
+            document.documentElement.classList.remove('about-valley-locked-html');
             engine.dispose();
             setDuck(false);
             valleyEngineRef.current = null;
         };
     }, [setDuck]);
+
+    // Lock page scroll strictly inside Valley Portal mode until visitor enters through the #go arrow
+    useEffect(() => {
+        const html = document.documentElement;
+        const body = document.body;
+        if (storyEntered) {
+            html.classList.remove('about-valley-locked-html');
+            body.classList.remove('about-valley-locked');
+            valleyEngineRef.current?.setScrollDim(0.82);
+        } else {
+            html.classList.add('about-valley-locked-html');
+            body.classList.add('about-valley-locked');
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            valleyEngineRef.current?.setScrollDim(0);
+        }
+    }, [storyEntered]);
 
     const handleToggleSound = () => {
         toggleMute();
@@ -171,7 +176,7 @@ const About = () => {
 
     const handleEnterClick = (e) => {
         e.preventDefault();
-        if (isDiving) return;
+        if (isDiving || storyEntered) return;
 
         setIsDiving(true);
         setDuck(false);
@@ -179,25 +184,27 @@ const About = () => {
         const engine = valleyEngineRef.current;
         if (!engine) {
             setIsDiving(false);
-            storyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setStoryEntered(true);
+            requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'instant' }));
             return;
         }
 
         engine.triggerWarpHole().then(() => {
-            if (storyRef.current) {
-                const top = storyRef.current.getBoundingClientRect().top + window.scrollY;
-                window.scrollTo({ top, behavior: 'instant' });
-            }
             engine.resetWarp();
-            engine.setScrollDim(1);
+            engine.setScrollDim(0.82);
+            setStoryEntered(true);
             setIsDiving(false);
+            requestAnimationFrame(() => {
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            });
         });
     };
 
     const handleReturnToValley = () => {
         valleyEngineRef.current?.resetWarp();
         valleyEngineRef.current?.setScrollDim(0);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setStoryEntered(false);
+        window.scrollTo({ top: 0, behavior: 'instant' });
     };
 
     const handlePortraitMove = (e) => {
@@ -222,7 +229,7 @@ const About = () => {
                 <div ref={valleyContainerRef} className="js-canvas-container" />
                 <div
                     className="valley-depth-scrim"
-                    style={{ opacity: isDiving ? 0.04 : heroScrolledRatio * 0.9 }}
+                    style={{ opacity: storyEntered ? 0.78 : isDiving ? 0.04 : 0 }}
                 />
             </div>
 
@@ -231,63 +238,64 @@ const About = () => {
                 <span />
             </div>
 
-            {/* Section 1: 100vh Entry Hero overlaid cleanly on Night Flower Meadow (matches reference Antonio + #f5efe2 composition) */}
-            <section className="valley-entry" aria-label="About entry">
-                <div
-                    className={`valley-ui${introDone ? ' on' : ''}${isDiving ? ' diving' : ''}`}
-                    style={{
-                        opacity: isDiving ? 0 : introDone ? Math.max(0, 1 - heroScrolledRatio * 1.45) : 0,
-                        transform: isDiving
-                            ? 'scale(0.84) translateZ(0)'
-                            : `translateY(${(-heroScrolledRatio * 28).toFixed(1)}px)`,
-                        pointerEvents: isDiving || heroScrolledRatio > 0.45 ? 'none' : undefined,
-                    }}
-                >
-                    <div className="valley-hero">
-                        <h1>No teacher. Self-built.</h1>
-                        <p className="valley-cap">
-                            No one ever showed me the way.
-                            <br />
-                            I learned everything myself—to build a legacy.
-                        </p>
-                        <a
-                            href="#about-story"
-                            id="go"
-                            className="valley-go"
-                            aria-label="Enter About story through vortex"
-                            onPointerEnter={handleEnterPointerEnter}
-                            onPointerLeave={handleEnterPointerLeave}
-                            onClick={handleEnterClick}
-                        >
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M4 12h16M14 6l6 6-6 6" />
-                            </svg>
-                        </a>
-                    </div>
+            {/* Section 1: Exclusive 100vh Entry Hero (scroll stays locked to Valley flight until #go arrow click) */}
+            {!storyEntered && (
+                <section className="valley-entry" aria-label="About entry">
+                    <div
+                        className={`valley-ui${introDone ? ' on' : ''}${isDiving ? ' diving' : ''}`}
+                        style={{
+                            opacity: isDiving ? 0 : introDone ? 1 : 0,
+                            transform: isDiving ? 'scale(0.84) translateZ(0)' : 'none',
+                            pointerEvents: isDiving ? 'none' : undefined,
+                        }}
+                    >
+                        <div className="valley-hero">
+                            <h1>No teacher. Self-built.</h1>
+                            <p className="valley-cap">
+                                No one ever showed me the way.
+                                <br />
+                                I learned everything myself—to build a legacy.
+                            </p>
+                            <a
+                                href="#about-story"
+                                id="go"
+                                className="valley-go"
+                                aria-label="Enter About story through vortex"
+                                onPointerEnter={handleEnterPointerEnter}
+                                onPointerLeave={handleEnterPointerLeave}
+                                onClick={handleEnterClick}
+                            >
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M4 12h16M14 6l6 6-6 6" />
+                                </svg>
+                            </a>
+                        </div>
 
-                    <div className="valley-corner">
-                        <span>Scroll to wander</span>
-                        <i aria-hidden="true" />
-                        <button
-                            type="button"
-                            id="sound"
-                            className="valley-sound"
-                            aria-pressed={!isMuted}
-                            aria-label="Toggle ambient sound"
-                            onClick={handleToggleSound}
-                        >
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M4 9.5v5h3.5L12 18V6L7.5 9.5Z" />
-                                <path className="w" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" />
-                                <path className="x" d="m16 10 4 4m0-4-4 4" />
-                            </svg>
-                        </button>
+                        <div className="valley-corner">
+                            <span>Scroll to wander</span>
+                            <i aria-hidden="true" />
+                            <button
+                                type="button"
+                                id="sound"
+                                className="valley-sound"
+                                aria-pressed={!isMuted}
+                                aria-label="Toggle ambient sound"
+                                onClick={handleToggleSound}
+                            >
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M4 9.5v5h3.5L12 18V6L7.5 9.5Z" />
+                                    <path className="w" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" />
+                                    <path className="x" d="m16 10 4 4m0-4-4 4" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            )}
 
-            {/* Section 2+: Architectural Liquid Glass Narrative Over the Living Valley */}
-            <div ref={storyRef} id="about-story" className="about-story-shell">
+            {/* Section 2+: Architectural Liquid Glass Narrative (only revealed after entering via #go arrow) */}
+            {storyEntered && (
+                <div ref={storyRef} id="about-story" className="about-story-shell">
                 <div className="about-story-topbar">
                     <button
                         type="button"
@@ -466,7 +474,8 @@ const About = () => {
                         </div>
                     </div>
                 </Motion.section>
-            </div>
+                </div>
+            )}
         </div>
     );
 };

@@ -30,21 +30,24 @@ export function enforcePerimeterExclusion(nx, ny, isMobile = false) {
         return { x, y };
     }
 
-    // Avoid centered floating navbar at very top center
-    if (Math.abs(x) < 0.52 && y > 0.64) {
-        x = x >= 0 ? 0.62 : -0.62;
+    // Avoid centered floating navbar at top
+    if (Math.abs(x) < 0.62 && y > 0.56) {
+        x = x >= 0 ? 0.78 : -0.78;
     }
 
-    // Keep clear of central content cards / hero headlines (|x| < 0.73 && |y| < 0.54)
-    const halfBoxX = 0.73;
-    const halfBoxY = 0.54;
+    // Keep clear of central content cards / hero headlines (|x| < 0.74 && |y| < 0.62)
+    const halfBoxX = 0.74;
+    const halfBoxY = 0.62;
     if (Math.abs(x) < halfBoxX && Math.abs(y) < halfBoxY) {
         const pushRight = halfBoxX - Math.abs(x);
         const pushTop = halfBoxY - Math.abs(y);
-        if (pushRight < pushTop * 1.2) {
-            x = x >= 0 ? 0.78 : -0.78;
+        if (pushRight < pushTop * 1.15) {
+            x = x >= 0 ? 0.80 : -0.80;
         } else {
-            y = y >= 0 ? 0.60 : -0.60;
+            y = y >= 0 ? 0.66 : -0.66;
+            if (y > 0 && Math.abs(x) < 0.62) {
+                x = x >= 0 ? 0.78 : -0.78;
+            }
         }
     }
 
