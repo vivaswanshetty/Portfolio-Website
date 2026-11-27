@@ -98,7 +98,7 @@ const AnimatedRoutes = () => {
     };
 
     const isProjectsSphere = location.pathname === '/projects';
-    const isSpatialScene = isProjectsSphere || location.pathname === '/about';
+    const isSpatialScene = isProjectsSphere || location.pathname === '/about' || location.pathname === '/contact';
 
     const routeElement = (
         <Routes location={location} key={location.pathname}>
@@ -144,6 +144,8 @@ const AnimatedRoutes = () => {
 const AppLayout = () => {
     const location = useLocation();
     const isProjectsSphere = location.pathname === '/projects';
+    const isCinemaContact = location.pathname === '/contact';
+    const hideChromeExtras = isProjectsSphere || isCinemaContact;
 
     return (
         <>
@@ -152,8 +154,8 @@ const AppLayout = () => {
             </a>
             <ScrollToTop />
             <Starfield />
-            {!isProjectsSphere && <SpotlightCursor />}
-            {!isProjectsSphere && <ScrollProgress />}
+            {!hideChromeExtras && <SpotlightCursor />}
+            {!hideChromeExtras && <ScrollProgress />}
             {!isProjectsSphere && <CookieBanner />}
             <ToastContainer />
             <Analytics />
@@ -167,7 +169,7 @@ const AppLayout = () => {
                         <AnimatedRoutes />
                     </ErrorBoundary>
                 </main>
-                {!isProjectsSphere && <Footer />}
+                {!hideChromeExtras && <Footer />}
             </div>
         </>
     );
