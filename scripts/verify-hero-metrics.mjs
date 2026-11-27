@@ -33,15 +33,16 @@ for (const vp of viewports) {
         viewportW: vp.w,
         viewportH: vp.h,
         navBottom: vp.navBottom,
-        wordWidthAt100: 415,
+        wordWidthAt100: 480,
     });
 
     assert.equal(layout.isPortrait, vp.expectPortrait, `portrait detection mismatch for ${vp.w}x${vp.h}`);
     assert.equal(layout.baselinePct, vp.expectPortrait ? 0.362 : 0.43);
+    assert.ok(layout.kickerGap >= 4, `kicker gap (${layout.kickerGap}) must stay >= 4px above VIVASWAN`);
 
-    const renderedWordWidth = (layout.wordSize * 415) / 100;
+    const renderedWordWidth = (layout.wordSize * 480) / 100;
     assert.ok(renderedWordWidth <= vp.w * 0.92 + 0.5, `word overflows 92% of viewport at ${vp.w}x${vp.h}`);
-    assert.ok(renderedWordWidth <= stage.width * 0.625 + 0.5, `word overflows 62.5% of stage at ${vp.w}x${vp.h}`);
+    assert.ok(renderedWordWidth <= stage.width * 0.68 + 0.5, `word overflows 68% of stage at ${vp.w}x${vp.h}`);
 
     const urls = buildHeroImageUrls(imgW);
     for (const url of Object.values(urls)) {

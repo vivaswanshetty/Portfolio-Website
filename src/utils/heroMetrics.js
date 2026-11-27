@@ -19,7 +19,7 @@ export const HERO_VIDEOS = {
 
 export const HERO_COPY = {
     kicker: 'Building High-Impact',
-    word: 'Vivaswan',
+    word: 'VIVASWAN',
     ariaLabel: 'Building High-Impact Vivaswan',
 };
 
@@ -62,14 +62,14 @@ export function computeStageBox(viewportW, viewportH) {
 }
 
 /**
- * Computes responsive headline size, baseline %, kicker size, and offsets.
- * Enforces width fit against stage (62.5%), viewport (92%), and vertical nav gap (/ 0.88).
+ * Computes responsive headline size, baseline %, kicker size, and vertical gap.
+ * Enforces width fit against stage (68%), viewport (92%), and vertical nav gap (/ 1.02).
  */
 export function computeHeadlineLayout({
     viewportW,
     viewportH,
     navBottom = 72,
-    wordWidthAt100 = 415,
+    wordWidthAt100 = 480,
 }) {
     const { width: stageW, height: stageH, heroHeight } = computeStageBox(viewportW, viewportH);
     const isPortrait = viewportH > 1.2 * viewportW;
@@ -81,19 +81,18 @@ export function computeHeadlineLayout({
 
     const wordWidthPerEm = Math.max(wordWidthAt100 / 100, 1);
 
-    const sizeFromStage = (0.625 * stageW) / wordWidthPerEm;
+    const sizeFromStage = (0.68 * stageW) / wordWidthPerEm;
     const sizeFromViewport = (0.92 * viewportW) / wordWidthPerEm;
 
     const minTopInHero = navBottom + 0.035 * Math.min(viewportH, heroHeight);
     const availableGap = Math.max(48, baselineInHero - minTopInHero);
-    const sizeFromGap = availableGap / 0.88;
+    const sizeFromGap = availableGap / 1.02;
 
-    const wordSize = Math.max(44, Math.min(sizeFromStage, sizeFromViewport, sizeFromGap));
+    const wordSize = Math.max(40, Math.min(sizeFromStage, sizeFromViewport, sizeFromGap));
     const kickerSize = Math.max(11, 0.118 * wordSize);
 
-    // Kicker rests cleanly above x-height lowercase letters ('ivaswan'), shifted right to clear capital 'V'
-    const kickerBottomFromBaseline = 0.61 * wordSize;
-    const kickerShiftX = 0.22 * wordSize;
+    // Kicker stacks in flow cleanly above full-height uppercase VIVASWAN (adds on top of ~0.138em ascender lead)
+    const kickerGap = Math.max(4, 0.02 * wordSize);
 
     return {
         stageW,
@@ -103,8 +102,7 @@ export function computeHeadlineLayout({
         baselinePct,
         wordSize,
         kickerSize,
-        kickerBottomFromBaseline,
-        kickerShiftX,
+        kickerGap,
     };
 }
 

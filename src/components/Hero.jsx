@@ -251,7 +251,7 @@ const Hero = () => {
         const navRect = navEl?.getBoundingClientRect();
         const navHiddenShift = navEl?.classList.contains('navbar-intro-hidden') ? 6 : 0;
         const navBottom = navRect ? navRect.bottom + navHiddenShift : vw <= 900 ? 65 : 74;
-        const wordWidthAt100 = measureRef.current?.getBoundingClientRect().width || 415;
+        const wordWidthAt100 = measureRef.current?.getBoundingClientRect().width || 480;
 
         setLayout(
             computeHeadlineLayout({
@@ -799,7 +799,8 @@ const Hero = () => {
                     whiteSpace: 'nowrap',
                     fontFamily: "'InterHero', 'Inter', sans-serif",
                     fontWeight: 700,
-                    letterSpacing: '-0.045em',
+                    letterSpacing: '-0.03em',
+                    textTransform: 'uppercase',
                     fontSize: '100px',
                     lineHeight: 1,
                 }}
@@ -867,10 +868,7 @@ const Hero = () => {
                                         className="harbor-kicker"
                                         style={{
                                             fontSize: `${layout.kickerSize.toFixed(1)}px`,
-                                            bottom: `${layout.kickerBottomFromBaseline.toFixed(1)}px`,
-                                            position: 'absolute',
-                                            left: `calc(50% + ${layout.kickerShiftX.toFixed(1)}px)`,
-                                            transform: 'translateX(-50%)',
+                                            marginBottom: `${layout.kickerGap.toFixed(1)}px`,
                                         }}
                                     >
                                         {HERO_COPY.kicker}
