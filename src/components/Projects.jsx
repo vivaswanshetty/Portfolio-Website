@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, ExternalLink, Github } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight, ExternalLink, Github, Layers, Search, X } from 'lucide-react';
 import portraitImg from '../assets/vivaswan_portrait.webp';
+import { portfolioData } from '../data/portfolioData';
 import { PROJECTS_SPHERE_ITEMS } from '../data/projectSphereItems';
 import {
     buildSpherePoints,
@@ -34,16 +35,16 @@ function preloadImage(src) {
 }
 
 const Projects = () => {
+    const navigate = useNavigate();
     const stageRef = useRef(null);
     const worldRef = useRef(null);
     const headlineRef = useRef(null);
     const cardRefs = useRef([]);
     const washRefs = useRef([]);
-    const gridFigRefs = useRef({});
     const splashRef = useRef(null);
     const splashBarRef = useRef(null);
+    const litOverlayRef = useRef(null);
     const plateRef = useRef(null);
-    const litImgRef = useRef(null);
     const dotRef = useRef(null);
 
     const spherePoints = useMemo(() => buildSpherePoints(PROJECTS_SPHERE_ITEMS.length), []);
@@ -57,12 +58,13 @@ const Projects = () => {
     const [gridOpen, setGridOpen] = useState(false);
     const [gridFilter, setGridFilter] = useState('All');
     const [gridQuery, setGridQuery] = useState('');
-    const [litState, setLitState] = useState(null); // { idx, item, highResReady }
+    const [litState, setLitState] = useState(null); // { idx, item, previewSrc }
 
     // Imperative 3D physics + layout state (zero React re-renders during drag/scroll/frame)
+    // Resting (spin: 255, tilt: 22) opens an unobstructed equatorial portal around #headline on load.
     const camRef = useRef({
-        spin: 0,
-        tilt: -4,
+        spin: 255,
+        tilt: 22,
         camZ: 0,
         dragX: 0,
         dragY: 0,
@@ -79,25 +81,24 @@ const Projects = () => {
                 ? computeSphereLayout(window.innerWidth, window.innerHeight)
                 : computeSphereLayout(1440, 900),
         lastCardStyles: [],
-        litSourceType: 'sphere', // 'sphere' | 'grid'
         litToken: 0,
         closeTimer: null,
     });
 
-    const filteredGridItems = useMemo(() => {
+    // Overview grid uses only the 6 core projects (mirroring the original portfolio overview layout)
+    const filteredOverviewProjects = useMemo(() => {
         const q = gridQuery.toLowerCase().trim();
-        return PROJECTS_SPHERE_ITEMS.map((item, idx) => ({ item, idx })).filter(({ item }) => {
+        return portfolioData.projects.filter((project) => {
             let matchesCat = true;
-            if (gridFilter === 'Flagship') matchesCat = item.isFlagshipCover;
-            else if (gridFilter === 'Mobile Apps') matchesCat = item.category === 'Mobile Apps';
-            else if (gridFilter === 'Full-Stack Web') matchesCat = item.category === 'Full-Stack Web';
+            if (gridFilter === 'Mobile Apps') matchesCat = project.category === 'Mobile Apps';
+            else if (gridFilter === 'Full-Stack Web') matchesCat = project.category === 'Full-Stack Web';
 
             const matchesQ =
                 !q ||
-                item.title.toLowerCase().includes(q) ||
-                item.place.toLowerCase().includes(q) ||
-                item.note.toLowerCase().includes(q) ||
-                item.tech.some((t) => t.toLowerCase().includes(q));
+                project.title.toLowerCase().includes(q) ||
+                project.problem.toLowerCase().includes(q) ||
+                (project.tagline && project.tagline.toLowerCase().includes(q)) ||
+                project.tech.some((t) => t.toLowerCase().includes(q));
 
             return matchesCat && matchesQ;
         });
@@ -307,9 +308,9 @@ const Projects = () => {
                 worldRef.current.style.transform = `translateZ(${cam.camZ.toFixed(2)}px) rotateY(${sy.toFixed(3)}deg) rotateX(${sx.toFixed(3)}deg)`;
             }
 
-            // Counter-rotate headline strictly in mandatory CSS right-to-left transform order
+            // Counter-rotate headline forward of front sphere meridian so letters never slice through cards
             if (headlineRef.current) {
-                headlineRef.current.style.transform = `rotateX(${(-sx).toFixed(3)}deg) rotateY(${(-sy).toFixed(3)}deg) translateZ(${(R * 0.62).toFixed(2)}px)`;
+                headlineRef.current.style.transform = `rotateX(${(-sx).toFixed(3)}deg) rotateY(${(-sy).toFixed(3)}deg) translateZ(${(R * 0.96).toFixed(2)}px)`;
                 headlineRef.current.style.opacity = Math.max(0, 1 - p * 0.55).toFixed(3);
             }
 
@@ -356,8 +357,8 @@ const Projects = () => {
         };
     }, [spherePoints]);
 
-    // Open Lightbox with FLIP transition from the clicked card or grid figure
-    const openLightbox = useCallback((idx, sourceEl, sourceType = 'sphere') => {
+    // Open Lightbox with FLIP transition from clicked sphere card
+    const openLightbox = useCallback((idx, sourceEl) => {
         const item = PROJECTS_SPHERE_ITEMS[idx];
         if (!item) return;
 
@@ -366,7 +367,6 @@ const Projects = () => {
         cam.litToken = token;
         cam.focused = idx;
         cam.hasLit = true;
-        cam.litSourceType = sourceType;
 
         document.body.classList.add('lit');
         document.documentElement.style.overflow = 'hidden';
@@ -374,8 +374,11 @@ const Projects = () => {
         const rect = sourceEl?.getBoundingClientRect();
         setLitState({ idx, item, previewSrc: item.src });
 
-        // Execute FLIP from source rect -> centered plate
+        // Reset modal scroll & execute FLIP from source rect -> centered plate
         requestAnimationFrame(() => {
+            if (litOverlayRef.current) {
+                litOverlayRef.current.scrollTop = 0;
+            }
             const plate = plateRef.current;
             if (!plate || !rect || rect.width === 0) return;
 
@@ -404,16 +407,12 @@ const Projects = () => {
         if (!cam.hasLit) return;
 
         const closingIdx = cam.focused;
-        const sourceType = cam.litSourceType;
         cam.litToken += 1;
         cam.focused = -1;
         cam.hasLit = false;
 
         const plate = plateRef.current;
-        const targetEl =
-            sourceType === 'grid'
-                ? gridFigRefs.current[closingIdx]
-                : cardRefs.current[closingIdx];
+        const targetEl = cardRefs.current[closingIdx];
 
         if (plate && targetEl) {
             const destRect = targetEl.getBoundingClientRect();
@@ -754,13 +753,22 @@ const Projects = () => {
                 <span>Drag to rotate · Scroll to zoom</span>
             </div>
 
-            {/* Filterable Flat Grid View (#projects-grid) */}
+            {/* Project Overview Grid View (#projects-grid) matching editorial project overviews */}
             <section id="projects-grid" aria-label="Projects grid view" aria-hidden={!gridOpen}>
+                <div className="projects-grid-intro">
+                    <span className="projects-grid-eyebrow">SELECTED WORKS & ARCHIVE</span>
+                    <h2 className="projects-grid-title">
+                        PRODUCTION <span>SYSTEMS</span>
+                    </h2>
+                    <p className="projects-grid-sub">
+                        Project overviews across mobile applications and full-stack platforms — select any system for full architecture breakdowns and screenshots.
+                    </p>
+                </div>
+
                 <div className="projects-grid-header">
                     <div className="projects-grid-filters">
                         {[
-                            { key: 'All', label: `All (${PROJECTS_SPHERE_ITEMS.length})` },
-                            { key: 'Flagship', label: 'Flagship Systems (6)' },
+                            { key: 'All', label: `All (${portfolioData.projects.length})` },
                             { key: 'Mobile Apps', label: 'Mobile Apps' },
                             { key: 'Full-Stack Web', label: 'Full-Stack Web' },
                         ].map((tab) => (
@@ -776,60 +784,189 @@ const Projects = () => {
                     </div>
 
                     <div className="projects-grid-search">
+                        <Search size={14} className="projects-grid-search-icon" aria-hidden="true" />
                         <input
                             type="text"
                             value={gridQuery}
                             onChange={(e) => setGridQuery(e.target.value)}
-                            placeholder="Filter by stack or project..."
-                            aria-label="Filter project archive"
+                            placeholder="Filter by tech or project..."
+                            aria-label="Filter project overviews"
                         />
+                        {gridQuery && (
+                            <button
+                                type="button"
+                                className="projects-grid-search-clear"
+                                onClick={() => setGridQuery('')}
+                                aria-label="Clear filter"
+                            >
+                                <X size={13} />
+                            </button>
+                        )}
                     </div>
                 </div>
 
-                <div className="rows">
-                    {filteredGridItems.map(({ item, idx }) => (
-                        <figure
-                            key={item.id}
-                            ref={(el) => {
-                                gridFigRefs.current[idx] = el;
+                <div className="projects-grid-count">
+                    <span>
+                        Showing {filteredOverviewProjects.length} of {portfolioData.projects.length} project overviews
+                    </span>
+                    {(gridQuery || gridFilter !== 'All') && (
+                        <button
+                            type="button"
+                            className="projects-grid-reset"
+                            onClick={() => {
+                                setGridFilter('All');
+                                setGridQuery('');
                             }}
-                            data-idx={idx}
-                            className={item.tall ? 'tall-frame' : ''}
-                            onClick={() => openLightbox(idx, gridFigRefs.current[idx], 'grid')}
                         >
-                            <img
-                                src={item.src}
-                                alt={item.title}
-                                loading="lazy"
-                            />
-                            <figcaption>
-                                {item.title}
-                                <small>{item.projectTitle}</small>
-                            </figcaption>
-                        </figure>
-                    ))}
+                            Reset filters
+                        </button>
+                    )}
+                </div>
+
+                <div className="rows">
+                    {filteredOverviewProjects.length === 0 ? (
+                        <div className="projects-grid-empty">
+                            <Search size={28} />
+                            <h3>No matching projects found</h3>
+                            <p>Try searching for Expo, Firebase, Next.js, or Socket.io.</p>
+                            <button
+                                type="button"
+                                className="lit-case-btn"
+                                onClick={() => {
+                                    setGridFilter('All');
+                                    setGridQuery('');
+                                }}
+                            >
+                                Clear Filters
+                            </button>
+                        </div>
+                    ) : (
+                        filteredOverviewProjects.map((project) => (
+                            <article
+                                key={project.slug}
+                                className="projects-overview-card"
+                                onClick={(e) => {
+                                    if (e.target.closest('a') || e.target.closest('button')) return;
+                                    navigate(`/projects/${project.slug}`);
+                                }}
+                            >
+                                {project.image && (
+                                    <div className="projects-overview-cover">
+                                        <img src={project.image} alt={project.title} loading="lazy" />
+                                        <div className="projects-overview-cover-scrim" />
+                                        <span className="projects-overview-category">{project.category}</span>
+                                    </div>
+                                )}
+
+                                <div className="projects-overview-body">
+                                    <div className="projects-overview-top">
+                                        <div className="projects-overview-brand">
+                                            {project.logo && (
+                                                <div className="projects-overview-logo">
+                                                    <img src={project.logo} alt={`${project.title} logo`} loading="lazy" />
+                                                </div>
+                                            )}
+                                            <div>
+                                                <h3>{project.title}</h3>
+                                                {project.tagline && (
+                                                    <span className="projects-overview-tagline">
+                                                        {project.tagline}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="projects-overview-links">
+                                            {project.repo && (
+                                                <a
+                                                    href={project.repo}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    title="GitHub Repository"
+                                                    aria-label={`${project.title} GitHub repository`}
+                                                >
+                                                    <Github size={17} />
+                                                </a>
+                                            )}
+                                            {project.link && (
+                                                <a
+                                                    href={project.link}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    title="Live Preview"
+                                                    aria-label={`${project.title} live preview`}
+                                                >
+                                                    <ExternalLink size={17} />
+                                                </a>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <p className="projects-overview-summary">{project.problem}</p>
+
+                                    <div className="projects-overview-tech">
+                                        {project.tech.slice(0, 3).map((t) => (
+                                            <span key={t} className="projects-overview-chip">
+                                                {t}
+                                            </span>
+                                        ))}
+                                        {project.tech.length > 3 && (
+                                            <span className="projects-overview-chip muted">
+                                                +{project.tech.length - 3}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="projects-overview-footer">
+                                        <span className="projects-overview-metric">
+                                            <Layers size={14} />
+                                            <span>{project.metrics ? project.metrics[0].val : 'Case Study'}</span>
+                                        </span>
+                                        <Link to={`/projects/${project.slug}`} className="projects-overview-cta">
+                                            <span>Explore Case Study</span>
+                                            <ArrowRight size={13} />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </article>
+                        ))
+                    )}
                 </div>
             </section>
 
-            {/* FLIP Zoom Lightbox (#lit) */}
-            <div id="lit" role="dialog" aria-modal="true" aria-hidden={!litState} aria-label="Project showcase plate">
+            {/* Liquid Glass Scrollable FLIP Lightbox (#lit) */}
+            <div
+                id="lit"
+                ref={litOverlayRef}
+                role="dialog"
+                aria-modal="true"
+                aria-hidden={!litState}
+                aria-label="Project showcase plate"
+            >
                 <div className="scrim" onClick={closeLightbox} />
                 {litState && (
                     <div ref={plateRef} className="plate">
-                        <div className={`shot${litState.item.tall ? ' tall-shot' : ''}`}>
-                            <img
-                                ref={litImgRef}
-                                src={litState.previewSrc}
-                                alt={litState.item.title}
-                            />
+                        <div className="lit-topbar">
+                            <span className="lit-kicker">
+                                {litState.item.projectTitle} · {litState.item.category}
+                            </span>
                             <button
                                 type="button"
                                 className="lit-close"
                                 data-close
                                 onClick={closeLightbox}
+                                aria-label="Close expanded view"
                             >
-                                Close
+                                <span>Close</span>
+                                <X size={14} />
                             </button>
+                        </div>
+
+                        <div className={`shot${litState.item.tall ? ' tall-shot' : ''}`}>
+                            <img
+                                src={litState.previewSrc}
+                                alt={litState.item.title}
+                            />
                         </div>
 
                         <div className="meta">

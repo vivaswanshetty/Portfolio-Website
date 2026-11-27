@@ -45,7 +45,7 @@ export function computeSphereLayout(vw, vh) {
             ? Math.min(vw * 0.88, 320)
             : vw <= 640
             ? Math.min(vw * 0.84, 360)
-            : Math.min(vw * 0.56, 640);
+            : Math.round(Math.min(vw * 0.42, R * 1.18, 520));
 
     return {
         R,

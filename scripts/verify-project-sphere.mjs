@@ -82,4 +82,33 @@ const overScroll = computeScrollDolly(500, 900, 400);
 assert.equal(overScroll.p, 1);
 assert.equal(overScroll.camZTarget, 48);
 
-console.log('projectSphere verification passed across lattice, breakpoints, depth, and dolly zoom.');
+// 5. Initial landing portal clearance (spin=255, tilt=22) keeps front cards clear of headline band
+{
+    const sy = 255;
+    const sx = 22;
+    const radY = (sy * Math.PI) / 180;
+    const radX = (sx * Math.PI) / 180;
+    const m = computeSphereLayout(1440, 900);
+    const hlHalfW = m.headlineWidth / 2;
+    const hlHalfH = 26;
+    for (let i = 0; i < points.length; i++) {
+        const p = points[i];
+        const py = -p.y;
+        const z1 = py * Math.sin(radX) + p.z * Math.cos(radX);
+        const y1 = py * Math.cos(radX) - p.z * Math.sin(radX);
+        const x2 = p.x * Math.cos(radY) + z1 * Math.sin(radY);
+        const z2 = -p.x * Math.sin(radY) + z1 * Math.cos(radY);
+        if (z2 > -0.15) {
+            const s = m.persp / (m.persp - z2 * m.R);
+            const cx = x2 * m.R * s;
+            const cy = y1 * m.R * s;
+            const hw = (m.cw / 2) * s;
+            const hh = ((i >= 18 ? m.cw * 1.25 : m.cw / 1.5) / 2) * s;
+            const overlapsX = Math.abs(cx) < hlHalfW + hw;
+            const overlapsY = Math.abs(cy) < hlHalfH + hh;
+            assert.ok(!(overlapsX && overlapsY), `card ${i} overlaps resting headline box`);
+        }
+    }
+}
+
+console.log('projectSphere verification passed across lattice, breakpoints, depth, dolly zoom, and landing clearance.');

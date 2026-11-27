@@ -542,54 +542,22 @@ const ProjectDetail = () => {
                             style={{
                                 position: 'fixed',
                                 inset: 0,
-                                background: 'rgba(3, 7, 18, 0.95)',
-                                backdropFilter: 'blur(12px)',
-                                WebkitBackdropFilter: 'blur(12px)',
+                                background: 'rgba(3, 7, 18, 0.84)',
+                                backdropFilter: 'blur(16px)',
+                                WebkitBackdropFilter: 'blur(16px)',
                                 zIndex: 999999,
                                 display: 'flex',
-                                alignItems: 'center',
+                                alignItems: 'flex-start',
                                 justifyContent: 'center',
-                                padding: '1.5rem',
+                                overflowY: 'auto',
+                                overscrollBehavior: 'contain',
+                                padding: 'clamp(1.25rem, 3.5vw, 2.5rem) clamp(1rem, 4vw, 4.5rem)',
                                 boxSizing: 'border-box',
                                 transform: 'translateZ(0)',
                                 willChange: 'opacity',
                                 WebkitBackfaceVisibility: 'hidden'
                             }}
                         >
-                            {/* Fixed Close Button at top-right of screen */}
-                            <button 
-                                onClick={() => setSelectedImage(null)} 
-                                style={{
-                                    position: 'fixed',
-                                    top: '1.5rem',
-                                    right: '1.5rem',
-                                    width: '42px',
-                                    height: '42px',
-                                    borderRadius: '50%',
-                                    background: 'rgba(255, 255, 255, 0.08)',
-                                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                                    color: '#ffffff',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    cursor: 'pointer',
-                                    zIndex: 1000000,
-                                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.background = '#ef4444';
-                                    e.currentTarget.style.borderColor = '#ef4444';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                                }}
-                                title="Close (Esc)"
-                                aria-label="Close lightbox"
-                            >
-                                <X size={20} />
-                            </button>
-
                             {/* Floating Prev / Next Controls outside the card */}
                             {screenshots.length > 1 && (
                                 <>
@@ -597,14 +565,17 @@ const ProjectDetail = () => {
                                         onClick={handlePrevImage} 
                                         style={{
                                             position: 'fixed',
-                                            left: '1.5rem',
+                                            left: '1rem',
                                             top: '50%',
                                             transform: 'translateY(-50%)',
-                                            background: 'rgba(255, 255, 255, 0.08)',
-                                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)), rgba(10, 12, 18, 0.72)',
+                                            backdropFilter: 'blur(20px) saturate(180%)',
+                                            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                                            border: '1px solid rgba(255, 255, 255, 0.18)',
+                                            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.45)',
                                             color: '#ffffff',
-                                            width: '44px',
-                                            height: '44px',
+                                            width: '42px',
+                                            height: '42px',
                                             borderRadius: '50%',
                                             display: 'flex',
                                             alignItems: 'center',
@@ -614,30 +585,33 @@ const ProjectDetail = () => {
                                             transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)';
                                             e.currentTarget.style.transform = 'translateY(-50%) scale(1.08)';
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                                            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)), rgba(10, 12, 18, 0.72)';
                                             e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
                                         }}
                                         title="Previous (Left Arrow)"
                                         aria-label="Previous screenshot"
                                     >
-                                        <ChevronLeft size={22} />
+                                        <ChevronLeft size={20} />
                                     </button>
                                     <button 
                                         onClick={handleNextImage} 
                                         style={{
                                             position: 'fixed',
-                                            right: '1.5rem',
+                                            right: '1rem',
                                             top: '50%',
                                             transform: 'translateY(-50%)',
-                                            background: 'rgba(255, 255, 255, 0.08)',
-                                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)), rgba(10, 12, 18, 0.72)',
+                                            backdropFilter: 'blur(20px) saturate(180%)',
+                                            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                                            border: '1px solid rgba(255, 255, 255, 0.18)',
+                                            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.45)',
                                             color: '#ffffff',
-                                            width: '44px',
-                                            height: '44px',
+                                            width: '42px',
+                                            height: '42px',
                                             borderRadius: '50%',
                                             display: 'flex',
                                             alignItems: 'center',
@@ -647,22 +621,22 @@ const ProjectDetail = () => {
                                             transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)';
                                             e.currentTarget.style.transform = 'translateY(-50%) scale(1.08)';
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                                            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)), rgba(10, 12, 18, 0.72)';
                                             e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
                                         }}
                                         title="Next (Right Arrow)"
                                         aria-label="Next screenshot"
                                     >
-                                        <ChevronRight size={22} />
+                                        <ChevronRight size={20} />
                                     </button>
                                 </>
                             )}
 
-                            {/* Center Modal Card */}
+                            {/* Scrollable Liquid Glass Center Modal Card */}
                             <motion.div
                                 initial={{ scale: 0.98, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
@@ -671,59 +645,103 @@ const ProjectDetail = () => {
                                 onClick={(e) => e.stopPropagation()}
                                 style={{
                                     width: '100%',
-                                    maxWidth: isModalPortrait ? '420px' : '1080px',
-                                    maxHeight: 'calc(100vh - 3.5rem)',
-                                    background: '#060709',
+                                    maxWidth: isModalPortrait ? '460px' : '1020px',
+                                    margin: 'auto',
+                                    background: 'linear-gradient(145deg, rgba(255, 255, 255, 0.085) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(10, 12, 18, 0.78)',
+                                    backdropFilter: 'blur(32px) saturate(190%)',
+                                    WebkitBackdropFilter: 'blur(32px) saturate(190%)',
                                     border: '1px solid rgba(255, 255, 255, 0.16)',
-                                    borderRadius: isModalPortrait ? '24px' : '12px',
+                                    borderRadius: isModalPortrait ? '24px' : '20px',
                                     position: 'relative',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     overflow: 'hidden',
-                                    boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 30px rgba(239, 68, 68, 0.1)',
+                                    boxShadow: '0 32px 90px -12px rgba(0, 0, 0, 0.9), inset 0 1px 1px rgba(255, 255, 255, 0.25), inset 0 -1px 1px rgba(0, 0, 0, 0.4)',
                                     transform: 'translateZ(0)',
                                     willChange: 'transform, opacity'
                                 }}
                             >
+                                {/* Non-overlapping Liquid Glass Header Bar with Close Button */}
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    gap: '1rem',
+                                    padding: '0.85rem 1.25rem',
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                                    background: 'rgba(255, 255, 255, 0.03)'
+                                }}>
+                                    <span className="editorial-badge" style={{ padding: '0.25rem 0.65rem', fontSize: '0.7rem' }}>
+                                        {selectedImage.category}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => setSelectedImage(null)}
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '0.4rem',
+                                            padding: '0.45rem 0.85rem',
+                                            borderRadius: '9999px',
+                                            background: 'rgba(255, 255, 255, 0.08)',
+                                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                                            color: '#ffffff',
+                                            fontSize: '0.72rem',
+                                            fontFamily: 'var(--font-heading)',
+                                            fontWeight: 600,
+                                            letterSpacing: '0.12em',
+                                            textTransform: 'uppercase',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.background = '#ef4444';
+                                            e.currentTarget.style.borderColor = '#ef4444';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                                        }}
+                                        title="Close (Esc)"
+                                        aria-label="Close lightbox"
+                                    >
+                                        <span>Close</span>
+                                        <X size={15} />
+                                    </button>
+                                </div>
+
                                 <div style={{
                                     width: '100%',
-                                    height: isModalPortrait ? 'min(64vh, 580px)' : 'min(66vh, 600px)',
-                                    overflow: 'hidden',
+                                    maxHeight: isModalPortrait ? 'min(62vh, 560px)' : 'min(64vh, 560px)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    background: '#030406',
-                                    padding: isModalPortrait ? '1.25rem 1.25rem 0.75rem' : '1rem'
+                                    background: 'rgba(3, 4, 8, 0.55)',
+                                    padding: isModalPortrait ? '1.25rem' : '1rem'
                                 }}>
                                     <img 
                                         src={selectedImage.src} 
                                         alt={selectedImage.title} 
                                         style={{ 
                                             maxWidth: '100%', 
-                                            maxHeight: '100%',
+                                            maxHeight: isModalPortrait ? 'calc(min(62vh, 560px) - 2.5rem)' : 'calc(min(64vh, 560px) - 2rem)',
                                             objectFit: 'contain', 
-                                            borderRadius: isModalPortrait ? '16px' : '4px',
+                                            borderRadius: isModalPortrait ? '16px' : '8px',
                                             display: 'block',
-                                            boxShadow: isModalPortrait ? '0 12px 36px rgba(0, 0, 0, 0.7)' : 'none'
+                                            boxShadow: '0 14px 40px rgba(0, 0, 0, 0.55)'
                                         }} 
                                     />
                                 </div>
 
                                 <div style={{
-                                    flexShrink: 0,
-                                    padding: '1.2rem 1.8rem',
+                                    padding: '1.2rem 1.5rem 1.4rem',
                                     borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                                    background: 'rgba(6, 7, 9, 0.95)'
+                                    background: 'rgba(255, 255, 255, 0.02)'
                                 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.4rem' }}>
-                                        <h3 style={{ margin: 0, fontSize: '1rem', color: '#ffffff', fontFamily: 'var(--font-heading)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                                            {selectedImage.title}
-                                        </h3>
-                                        <span className="editorial-badge" style={{ padding: '0.2rem 0.55rem', fontSize: '0.68rem', flexShrink: 0 }}>
-                                            {selectedImage.category}
-                                        </span>
-                                    </div>
-                                    <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>
+                                    <h3 style={{ margin: '0 0 0.45rem', fontSize: '1.05rem', color: '#ffffff', fontFamily: 'var(--font-heading)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                                        {selectedImage.title}
+                                    </h3>
+                                    <p style={{ margin: 0, fontSize: '0.86rem', color: 'var(--text-muted)', fontFamily: 'var(--font-body)', lineHeight: 1.6 }}>
                                         {selectedImage.description}
                                     </p>
                                 </div>
