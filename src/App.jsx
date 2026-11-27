@@ -95,6 +95,32 @@ const AnimatedRoutes = () => {
         }
     };
 
+    const isProjectsSphere = location.pathname === '/projects';
+
+    const routeElement = (
+        <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/resume" element={<Resume />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:slug" element={<ProjectDetail />} />
+            <Route path="/skills" element={<Skills />} />
+            <Route path="/testimonials" element={<Testimonials />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="*" element={<NotFound />} />
+        </Routes>
+    );
+
+    if (isProjectsSphere) {
+        return (
+            <Suspense fallback={<RouteLoader />}>
+                <div key={location.pathname}>{routeElement}</div>
+            </Suspense>
+        );
+    }
+
     return (
         <AnimatePresence mode="wait">
             <Suspense fallback={<RouteLoader />}>
@@ -105,22 +131,39 @@ const AnimatedRoutes = () => {
                     exit="exit"
                     variants={pageVariants}
                 >
-                    <Routes location={location} key={location.pathname}>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/resume" element={<Resume />} />
-                        <Route path="/projects" element={<Projects />} />
-                        <Route path="/projects/:slug" element={<ProjectDetail />} />
-                        <Route path="/skills" element={<Skills />} />
-                        <Route path="/testimonials" element={<Testimonials />} />
-                        <Route path="/contact" element={<Contact />} />
-                        <Route path="/privacy" element={<PrivacyPolicy />} />
-                        <Route path="/terms" element={<Terms />} />
-                        <Route path="*" element={<NotFound />} />
-                    </Routes>
+                    {routeElement}
                 </motion.div>
             </Suspense>
         </AnimatePresence>
+    );
+};
+
+const AppLayout = () => {
+    const location = useLocation();
+    const isProjectsSphere = location.pathname === '/projects';
+
+    return (
+        <>
+            <a href="#main-content" className="skip-to-content-link">
+                Skip to content
+            </a>
+            <ScrollToTop />
+            <Starfield />
+            {!isProjectsSphere && <SpotlightCursor />}
+            {!isProjectsSphere && <ScrollProgress />}
+            {!isProjectsSphere && <CookieBanner />}
+            <ToastContainer />
+            <Analytics />
+            <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                <Navbar />
+                <main id="main-content" tabIndex="-1" style={{ flex: 1, display: 'flex', flexDirection: 'column', outline: 'none' }}>
+                    <ErrorBoundary>
+                        <AnimatedRoutes />
+                    </ErrorBoundary>
+                </main>
+                {!isProjectsSphere && <Footer />}
+            </div>
+        </>
     );
 };
 
@@ -129,25 +172,7 @@ function App() {
         <ToastProvider>
             <IntroProvider>
                 <Router>
-                    <a href="#main-content" className="skip-to-content-link">
-                        Skip to content
-                    </a>
-                    <ScrollToTop />
-                    <Starfield />
-                    <SpotlightCursor />
-                    <ScrollProgress />
-                    <CookieBanner />
-                    <ToastContainer />
-                    <Analytics />
-                    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-                        <Navbar />
-                        <main id="main-content" tabIndex="-1" style={{ flex: 1, display: 'flex', flexDirection: 'column', outline: 'none' }}>
-                            <ErrorBoundary>
-                                <AnimatedRoutes />
-                            </ErrorBoundary>
-                        </main>
-                        <Footer />
-                    </div>
+                    <AppLayout />
                 </Router>
             </IntroProvider>
         </ToastProvider>
