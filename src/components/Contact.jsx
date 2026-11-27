@@ -1,41 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { X, Loader2, CheckCircle2, AlertCircle, RefreshCw, Copy, Check, ArrowUpRight } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 
 const CONTACT_PORTAL_VIDEO_URL =
     'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260808_112712_da9d53df-6d27-4b12-bdf6-aa9dc2622bdf.mp4';
-
-const BrandMark = () => (
-    <svg
-        viewBox="0 0 31.5 48.5"
-        width="31.5"
-        height="48.5"
-        fill="none"
-        aria-hidden="true"
-    >
-        <defs>
-            <linearGradient id="contactBrandGrad" x1="8" y1="0" x2="34.1" y2="28.9" gradientUnits="userSpaceOnUse">
-                <stop offset="0" stopColor="#9e9e9e" />
-                <stop offset="0.28" stopColor="#a6a6a6" />
-                <stop offset="0.34" stopColor="#a3a3a3" />
-                <stop offset="0.40" stopColor="#3a3a3a" />
-                <stop offset="0.55" stopColor="#414141" />
-                <stop offset="0.60" stopColor="#7a7a7a" />
-                <stop offset="0.68" stopColor="#8e8e8e" />
-                <stop offset="0.80" stopColor="#a9a9a9" />
-                <stop offset="0.95" stopColor="#c4c4c4" />
-                <stop offset="1" stopColor="#cccccc" />
-            </linearGradient>
-        </defs>
-        <path
-            d="M21.5 0 L21.5 19.5 L31.5 19.5 L31.5 29 L10 48.5 L10 28.5 L0.5 28.5 L0.5 18.5 Z"
-            fill="url(#contactBrandGrad)"
-        />
-        <rect x="0.5" y="18.5" width="9" height="10" fill="#fdfdfd" />
-        <rect x="22" y="19.5" width="9.5" height="9.5" fill="#fdfdfd" />
-    </svg>
-);
 
 const GitHubGlyph = () => (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -56,9 +24,9 @@ const XGlyph = () => (
 );
 
 const MailGlyph = () => (
-    <svg viewBox="0 0 28 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <rect x="2" y="3.5" width="24" height="17" rx="3" />
-        <path d="m3.5 6 10.5 7.5L24.5 6" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="2.5" />
+        <path d="m3 6.5 9 6.5 9-6.5" />
     </svg>
 );
 
@@ -232,16 +200,13 @@ const Contact = () => {
                 </video>
             </div>
 
-            {/* Hero-Level Left Geometric Brand Signal (Desktop outer corner clear of centered Navbar) */}
-            <Link to="/" className="contact-brand" aria-label="Vivaswan Shetty Home">
-                <BrandMark />
-            </Link>
-
             {/* Primary Left-Anchored Editorial Composition */}
             <section className="contact-hero" aria-label="Contact overview">
                 <h1 className="contact-headline">
                     <span>Let&apos;s Architect</span>
-                    <span>What Comes Next</span>
+                    <span>
+                        What Comes Next<em className="contact-accent-dot">.</em>
+                    </span>
                 </h1>
 
                 <p className="contact-sub">
@@ -276,49 +241,46 @@ const Contact = () => {
                     href={github}
                     target="_blank"
                     rel="noreferrer"
-                    className="contact-lg lg1"
+                    className="contact-lg"
                     aria-label="GitHub profile"
                 >
                     <GitHubGlyph />
-                    <span>github</span>
+                    <span>GitHub</span>
                 </a>
 
                 <a
                     href={linkedin}
                     target="_blank"
                     rel="noreferrer"
-                    className="contact-lg lg2"
+                    className="contact-lg"
                     aria-label="LinkedIn profile"
                 >
                     <LinkedInGlyph />
-                    <span>
-                        linkedin
-                        <i className="contact-lg-dot" aria-hidden="true" />
-                    </span>
+                    <span>LinkedIn</span>
                 </a>
 
                 <a
                     href={x || 'https://x.com/vivaswanshetty'}
                     target="_blank"
                     rel="noreferrer"
-                    className="contact-lg lg3"
-                    aria-label="X profile"
+                    className="contact-lg"
+                    aria-label="X / Twitter profile"
                 >
                     <XGlyph />
-                    <span>twitter</span>
+                    <span>X / Twitter</span>
                 </a>
 
                 <a
                     href={`mailto:${email}`}
-                    className="contact-lg lg4"
+                    className="contact-lg"
                     aria-label={`Send email to ${email}`}
                 >
                     <MailGlyph />
-                    <span>direct mail</span>
+                    <span>Direct Mail</span>
                 </a>
             </nav>
 
-            {/* Restrained Monochrome Composer Overlay (Triggered by Primary White Pill CTA) */}
+            {/* Minimal Composer Overlay Triggered by Primary White Pill CTA */}
             {composerOpen && (
                 <div
                     className="contact-modal-backdrop"
@@ -333,7 +295,7 @@ const Contact = () => {
                             <div>
                                 <span className="contact-modal-kicker">Direct Transmission · Bengaluru</span>
                                 <h2 id="contact-composer-title" className="contact-modal-title">
-                                    Send a Message
+                                    Send a <span>Message</span>
                                 </h2>
                             </div>
                             <button
@@ -349,7 +311,7 @@ const Contact = () => {
                         {status === 'success' ? (
                             <div className="contact-modal-success">
                                 <div className="contact-modal-success-icon">
-                                    <CheckCircle2 size={28} color="#fafafa" />
+                                    <CheckCircle2 size={28} color="#ef4444" />
                                 </div>
                                 <h3>Message Dispatched</h3>
                                 <p>

@@ -7535,10 +7535,9 @@ body.contact-cinema-route .scroll-progress-indicator {
   --cu: calc(100vh / 1058);
   --cuw: calc(100vw / 1487);
   --ch: clamp(var(--cu), calc(var(--cu) * 0.65 + var(--cuw) * 0.35), calc(var(--cu) * 1.16));
-  --ink: #fafafa;
-  --muted: #a7a6a6;
-  --nav: #b6b5b5;
-  --strip: #8b8a8a;
+  --ink: #f8fafc;
+  --muted: rgba(248, 250, 252, 0.78);
+  --strip: #94a3b8;
   --pill: #ffffff;
   --pill-ink: #050505;
   position: fixed;
@@ -7547,7 +7546,7 @@ body.contact-cinema-route .scroll-progress-indicator {
   height: 100%;
   background: #050505;
   color: var(--ink);
-  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--font-body), 'Inter', system-ui, -apple-system, sans-serif;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
@@ -7608,35 +7607,6 @@ body.contact-cinema-route .scroll-progress-indicator {
     );
 }
 
-/* Hero-Level Left Geometric Brand Signal (Hidden below 1060px so centered Navbar stays spacious) */
-.contact-brand {
-  position: absolute;
-  left: calc(75 * var(--cu));
-  top: calc(27 * var(--cu));
-  width: calc(31.5 * var(--cu));
-  height: calc(48.5 * var(--cu));
-  z-index: 12;
-  display: block;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-.contact-brand svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.contact-brand:hover {
-  opacity: 0.86;
-  transform: translateY(1px);
-}
-
-@media (max-width: 1080px) {
-  .contact-brand {
-    display: none;
-  }
-}
-
 /* Desktop Measured Left Typography Column */
 .contact-hero {
   position: relative;
@@ -7656,11 +7626,11 @@ body.contact-cinema-route .scroll-progress-indicator {
   left: calc(75.5 * var(--cu));
   top: calc(230.5 * var(--cu));
   margin: 0;
-  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
-  font-size: calc(71.6 * var(--ch)) !important;
-  line-height: calc(80.5 * var(--ch)) !important;
-  font-weight: 400 !important;
-  letter-spacing: calc(0.3 * var(--ch));
+  font-family: var(--font-heading), 'Outfit', sans-serif !important;
+  font-size: calc(70 * var(--ch)) !important;
+  line-height: calc(78 * var(--ch)) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.025em;
   color: var(--ink);
   text-transform: none !important;
   white-space: nowrap;
@@ -7670,16 +7640,20 @@ body.contact-cinema-route .scroll-progress-indicator {
   display: block;
 }
 
+.contact-accent-dot {
+  font-style: normal;
+  color: #ef4444;
+}
+
 .contact-sub {
   position: absolute;
   left: calc(75.5 * var(--cu));
-  top: calc(230.5 * var(--cu) + 189 * var(--ch));
+  top: calc(230.5 * var(--cu) + 184 * var(--ch));
   margin: 0;
-  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  font-size: calc(20.7 * var(--ch));
-  line-height: calc(23.5 * var(--ch));
+  font-family: var(--font-body), 'Inter', sans-serif;
+  font-size: calc(19.5 * var(--ch));
+  line-height: calc(28 * var(--ch));
   font-weight: 400;
-  word-spacing: calc(1.8 * var(--ch));
   color: var(--muted);
   white-space: nowrap;
 }
@@ -7695,171 +7669,101 @@ body.contact-cinema-route .scroll-progress-indicator {
   border-radius: 999px;
   background: var(--pill);
   color: var(--pill-ink);
-  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  font-size: calc(20.6 * var(--ch));
-  font-weight: 500;
+  font-family: var(--font-heading), 'Outfit', sans-serif;
+  font-size: calc(17.5 * var(--ch));
+  font-weight: 700;
+  letter-spacing: 0.04em;
   border: 0;
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
-  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s ease, color 0.2s ease, box-shadow 0.24s ease;
 }
 
 .contact-pill:hover {
-  transform: translateY(-1px);
-  opacity: 0.92;
-}
-
-.contact-pill span {
-  display: inline-block;
-  transform: translateY(calc(0.5 * var(--cu)));
+  transform: translateY(-2px);
+  background: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 12px 32px rgba(239, 68, 68, 0.35);
 }
 
 .contact-pill-cta {
   position: absolute;
-  left: calc(74.9 * var(--cu));
-  top: calc(230.5 * var(--cu) + 264.5 * var(--ch));
-  width: calc(175.6 * var(--ch));
+  left: calc(75.5 * var(--cu));
+  top: calc(230.5 * var(--cu) + 266 * var(--ch));
+  min-width: calc(182 * var(--ch));
   height: calc(50 * var(--ch));
+  padding: 0 calc(26 * var(--ch));
 }
 
 .contact-ghost {
   position: absolute;
-  left: calc(74.9 * var(--cu) + 220.6 * var(--ch));
-  top: calc(230.5 * var(--cu) + 279.5 * var(--ch));
-  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  font-size: calc(20.6 * var(--ch));
-  font-weight: 500;
-  letter-spacing: calc(0.12 * var(--ch));
-  color: #ffffff;
+  left: calc(75.5 * var(--cu) + 220 * var(--ch));
+  top: calc(230.5 * var(--cu) + 280 * var(--ch));
+  font-family: var(--font-heading), 'Outfit', sans-serif;
+  font-size: calc(18.5 * var(--ch));
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #f8fafc;
   text-decoration: none;
   white-space: nowrap;
-  transition: opacity 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .contact-ghost:hover {
-  opacity: 0.72;
+  color: #ef4444;
 }
 
-/* Bottom Monochrome Channel Strip Sitting Inside #050505 Fade */
+/* Uniform Bottom Monochrome Channel Strip Inside #050505 Fade */
 .contact-logos {
   position: absolute;
-  top: 0;
   left: 50%;
-  width: calc(741 * var(--cu));
-  height: 100%;
-  transform: translateX(calc(-50% + 20 * var(--cu)));
-  color: var(--strip);
+  bottom: calc(32 * var(--cu));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(28px, 4.4vw, 68px);
   z-index: 6;
   pointer-events: none;
 }
 
 .contact-lg {
-  position: absolute;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   color: var(--strip);
   text-decoration: none;
   pointer-events: auto;
-  transition: color 0.22s ease;
+  transition: color 0.22s ease, transform 0.22s ease;
 }
 
 .contact-lg:hover {
-  color: #fafafa;
+  color: #f8fafc;
+  transform: translateY(-1px);
 }
 
 .contact-lg svg {
+  width: 17px;
+  height: 17px;
   display: block;
+  flex-shrink: 0;
+  transition: color 0.22s ease;
+}
+
+.contact-lg:hover svg {
+  color: #ef4444;
 }
 
 .contact-lg span {
-  position: absolute;
-  font-family: 'IpsumMark', 'Manrope', sans-serif;
+  font-family: var(--font-heading), 'Outfit', sans-serif;
+  font-size: clamp(11.5px, calc(13.5 * var(--cu)), 14px);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   line-height: 1;
   white-space: nowrap;
-}
-
-.contact-lg.lg1 {
-  left: calc(-0.5 * var(--cu));
-  top: calc(994.7 * var(--cu));
-  width: calc(114 * var(--cu));
-  height: calc(31 * var(--cu));
-}
-
-.contact-lg.lg1 svg {
-  width: calc(30.5 * var(--cu));
-  height: calc(31 * var(--cu));
-}
-
-.contact-lg.lg1 span {
-  left: calc(37 * var(--cu));
-  top: calc(5.6 * var(--cu));
-  font-size: calc(18.1 * var(--cu));
-}
-
-.contact-lg.lg2 {
-  left: calc(206.5 * var(--cu));
-  top: calc(995.7 * var(--cu));
-  width: calc(116 * var(--cu));
-  height: calc(30 * var(--cu));
-}
-
-.contact-lg.lg2 svg {
-  width: calc(24.5 * var(--cu));
-  height: calc(30 * var(--cu));
-}
-
-.contact-lg.lg2 span {
-  left: calc(31 * var(--cu));
-  top: calc(7.3 * var(--cu));
-  font-size: calc(18.5 * var(--cu));
-}
-
-.contact-lg-dot {
-  display: inline-block;
-  width: 0.14em;
-  height: 0.14em;
-  border-radius: 50%;
-  background: currentColor;
-  vertical-align: 0.62em;
-  margin-left: 0.08em;
-}
-
-.contact-lg.lg3 {
-  left: calc(416.5 * var(--cu));
-  top: calc(996.7 * var(--cu));
-  width: calc(108 * var(--cu));
-  height: calc(28 * var(--cu));
-}
-
-.contact-lg.lg3 svg {
-  width: calc(28.5 * var(--cu));
-  height: calc(28 * var(--cu));
-}
-
-.contact-lg.lg3 span {
-  left: calc(35 * var(--cu));
-  top: calc(7.3 * var(--cu));
-  font-size: calc(16.15 * var(--cu));
-}
-
-.contact-lg.lg4 {
-  left: calc(620.5 * var(--cu));
-  top: calc(998.7 * var(--cu));
-  width: calc(122 * var(--cu));
-  height: calc(26 * var(--cu));
-}
-
-.contact-lg.lg4 svg {
-  width: calc(28.5 * var(--cu));
-  height: calc(25.5 * var(--cu));
-}
-
-.contact-lg.lg4 span {
-  left: calc(37 * var(--cu));
-  top: calc(8.3 * var(--cu));
-  font-size: calc(15.3 * var(--cu));
 }
 
 /* Entrance Animations */
@@ -7884,10 +7788,6 @@ body.contact-cinema-route .scroll-progress-indicator {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .contact-brand {
-    animation: contactRise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-
   .contact-headline {
     animation: contactRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.06s both;
   }
@@ -7926,11 +7826,7 @@ body.contact-cinema-route .scroll-progress-indicator {
       calc(24 * var(--cm) + env(safe-area-inset-right, 0px))
       calc(28 * var(--cm) + env(safe-area-inset-bottom, 0px))
       calc(24 * var(--cm) + env(safe-area-inset-left, 0px));
-    gap: calc(44 * var(--cm));
-  }
-
-  .contact-brand {
-    display: none;
+    gap: calc(40 * var(--cm));
   }
 
   .contact-plate-video {
@@ -7969,13 +7865,13 @@ body.contact-cinema-route .scroll-progress-indicator {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: calc(18 * var(--cm));
+    gap: calc(16 * var(--cm));
   }
 
   .contact-headline {
     position: static;
-    font-size: clamp(32px, calc(44 * var(--cm)), 54px) !important;
-    line-height: 1.08 !important;
+    font-size: clamp(32px, calc(42 * var(--cm)), 52px) !important;
+    line-height: 1.06 !important;
     white-space: normal;
   }
 
@@ -7989,9 +7885,8 @@ body.contact-cinema-route .scroll-progress-indicator {
 
   .contact-sub {
     position: static;
-    font-size: clamp(14px, calc(16.5 * var(--cm)), 19px);
-    line-height: 1.42;
-    word-spacing: normal;
+    font-size: clamp(14px, calc(16 * var(--cm)), 18px);
+    line-height: 1.48;
     white-space: normal;
     max-width: min(100%, 42ch);
   }
@@ -8014,57 +7909,28 @@ body.contact-cinema-route .scroll-progress-indicator {
 
   .contact-pill-cta {
     position: static;
-    width: auto;
+    min-width: auto;
     height: auto;
-    padding: calc(13 * var(--cm)) calc(26 * var(--cm));
-    font-size: max(15px, calc(16.5 * var(--cm)));
+    padding: calc(12 * var(--cm)) calc(24 * var(--cm));
+    font-size: max(14.5px, calc(16 * var(--cm)));
   }
 
   .contact-ghost {
     position: static;
-    font-size: max(15px, calc(16.5 * var(--cm)));
+    font-size: max(14.5px, calc(16 * var(--cm)));
   }
 
   .contact-logos {
     position: static;
     width: 100%;
-    height: auto;
     transform: none;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: calc(16 * var(--cm)) calc(20 * var(--cm));
+    gap: calc(14 * var(--cm)) calc(18 * var(--cm));
   }
 
-  .contact-lg,
-  .contact-lg.lg1,
-  .contact-lg.lg2,
-  .contact-lg.lg3,
-  .contact-lg.lg4 {
-    position: static;
-    width: auto;
-    height: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .contact-lg svg,
-  .contact-lg.lg1 svg,
-  .contact-lg.lg2 svg,
-  .contact-lg.lg3 svg,
-  .contact-lg.lg4 svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-  }
-
-  .contact-lg span,
-  .contact-lg.lg1 span,
-  .contact-lg.lg2 span,
-  .contact-lg.lg3 span,
-  .contact-lg.lg4 span {
-    position: static;
-    font-size: 15px;
+  .contact-lg span {
+    font-size: 12.5px;
   }
 }
 
@@ -8109,7 +7975,7 @@ body.contact-cinema-route .scroll-progress-indicator {
   }
 
   .contact-logos {
-    grid-template-columns: repeat(4, minmax(0, auto));
+    display: flex;
     justify-content: space-between;
   }
 }
@@ -8127,7 +7993,7 @@ body.contact-cinema-route .scroll-progress-indicator {
 .contact-modal-scrim {
   position: absolute;
   inset: 0;
-  background: rgba(5, 5, 5, 0.82);
+  background: rgba(5, 5, 5, 0.84);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 }
@@ -8139,12 +8005,12 @@ body.contact-cinema-route .scroll-progress-indicator {
   max-height: calc(100dvh - 32px);
   overflow-y: auto;
   border-radius: 16px;
-  background: #0a0a0c;
+  background: #0a0b10;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.88);
   padding: clamp(22px, 3vw, 32px);
-  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  color: #fafafa;
+  font-family: var(--font-body), 'Inter', sans-serif;
+  color: #f8fafc;
 }
 
 .contact-modal-head {
@@ -8157,30 +8023,36 @@ body.contact-cinema-route .scroll-progress-indicator {
 
 .contact-modal-kicker {
   display: block;
+  font-family: var(--font-heading), 'Outfit', sans-serif;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #8b8a8a;
+  color: #ef4444;
   margin-bottom: 4px;
 }
 
 .contact-modal-title {
   margin: 0 !important;
-  font-family: 'Manrope', sans-serif !important;
+  font-family: var(--font-heading), 'Outfit', sans-serif !important;
   font-size: 24px !important;
-  font-weight: 500 !important;
-  letter-spacing: -0.01em;
-  color: #fafafa;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.contact-modal-title span {
+  color: #ef4444;
 }
 
 .contact-modal-close {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   background: transparent;
-  color: #b6b5b5;
+  color: #94a3b8;
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -8188,8 +8060,8 @@ body.contact-cinema-route .scroll-progress-indicator {
 }
 
 .contact-modal-close:hover {
-  color: #fafafa;
-  border-color: rgba(255, 255, 255, 0.36);
+  color: #ffffff;
+  border-color: #ef4444;
 }
 
 .contact-modal-form {
@@ -8217,29 +8089,32 @@ body.contact-cinema-route .scroll-progress-indicator {
 }
 
 .contact-field span {
-  font-size: 12px;
-  font-weight: 500;
-  color: #b6b5b5;
+  font-family: var(--font-heading), 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #cbd5e1;
 }
 
 .contact-field input,
 .contact-field textarea {
   width: 100%;
-  background: #111114;
+  background: #11131a;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
   padding: 11px 13px;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-body), 'Inter', sans-serif;
   font-size: 14px;
-  color: #fafafa;
+  color: #f8fafc;
   outline: none;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .contact-field input:focus,
 .contact-field textarea:focus {
-  border-color: rgba(255, 255, 255, 0.48);
-  background: #141418;
+  border-color: #ef4444;
+  background: #141720;
 }
 
 .contact-field input.error,
@@ -8258,8 +8133,8 @@ body.contact-cinema-route .scroll-progress-indicator {
   gap: 10px;
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid rgba(248, 113, 113, 0.45);
-  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  background: rgba(239, 68, 68, 0.1);
   color: #fecaca;
   font-size: 13px;
 }
@@ -8288,9 +8163,9 @@ body.contact-cinema-route .scroll-progress-indicator {
   background: transparent;
   border: 0;
   padding: 0;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-body), 'Inter', sans-serif;
   font-size: 12.5px;
-  color: #a7a6a6;
+  color: #94a3b8;
   cursor: pointer;
   text-decoration: none;
   transition: color 0.2s ease;
@@ -8298,7 +8173,7 @@ body.contact-cinema-route .scroll-progress-indicator {
 
 .contact-copy-btn:hover,
 .contact-gmail-link:hover {
-  color: #fafafa;
+  color: #ef4444;
 }
 
 .contact-pill-inline {
@@ -8311,15 +8186,18 @@ body.contact-cinema-route .scroll-progress-indicator {
   background: #ffffff;
   color: #050505;
   border: 0;
-  font-family: 'Manrope', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  font-family: var(--font-heading), 'Outfit', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .contact-pill-inline:hover:not(:disabled) {
-  opacity: 0.9;
+  background: #ef4444;
+  color: #ffffff;
   transform: translateY(-1px);
 }
 
@@ -8330,12 +8208,15 @@ body.contact-cinema-route .scroll-progress-indicator {
 
 .contact-ghost-inline {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #fafafa;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f8fafc;
   border-radius: 999px;
   padding: 10px 20px;
-  font-family: 'Manrope', sans-serif;
-  font-size: 14px;
+  font-family: var(--font-heading), 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 
@@ -8348,7 +8229,8 @@ body.contact-cinema-route .scroll-progress-indicator {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  background: rgba(239, 68, 68, 0.12);
   display: grid;
   place-items: center;
   margin: 0 auto 16px;
@@ -8356,14 +8238,16 @@ body.contact-cinema-route .scroll-progress-indicator {
 
 .contact-modal-success h3 {
   margin: 0 0 8px;
+  font-family: var(--font-heading), 'Outfit', sans-serif;
   font-size: 20px;
-  font-weight: 500;
-  color: #fafafa;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ffffff;
 }
 
 .contact-modal-success p {
   margin: 0 0 22px;
-  color: #a7a6a6;
+  color: #94a3b8;
   font-size: 14px;
   line-height: 1.55;
 }
