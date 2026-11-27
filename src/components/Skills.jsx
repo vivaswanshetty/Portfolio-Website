@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Cpu, Globe, Wrench, Code, Terminal, Smartphone, Zap, Github, Palette, Cloud, Database, Send, FileText } from 'lucide-react';
+import { motion as Motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { Cpu, Globe, Wrench, Terminal, Smartphone, Zap, Github, Palette, Cloud, Database, Send, FileText } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
+import { LineReveal, RuleDraw, MagnetContainer, CharScrollText } from './MotionPrimitives';
 
 const AnimatedProgressBar = ({ level, name, index }) => {
     const ref = useRef(null);
@@ -28,7 +29,7 @@ const AnimatedProgressBar = ({ level, name, index }) => {
                 }}>
                     {name}
                 </span>
-                <motion.span
+                <Motion.span
                     initial={{ opacity: 0 }}
                     animate={isInView ? { opacity: 1 } : { opacity: 0 }}
                     transition={{ delay: 0.4 + index * 0.1 }}
@@ -41,7 +42,7 @@ const AnimatedProgressBar = ({ level, name, index }) => {
                     }}
                 >
                     {level}%
-                </motion.span>
+                </Motion.span>
             </div>
             <div style={{
                 height: '6px',
@@ -50,7 +51,7 @@ const AnimatedProgressBar = ({ level, name, index }) => {
                 overflow: 'hidden',
                 position: 'relative'
             }}>
-                <motion.div
+                <Motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${width}%` }}
                     transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.2 + index * 0.15 }}
@@ -62,7 +63,7 @@ const AnimatedProgressBar = ({ level, name, index }) => {
                     }}
                 >
                     {/* Continuous Shimmer Sweep Animation Preserved */}
-                    <motion.div
+                    <Motion.div
                         style={{
                             position: 'absolute',
                             top: 0,
@@ -78,7 +79,7 @@ const AnimatedProgressBar = ({ level, name, index }) => {
                             repeatDelay: 1.5
                         }}
                     />
-                </motion.div>
+                </Motion.div>
             </div>
         </div>
     );
@@ -115,30 +116,34 @@ const Skills = () => {
         level: skill.level || 80
     }));
 
+    const tickerItems = [...technical.map((s) => s.name || s), ...tools];
+
     return (
         <div className="editorial-page-container" ref={ref}>
             {/* Opening Editorial Header */}
-            <motion.div
+            <Motion.div
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
                 className="editorial-page-header"
             >
-                <motion.div style={{ y: headerY }}>
+                <Motion.div style={{ y: headerY }}>
                     <div className="editorial-eyebrow-container" style={{ marginBottom: '0.8rem' }}>
                         <span className="editorial-eyebrow-text">
                             SKILLS & EXPERTISE.
                         </span>
                         <div className="editorial-eyebrow-rule" />
                     </div>
-                    <h1 className="editorial-page-title">
-                        TECHNICAL <span style={{ color: '#ef4444' }}>PROFICIENCY</span> & STACK.
-                    </h1>
-                    <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
-                        Production-proven technologies, system paradigms, and engineering toolchains I use to build scalable digital products.
-                    </p>
-                </motion.div>
-            </motion.div>
+                    <LineReveal as="h1" className="editorial-page-title">
+                        TECHNICAL <span style={{ color: '#ef4444' }}>PROFICIENCY</span> &amp; STACK.
+                    </LineReveal>
+                    <RuleDraw />
+                    <CharScrollText
+                        text="Production-proven frameworks, native mobile bridges, real-time sockets, and cloud deployment toolchains engineered for resilience."
+                        className="kinetic-subpage-scroll-lead"
+                    />
+                </Motion.div>
+            </Motion.div>
 
             {/* 2-Column Editorial Grid Layout */}
             <div style={{ 
@@ -149,11 +154,11 @@ const Skills = () => {
                 margin: '0 auto' 
             }}>
                 {/* Column 1: Technical Progress Bars Card */}
-                <motion.div
+                <Motion.div
                     initial={{ opacity: 0, x: -30 }}
                     animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
                     transition={{ duration: 0.7, delay: 0.1 }}
-                    className="editorial-card"
+                    className="editorial-card kinetic-glass-panel"
                     style={{ padding: '2.5rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}
                 >
                     <div style={{ 
@@ -178,14 +183,7 @@ const Skills = () => {
                                 CORE <span style={{ color: '#ef4444' }}>ENGINEERING</span>
                             </h2>
                         </div>
-                        <span style={{ 
-                            fontFamily: 'var(--font-body)', 
-                            fontSize: '0.72rem', 
-                            color: 'var(--text-subtle)', 
-                            letterSpacing: '0.15em' 
-                        }}>
-                            01 / METRICS
-                        </span>
+                        <span className="kinetic-index-numeral">01</span>
                     </div>
 
                     <div>
@@ -193,16 +191,16 @@ const Skills = () => {
                             <AnimatedProgressBar key={idx} name={skill.name} level={skill.level} index={idx} />
                         ))}
                     </div>
-                </motion.div>
+                </Motion.div>
 
                 {/* Column 2: Domain Expertise & Toolchain */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                     {/* Domain Expertise Editorial Card */}
-                    <motion.div
+                    <Motion.div
                         initial={{ opacity: 0, x: 30 }}
                         animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
                         transition={{ duration: 0.7, delay: 0.2 }}
-                        className="editorial-card"
+                        className="editorial-card kinetic-glass-panel"
                         style={{ padding: '2.25rem 2rem' }}
                     >
                         <div style={{ 
@@ -227,45 +225,34 @@ const Skills = () => {
                                     DOMAIN <span style={{ color: '#ef4444' }}>EXPERTISE</span>
                                 </h3>
                             </div>
-                            <span style={{ 
-                                fontFamily: 'var(--font-body)', 
-                                fontSize: '0.72rem', 
-                                color: 'var(--text-subtle)', 
-                                letterSpacing: '0.15em' 
-                            }}>
-                                02 / DOMAINS
-                            </span>
+                            <span className="kinetic-index-numeral">02</span>
                         </div>
 
                         <div className="editorial-badge-group">
                             {domain.map((item, idx) => (
-                                <motion.span
-                                    key={idx}
-                                    className="editorial-badge"
-                                    initial={{ opacity: 0, scale: 0.85 }}
-                                    animate={isInView ? { 
-                                        opacity: 1, 
-                                        scale: 1,
-                                        transition: { duration: 0.4, delay: 0.4 + idx * 0.05 }
-                                    } : { opacity: 0, scale: 0.85 }}
-                                    whileHover={{
-                                        scale: 1.04,
-                                        y: -2,
-                                        transition: { duration: 0.15 }
-                                    }}
-                                >
-                                    {item}
-                                </motion.span>
+                                <MagnetContainer key={item} strength={6}>
+                                    <Motion.span
+                                        className="editorial-badge"
+                                        initial={{ opacity: 0, scale: 0.85 }}
+                                        animate={isInView ? { 
+                                            opacity: 1, 
+                                            scale: 1,
+                                            transition: { duration: 0.4, delay: 0.4 + idx * 0.05 }
+                                        } : { opacity: 0, scale: 0.85 }}
+                                    >
+                                        {item}
+                                    </Motion.span>
+                                </MagnetContainer>
                             ))}
                         </div>
-                    </motion.div>
+                    </Motion.div>
 
                     {/* Tools & Workflow Editorial Card */}
-                    <motion.div
+                    <Motion.div
                         initial={{ opacity: 0, x: 30 }}
                         animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
                         transition={{ duration: 0.7, delay: 0.3 }}
-                        className="editorial-card"
+                        className="editorial-card kinetic-glass-panel"
                         style={{ padding: '2.25rem 2rem' }}
                     >
                         <div style={{ 
@@ -290,40 +277,41 @@ const Skills = () => {
                                     DEVELOPMENT <span style={{ color: '#ef4444' }}>TOOLCHAIN</span>
                                 </h3>
                             </div>
-                            <span style={{ 
-                                fontFamily: 'var(--font-body)', 
-                                fontSize: '0.72rem', 
-                                color: 'var(--text-subtle)', 
-                                letterSpacing: '0.15em' 
-                            }}>
-                                03 / TOOLS
-                            </span>
+                            <span className="kinetic-index-numeral">03</span>
                         </div>
 
                         <div className="editorial-badge-group">
                             {tools.map((item, idx) => (
-                                <motion.span
-                                    key={idx}
-                                    className="editorial-badge"
-                                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem' }}
-                                    initial={{ opacity: 0, scale: 0.85 }}
-                                    animate={isInView ? { 
-                                        opacity: 1, 
-                                        scale: 1,
-                                        transition: { duration: 0.4, delay: 0.5 + idx * 0.05 }
-                                    } : { opacity: 0, scale: 0.85 }}
-                                    whileHover={{
-                                        scale: 1.04,
-                                        y: -2,
-                                        transition: { duration: 0.15 }
-                                    }}
-                                >
-                                    {getToolIcon(item)}
-                                    {item}
-                                </motion.span>
+                                <MagnetContainer key={item} strength={6}>
+                                    <Motion.span
+                                        className="editorial-badge"
+                                        style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem' }}
+                                        initial={{ opacity: 0, scale: 0.85 }}
+                                        animate={isInView ? { 
+                                            opacity: 1, 
+                                            scale: 1,
+                                            transition: { duration: 0.4, delay: 0.5 + idx * 0.05 }
+                                        } : { opacity: 0, scale: 0.85 }}
+                                    >
+                                        {getToolIcon(item)}
+                                        {item}
+                                    </Motion.span>
+                                </MagnetContainer>
                             ))}
                         </div>
-                    </motion.div>
+                    </Motion.div>
+                </div>
+            </div>
+
+            {/* Ambient Tech Ticker Marquee Strip */}
+            <div className="kinetic-tech-ticker" aria-hidden="true">
+                <div className="kinetic-tech-track">
+                    {[...tickerItems, ...tickerItems].map((label, i) => (
+                        <span key={`${label}-${i}`} className="kinetic-tech-item">
+                            {label}
+                            <b>·</b>
+                        </span>
+                    ))}
                 </div>
             </div>
         </div>

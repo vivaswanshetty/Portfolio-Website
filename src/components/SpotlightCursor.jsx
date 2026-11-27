@@ -1,56 +1,66 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
+/**
+ * Zero-re-render smoothed cursor aura (crimson-ember atmospheric lamp on fine pointers).
+ */
 export const SpotlightCursor = () => {
-    const [mousePos, setMousePos] = useState({ x: -500, y: -500 });
-    const [isVisible, setIsVisible] = useState(false);
+    const lampRef = useRef(null);
 
     useEffect(() => {
-        // Disable on touch devices
-        if (window.matchMedia('(pointer: coarse)').matches) {
-            return;
-        }
+        if (typeof window === 'undefined') return undefined;
+        if (window.matchMedia?.('(pointer: coarse)')?.matches) return undefined;
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) return undefined;
 
+        let targetX = -800;
+        let targetY = -800;
+        let curX = -800;
+        let curY = -800;
+        let visible = false;
+        let lastTime = performance.now();
         let rafId = null;
 
-        const handleMouseMove = (e) => {
-            if (rafId) cancelAnimationFrame(rafId);
-            rafId = requestAnimationFrame(() => {
-                setMousePos({ x: e.clientX, y: e.clientY });
-                if (!isVisible) setIsVisible(true);
-            });
+        const onPointerMove = (e) => {
+            targetX = e.clientX;
+            targetY = e.clientY;
+            if (!visible) {
+                curX = targetX;
+                curY = targetY;
+                visible = true;
+                if (lampRef.current) lampRef.current.style.opacity = '1';
+            }
         };
 
-        const handleMouseLeave = () => {
-            setIsVisible(false);
+        const onMouseLeave = () => {
+            visible = false;
+            if (lampRef.current) lampRef.current.style.opacity = '0';
         };
 
-        window.addEventListener('mousemove', handleMouseMove, { passive: true });
-        document.body.addEventListener('mouseleave', handleMouseLeave);
+        const tick = (now) => {
+            const dt = Math.min(0.05, Math.max(0.001, (now - lastTime) / 1000));
+            lastTime = now;
+
+            if (visible && lampRef.current) {
+                const k = 1 - Math.exp(-10 * dt);
+                curX += (targetX - curX) * k;
+                curY += (targetY - curY) * k;
+                lampRef.current.style.transform = `translate3d(${(curX - 270).toFixed(1)}px, ${(curY - 270).toFixed(1)}px, 0)`;
+            }
+
+            rafId = requestAnimationFrame(tick);
+        };
+
+        window.addEventListener('pointermove', onPointerMove, { passive: true });
+        document.addEventListener('mouseleave', onMouseLeave, { passive: true });
+        rafId = requestAnimationFrame(tick);
 
         return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            document.body.removeEventListener('mouseleave', handleMouseLeave);
             if (rafId) cancelAnimationFrame(rafId);
+            window.removeEventListener('pointermove', onPointerMove);
+            document.removeEventListener('mouseleave', onMouseLeave);
         };
-    }, [isVisible]);
+    }, []);
 
-    if (!isVisible) return null;
-
-    return (
-        <div
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                pointerEvents: 'none',
-                zIndex: 0,
-                background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255, 255, 255, 0.015), transparent 75%)`,
-                transition: 'opacity 0.3s ease'
-            }}
-        />
-    );
+    return <div ref={lampRef} className="kinetic-cursor-lamp" aria-hidden="true" />;
 };
 
 export default SpotlightCursor;

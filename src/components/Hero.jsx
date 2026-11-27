@@ -1,9 +1,18 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowDown, Code, Cpu, Zap, Globe, User, Briefcase, Mail, RotateCcw, FastForward } from 'lucide-react';
+import { motion as Motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight, ArrowDown, Code, Cpu, Zap, Globe, User, Briefcase, Mail, RotateCcw, FastForward, ExternalLink } from 'lucide-react';
 import archiveBg from '../assets/archive_bg.webp';
+import { portfolioData } from '../data/portfolioData';
+import { projectScreenshots } from '../data/projectScreenshots';
 import { useIntro } from '../context/useIntro';
+import {
+    LineReveal,
+    RuleDraw,
+    CharScrollText,
+    MagnetContainer,
+    KineticSeamDivider,
+} from './MotionPrimitives';
 import {
     HERO_VIDEOS,
     HERO_COPY,
@@ -1038,99 +1047,325 @@ const Hero = () => {
     );
 };
 
-const FeatureCard = ({ feature, idx, isInView }) => {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={
-                isInView
-                    ? {
-                          opacity: 1,
-                          y: 0,
-                          transition: { duration: 0.5, delay: idx * 0.08 },
-                      }
-                    : {}
+const HOME_MARQUEE_SHOTS = [
+    ...projectScreenshots['rv-tours-and-travels'].map((s, idx) => ({
+        id: `rv-${idx}`,
+        src: s.src,
+        title: s.title,
+        project: 'RV Tours & Travels',
+        slug: 'rv-tours-and-travels',
+    })),
+    ...projectScreenshots['elevatex-web'].slice(0, 6).map((s, idx) => ({
+        id: `ew-${idx}`,
+        src: s.src,
+        title: s.title,
+        project: 'ElevateX Web',
+        slug: 'elevatex-web',
+    })),
+    ...projectScreenshots['medfind'].slice(0, 4).map((s, idx) => ({
+        id: `mf-${idx}`,
+        src: s.src,
+        title: s.title,
+        project: 'MedFind',
+        slug: 'medfind',
+    })),
+    ...projectScreenshots['conquerone'].slice(0, 3).map((s, idx) => ({
+        id: `c1-${idx}`,
+        src: s.src,
+        title: s.title,
+        project: 'CONQUER ONE',
+        slug: 'conquerone',
+    })),
+    ...projectScreenshots['portfolio'].slice(0, 3).map((s, idx) => ({
+        id: `pf-${idx}`,
+        src: s.src,
+        title: s.title,
+        project: 'Portfolio Architecture',
+        slug: 'portfolio',
+    })),
+];
+
+const HOME_ROW_1 = HOME_MARQUEE_SHOTS.slice(0, 10);
+const HOME_ROW_2 = HOME_MARQUEE_SHOTS.slice(10);
+
+const PortfolioMarqueeSection = () => {
+    const navigate = useNavigate();
+    const sectionRef = useRef(null);
+    const row1Ref = useRef(null);
+    const row2Ref = useRef(null);
+
+    useEffect(() => {
+        const el = sectionRef.current;
+        if (!el || window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) return undefined;
+
+        let rafId = null;
+        const update = () => {
+            const rect = el.getBoundingClientRect();
+            const vh = window.innerHeight || 900;
+            const travel = (vh - rect.top) * 0.28;
+            if (row1Ref.current) {
+                row1Ref.current.style.transform = `translate3d(${(travel - 240).toFixed(1)}px, 0, 0)`;
             }
-            style={{ height: '100%' }}
-            whileHover={{ y: -6 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-        >
-            <div className="editorial-feature-card">
-                <div>
-                    <div className="feature-card-header">
-                        <feature.icon size={22} className="feature-card-icon" />
-                        <span className="feature-card-index">0{idx + 1}</span>
-                    </div>
-                    <h3 className="feature-card-title">{feature.title}</h3>
-                </div>
-                <p className="feature-card-desc">{feature.desc}</p>
+            if (row2Ref.current) {
+                row2Ref.current.style.transform = `translate3d(${(-(travel - 180)).toFixed(1)}px, 0, 0)`;
+            }
+        };
+
+        const onScroll = () => {
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(update);
+        };
+
+        update();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => {
+            window.removeEventListener('scroll', onScroll);
+            if (rafId) cancelAnimationFrame(rafId);
+        };
+    }, []);
+
+    return (
+        <section ref={sectionRef} className="home-marquee-section" aria-label="Selected production screenshots">
+            <div className="home-marquee-header">
+                <span className="editorial-eyebrow-text">LIVE ARCHIVE STREAM · SCROLL TO GLIDE</span>
             </div>
-        </motion.div>
+
+            <div className="home-marquee-tracks">
+                <div ref={row1Ref} className="home-marquee-row">
+                    {[...HOME_ROW_1, ...HOME_ROW_1, ...HOME_ROW_1].map((shot, i) => (
+                        <button
+                            key={`r1-${shot.id}-${i}`}
+                            type="button"
+                            className="home-marquee-tile"
+                            onClick={() => navigate(`/projects/${shot.slug}`)}
+                        >
+                            <img src={shot.src} alt={shot.title} loading="lazy" />
+                            <span className="home-marquee-label">
+                                <b>{shot.project}</b>
+                                <small>{shot.title}</small>
+                            </span>
+                        </button>
+                    ))}
+                </div>
+
+                <div ref={row2Ref} className="home-marquee-row">
+                    {[...HOME_ROW_2, ...HOME_ROW_2, ...HOME_ROW_2].map((shot, i) => (
+                        <button
+                            key={`r2-${shot.id}-${i}`}
+                            type="button"
+                            className="home-marquee-tile"
+                            onClick={() => navigate(`/projects/${shot.slug}`)}
+                        >
+                            <img src={shot.src} alt={shot.title} loading="lazy" />
+                            <span className="home-marquee-label">
+                                <b>{shot.project}</b>
+                                <small>{shot.title}</small>
+                            </span>
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </section>
     );
 };
 
-const FeaturedSection = () => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: '-50px' });
+const StatementManifestoSection = () => {
+    return (
+        <section className="home-manifesto-section" aria-label="Engineering philosophy">
+            <div className="home-manifesto-inner">
+                <div className="home-manifesto-badges" aria-hidden="true">
+                    <span className="home-corner-chip">01 / DISTRIBUTED SYSTEMS</span>
+                    <span className="home-corner-chip">02 / NATIVE MOBILE</span>
+                    <span className="home-corner-chip">03 / KINETIC INTERFACES</span>
+                </div>
 
-    const features = [
-        {
-            icon: Code,
-            title: 'Full Stack & Mobile Systems',
-            desc: 'Production-ready architecture with React Native, Expo & MERN ecosystem.',
-        },
-        {
-            icon: Cpu,
-            title: 'Visionary Architecture',
-            desc: 'Designing resilient distributed backends and AI-first engineering workflows.',
-        },
-        {
-            icon: Zap,
-            title: 'High Performance & Precision',
-            desc: 'Optimized 60 FPS interfaces, offline-first sync engines, and tight data pipelines.',
-        },
-        {
-            icon: Globe,
-            title: 'Leadership & Execution',
-            desc: 'Driving end-to-end products from conception to high-scale execution.',
-        },
-    ];
+                <LineReveal as="h2" className="home-gradient-display">
+                    BUILT FOR SCALE<span style={{ color: '#ef4444' }}>.</span>
+                </LineReveal>
+                <RuleDraw center />
+
+                <CharScrollText
+                    text="I architect and ship production software spanning mobile discovery apps, full-stack platforms, real-time sockets, and high-framerate 3D web experiences. Engineered under real constraints—crafted to endure."
+                    className="home-manifesto-scroll-text"
+                />
+
+                <div className="home-manifesto-cta-wrap">
+                    <MagnetContainer strength={3.5}>
+                        <Link to="/about" className="home-magnetic-cta">
+                            <span>Enter Night Valley · About Me</span>
+                            <ArrowRight size={15} />
+                        </Link>
+                    </MagnetContainer>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+const CAPABILITY_ITEMS = [
+    {
+        num: '01',
+        icon: Code,
+        title: 'Full Stack & Mobile Systems',
+        desc: 'End-to-end production apps powered by React Native, Expo, Next.js 16, Node.js, and typed REST/Edge APIs.',
+    },
+    {
+        num: '02',
+        icon: Cpu,
+        title: 'Distributed & AI Architecture',
+        desc: 'Multi-model Gemini AI fallback orchestration, Cost-Guard rate protection, and real-time Socket.io lobbies.',
+    },
+    {
+        num: '03',
+        icon: Zap,
+        title: '60 FPS Motion & Compositing',
+        desc: 'Three.js WebGL scenes, GPU-accelerated spatial UI transitions, and offline-first local storage sync.',
+    },
+    {
+        num: '04',
+        icon: Globe,
+        title: 'Zero-to-Launch Ownership',
+        desc: 'Translating system design, privacy-first telemetry, and UX ergonomics directly into shipped products.',
+    },
+];
+
+const CapabilitiesContrastBand = () => {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: '-60px' });
 
     return (
-        <section
-            id="capabilities-section"
-            ref={ref}
-            style={{
-                padding: '10rem 2.5rem 6rem',
-                maxWidth: '1300px',
-                margin: '0 auto',
-                position: 'relative',
-                zIndex: 10,
-            }}
-        >
-            <motion.div
-                initial={{ opacity: 0, y: 25 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6 }}
-                className="editorial-section-header"
-            >
-                <span className="editorial-eyebrow-text">WHAT I DO.</span>
-                <h2 className="editorial-section-title">
-                    ENGINEERING <span style={{ color: '#ef4444' }}>CAPABILITIES</span>
-                </h2>
-            </motion.div>
+        <section id="capabilities-section" ref={ref} className="home-light-contrast-band">
+            <div className="home-light-container">
+                <div className="home-light-head">
+                    <span className="home-light-eyebrow">WHAT I BUILD · CAPABILITIES</span>
+                    <LineReveal as="h2" className="home-light-title">
+                        SERVICES &amp; CRAFT
+                    </LineReveal>
+                </div>
 
-            <div
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
-                    gap: '1.25rem',
-                }}
-            >
-                {features.map((feature, idx) => (
-                    <FeatureCard key={idx} feature={feature} idx={idx} isInView={isInView} />
-                ))}
+                <div className="home-light-rows">
+                    {CAPABILITY_ITEMS.map((item, idx) => (
+                        <Motion.div
+                            key={item.num}
+                            className="home-light-row"
+                            initial={{ opacity: 0, y: 24 }}
+                            animate={isInView ? { opacity: 1, y: 0 } : {}}
+                            transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.2, 0.8, 0.2, 1] }}
+                        >
+                            <div className="home-light-num">{item.num}</div>
+                            <div className="home-light-content">
+                                <h3>
+                                    <item.icon size={20} className="home-light-row-icon" />
+                                    <span>{item.title}</span>
+                                </h3>
+                                <p>{item.desc}</p>
+                            </div>
+                        </Motion.div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+};
+
+const STACKING_FEATURE_SLUGS = ['medfind', 'rv-tours-and-travels', 'elevatex-web'];
+
+const StackingProjectCard = ({ project, shots, index, total, progress, range }) => {
+    const targetScale = 1 - (total - 1 - index) * 0.035;
+    const scale = useTransform(progress, range, [1, targetScale]);
+
+    return (
+        <div className="home-stack-card-slot" style={{ top: `calc(var(--nav-height) + 18px + ${index * 26}px)` }}>
+            <Motion.article className="home-stack-card" style={{ scale }}>
+                <div className="home-stack-top">
+                    <div className="home-stack-title-row">
+                        <span className="home-stack-num">0{index + 1}</span>
+                        <div>
+                            <span className="home-stack-cat">{project.category}</span>
+                            <h3>{project.title}</h3>
+                        </div>
+                    </div>
+
+                    <div className="home-stack-actions">
+                        <Link to={`/projects/${project.slug}`} className="home-stack-pill">
+                            <span>Case Study</span>
+                            <ArrowRight size={14} />
+                        </Link>
+                        {project.link && (
+                            <a
+                                href={project.link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="home-stack-ext"
+                                aria-label={`Open ${project.title} live preview`}
+                            >
+                                <ExternalLink size={14} />
+                            </a>
+                        )}
+                    </div>
+                </div>
+
+                <div className="home-stack-media-grid">
+                    <div className="home-stack-col-left">
+                        <div className="home-stack-img-sm">
+                            <img src={shots[0]?.src || project.image} alt={shots[0]?.title || project.title} loading="lazy" />
+                        </div>
+                        <div className="home-stack-img-md">
+                            <img src={shots[1]?.src || project.image} alt={shots[1]?.title || project.title} loading="lazy" />
+                        </div>
+                    </div>
+
+                    <div className="home-stack-col-right">
+                        <img src={project.image} alt={project.title} loading="lazy" />
+                    </div>
+                </div>
+            </Motion.article>
+        </div>
+    );
+};
+
+const StackingProjectsSection = () => {
+    const wrapperRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: wrapperRef,
+        offset: ['start start', 'end end'],
+    });
+
+    const featured = useMemo(() => {
+        const bySlug = Object.fromEntries(portfolioData.projects.map((p) => [p.slug, p]));
+        return STACKING_FEATURE_SLUGS.map((slug) => ({
+            project: bySlug[slug],
+            shots: projectScreenshots[slug] || [],
+        })).filter((entry) => Boolean(entry.project));
+    }, []);
+
+    return (
+        <section className="home-stack-section" aria-label="Featured flagship project stack">
+            <div className="home-stack-inner">
+                <div className="home-stack-header">
+                    <span className="editorial-eyebrow-text">FLAGSHIP ARCHITECTURE</span>
+                    <LineReveal as="h2" className="home-gradient-display">
+                        PROJECTS<span style={{ color: '#ef4444' }}>.</span>
+                    </LineReveal>
+                    <RuleDraw center />
+                </div>
+
+                <div ref={wrapperRef} className="home-stack-wrapper">
+                    {featured.map(({ project, shots }, idx) => {
+                        const start = idx / featured.length;
+                        return (
+                            <StackingProjectCard
+                                key={project.slug}
+                                project={project}
+                                shots={shots}
+                                index={idx}
+                                total={featured.length}
+                                progress={scrollYProgress}
+                                range={[start, 1]}
+                            />
+                        );
+                    })}
+                </div>
             </div>
         </section>
     );
@@ -1138,53 +1373,55 @@ const FeaturedSection = () => {
 
 const QuickLinkCard = ({ link, idx, isInView }) => {
     return (
-        <motion.div
+        <Motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={
                 isInView
                     ? {
                           opacity: 1,
                           y: 0,
-                          transition: { duration: 0.4, delay: idx * 0.08 },
+                          transition: { duration: 0.45, delay: idx * 0.08 },
                       }
                     : {}
             }
             style={{ height: '100%' }}
         >
-            <Link to={link.path} className="editorial-quicklink-card">
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        width: '100%',
-                        marginBottom: '1.5rem',
-                    }}
-                >
-                    <link.icon size={22} className="quicklink-icon" color="var(--text-main)" />
-                    <ArrowRight size={16} className="quicklink-arrow" color="var(--text-subtle)" />
-                </div>
-                <div>
-                    <span
+            <MagnetContainer strength={8} className="home-quicklink-magnet">
+                <Link to={link.path} className="editorial-quicklink-card">
+                    <div
                         style={{
-                            fontWeight: 800,
-                            fontSize: '1.05rem',
-                            fontFamily: 'var(--font-heading)',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.08em',
-                            display: 'block',
-                            marginBottom: '0.3rem',
-                            color: '#ffffff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            width: '100%',
+                            marginBottom: '1.5rem',
                         }}
                     >
-                        {link.label}
-                    </span>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
-                        {link.desc}
-                    </span>
-                </div>
-            </Link>
-        </motion.div>
+                        <link.icon size={22} className="quicklink-icon" color="var(--text-main)" />
+                        <ArrowRight size={16} className="quicklink-arrow" color="var(--text-subtle)" />
+                    </div>
+                    <div>
+                        <span
+                            style={{
+                                fontWeight: 800,
+                                fontSize: '1.05rem',
+                                fontFamily: 'var(--font-heading)',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.08em',
+                                display: 'block',
+                                marginBottom: '0.3rem',
+                                color: '#ffffff',
+                            }}
+                        >
+                            {link.label}
+                        </span>
+                        <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
+                            {link.desc}
+                        </span>
+                    </div>
+                </Link>
+            </MagnetContainer>
+        </Motion.div>
     );
 };
 
@@ -1193,9 +1430,9 @@ const QuickLinks = () => {
     const isInView = useInView(ref, { once: true, margin: '-50px' });
 
     const links = [
-        { icon: User, label: 'About', path: '/about', desc: 'Journey & philosophy' },
-        { icon: Briefcase, label: 'Projects', path: '/projects', desc: 'Featured systems' },
-        { icon: Code, label: 'Skills', path: '/skills', desc: 'Technical stack' },
+        { icon: User, label: 'About', path: '/about', desc: 'Night valley & philosophy' },
+        { icon: Briefcase, label: 'Projects', path: '/projects', desc: '3D sphere & case studies' },
+        { icon: Code, label: 'Skills', path: '/skills', desc: 'Technical arsenal' },
         { icon: Mail, label: 'Contact', path: '/contact', desc: 'Initiate dialogue' },
     ];
 
@@ -1204,20 +1441,19 @@ const QuickLinks = () => {
             ref={ref}
             style={{
                 position: 'relative',
-                padding: '6rem 2.5rem 8rem',
+                padding: '4.5rem 2.5rem 7.5rem',
                 maxWidth: '1300px',
                 margin: '0 auto',
                 zIndex: 10,
             }}
         >
-            {/* Seamless Cinematic Atmospheric Backdrop (No box lines, infinite radial blend) */}
             <div
                 style={{
                     position: 'absolute',
-                    top: '-20%',
-                    left: '-25vw',
-                    right: '-25vw',
-                    bottom: '-20%',
+                    top: '-10%',
+                    left: '-20vw',
+                    right: '-20vw',
+                    bottom: '-15%',
                     zIndex: 0,
                     pointerEvents: 'none',
                     overflow: 'hidden',
@@ -1233,24 +1469,20 @@ const QuickLinks = () => {
                         height: '100%',
                         objectFit: 'cover',
                         objectPosition: 'center',
-                        opacity: 0.42,
+                        opacity: 0.36,
                         filter: 'brightness(0.85) contrast(1.15)',
                     }}
                 />
             </div>
 
             <div style={{ position: 'relative', zIndex: 1 }}>
-                <motion.div
-                    initial={{ opacity: 0, y: 25 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6 }}
-                    className="editorial-section-header"
-                >
+                <div className="editorial-section-header">
                     <span className="editorial-eyebrow-text">NAVIGATION.</span>
-                    <h2 className="editorial-section-title">
+                    <LineReveal as="h2" className="editorial-section-title">
                         EXPLORE THE <span style={{ color: '#ef4444' }}>ARCHIVE</span>
-                    </h2>
-                </motion.div>
+                    </LineReveal>
+                    <RuleDraw />
+                </div>
 
                 <div
                     style={{
@@ -1260,7 +1492,7 @@ const QuickLinks = () => {
                     }}
                 >
                     {links.map((link, idx) => (
-                        <QuickLinkCard key={idx} link={link} idx={idx} isInView={isInView} />
+                        <QuickLinkCard key={link.path} link={link} idx={idx} isInView={isInView} />
                     ))}
                 </div>
             </div>
@@ -1272,7 +1504,12 @@ const Home = () => {
     return (
         <div className="home-editorial-wrapper">
             <Hero />
-            <FeaturedSection />
+            <KineticSeamDivider tone="cyan" label="SCROLL DESCENT · ARCHIVE" />
+            <PortfolioMarqueeSection />
+            <StatementManifestoSection />
+            <CapabilitiesContrastBand />
+            <StackingProjectsSection />
+            <KineticSeamDivider tone="crimson" label="ENTER THE ARCHIVE" />
             <QuickLinks />
         </div>
     );

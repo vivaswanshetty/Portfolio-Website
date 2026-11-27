@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { motion as Motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
 import { Mail, Linkedin, Github, Send, Instagram, Loader2, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
 import MagneticWrapper from './MagneticWrapper';
+import { RuleDraw } from './MotionPrimitives';
 
 const XIcon = ({ size = 15, color = 'currentColor' }) => (
     <svg viewBox="0 0 24 24" width={size} height={size} fill={color} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
@@ -132,13 +133,13 @@ const Contact = () => {
     return (
         <div className="editorial-page-container" ref={ref}>
             {/* Opening Editorial Header */}
-            <motion.div
+            <Motion.div
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
                 className="editorial-page-header"
             >
-                <motion.div style={{ y: y1 }}>
+                <Motion.div style={{ y: y1 }}>
                     <div className="editorial-eyebrow-container" style={{ marginBottom: '0.8rem' }}>
                         <span className="editorial-eyebrow-text">
                             COMMUNICATIONS & INQUIRIES.
@@ -158,7 +159,7 @@ const Contact = () => {
                         }}
                     >
                         {['C', 'O', 'N', 'N', 'E', 'C', 'T'].map((letter, i) => (
-                            <motion.span
+                            <Motion.span
                                 key={i}
                                 style={{
                                     display: 'inline-block',
@@ -183,9 +184,9 @@ const Contact = () => {
                                 }}
                             >
                                 {letter}
-                            </motion.span>
+                            </Motion.span>
                         ))}
-                        <motion.span
+                        <Motion.span
                             style={{
                                 display: 'inline-block',
                                 color: '#ef4444',
@@ -214,16 +215,17 @@ const Contact = () => {
                             }}
                         >
                             .
-                        </motion.span>
+                        </Motion.span>
                     </h1>
+                    <RuleDraw />
                     <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
                         Open for technical leadership, production engineering collaborations, and high-impact systems development.
                     </p>
-                </motion.div>
-            </motion.div>
+                </Motion.div>
+            </Motion.div>
 
             {/* 2-Column Editorial Grid */}
-            <motion.div
+            <Motion.div
                 style={{ 
                     display: 'grid', 
                     gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', 
@@ -237,9 +239,9 @@ const Contact = () => {
                 animate={isInView ? 'visible' : 'hidden'}
             >
                 {/* Column 1: Editorial Details & Social Links */}
-                <motion.div 
+                <Motion.div 
                     variants={itemVariants}
-                    className="editorial-card"
+                    className="editorial-card kinetic-glass-panel"
                     style={{ padding: '3rem 2.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
                 >
                     <div>
@@ -289,7 +291,7 @@ const Contact = () => {
                             OFFICIAL PLATFORMS
                         </span>
                         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                            <motion.a
+                            <Motion.a
                                 href={linkedin}
                                 target="_blank"
                                 rel="noreferrer"
@@ -298,8 +300,8 @@ const Contact = () => {
                                 whileTap={{ scale: 0.98 }}
                             >
                                 <Linkedin size={15} /> <span>LINKEDIN</span>
-                            </motion.a>
-                            <motion.a
+                            </Motion.a>
+                            <Motion.a
                                 href={github}
                                 target="_blank"
                                 rel="noreferrer"
@@ -308,9 +310,9 @@ const Contact = () => {
                                 whileTap={{ scale: 0.98 }}
                             >
                                 <Github size={15} /> <span>GITHUB</span>
-                            </motion.a>
+                            </Motion.a>
                             {instagram && (
-                                <motion.a
+                                <Motion.a
                                     href={instagram}
                                     target="_blank"
                                     rel="noreferrer"
@@ -319,10 +321,10 @@ const Contact = () => {
                                     whileTap={{ scale: 0.98 }}
                                 >
                                     <Instagram size={15} /> <span>INSTAGRAM</span>
-                                </motion.a>
+                                </Motion.a>
                             )}
                             {x && (
-                                <motion.a
+                                <Motion.a
                                     href={x}
                                     target="_blank"
                                     rel="noreferrer"
@@ -331,16 +333,16 @@ const Contact = () => {
                                     whileTap={{ scale: 0.98 }}
                                 >
                                     <XIcon size={14} /> <span>X / TWITTER</span>
-                                </motion.a>
+                                </Motion.a>
                             )}
                         </div>
                     </div>
-                </motion.div>
+                </Motion.div>
 
                 {/* Column 2: Web3Forms Connected Interactive Form */}
-                <motion.div
+                <Motion.div
                     variants={itemVariants}
-                    className="editorial-card"
+                    className="editorial-card kinetic-glass-panel"
                     style={{
                         padding: '3rem 2.5rem',
                         position: 'relative',
@@ -352,7 +354,7 @@ const Contact = () => {
                 >
                     {status === 'success' ? (
                         /* SUCCESS STATE */
-                        <motion.div 
+                        <Motion.div 
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.4 }}
@@ -389,7 +391,7 @@ const Contact = () => {
                             </h3>
 
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', lineHeight: 1.7, maxWidth: '420px', margin: '0 auto 2.5rem' }}>
-                                Thank you for reaching out. Your communication has been routed directly to Vivaswan's inbox. Expect a response within 24 hours.
+                                Thank you for reaching out. Your communication has been routed directly to Vivaswan&apos;s inbox. Expect a response within 24 hours.
                             </p>
 
                             <MagneticWrapper>
@@ -401,7 +403,7 @@ const Contact = () => {
                                     <RefreshCw size={15} /> SEND ANOTHER MESSAGE
                                 </button>
                             </MagneticWrapper>
-                        </motion.div>
+                        </Motion.div>
                     ) : (
                         /* IDLE / SUBMITTING / ERROR FORM */
                         <div>
@@ -423,12 +425,12 @@ const Contact = () => {
                             </h3>
 
                             <p style={{ marginBottom: '1.75rem', color: 'var(--text-muted)', fontSize: '0.86rem' }}>
-                                Direct secure transmission to Vivaswan's inbox.
+                                Direct secure transmission to Vivaswan&apos;s inbox.
                             </p>
 
                             {/* Inline Error Alert */}
                             {status === 'error' && (
-                                <motion.div
+                                <Motion.div
                                     initial={{ opacity: 0, y: -10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     style={{
@@ -446,7 +448,7 @@ const Contact = () => {
                                 >
                                     <AlertCircle size={18} color="#ef4444" style={{ flexShrink: 0 }} />
                                     <span>{errorMessage}</span>
-                                </motion.div>
+                                </Motion.div>
                             )}
 
                             <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
@@ -586,8 +588,8 @@ const Contact = () => {
                             </form>
                         </div>
                     )}
-                </motion.div>
-            </motion.div>
+                </Motion.div>
+            </Motion.div>
         </div>
     );
 };

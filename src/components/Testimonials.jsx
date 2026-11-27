@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useInView } from 'framer-motion';
+import { motion as Motion, useInView } from 'framer-motion';
 import { portfolioData } from '../data/portfolioData';
 import { Quote, Star, ExternalLink } from 'lucide-react';
 import MagneticWrapper from './MagneticWrapper';
+import { LineReveal, RuleDraw, CharScrollText, MagnetContainer } from './MotionPrimitives';
 
 const TestimonialCard = ({ testimonial, index }) => {
     const ref = useRef(null);
@@ -29,12 +30,12 @@ const TestimonialCard = ({ testimonial, index }) => {
     const initials = getInitials(name);
 
     return (
-        <motion.div
+        <Motion.div
             ref={ref}
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-            className="editorial-card"
+            className="editorial-card kinetic-glass-panel"
             style={{ 
                 padding: '2.5rem 2rem', 
                 position: 'relative', 
@@ -46,7 +47,7 @@ const TestimonialCard = ({ testimonial, index }) => {
             }}
             whileHover={{ y: -5, transition: { duration: 0.15, ease: 'easeOut' } }}
         >
-            {/* Header: Quote Icon & 5 Star Rating */}
+            {/* Header: Index & 5 Star Rating */}
             <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -54,7 +55,10 @@ const TestimonialCard = ({ testimonial, index }) => {
                 paddingBottom: '1rem',
                 marginBottom: '1.25rem'
             }}>
-                <Quote size={24} color="#ef4444" style={{ opacity: 0.8, flexShrink: 0 }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <Quote size={22} color="#ef4444" style={{ opacity: 0.85, flexShrink: 0 }} />
+                    <span className="kinetic-index-numeral">0{index + 1}</span>
+                </div>
 
                 <div style={{ display: 'flex', gap: '0.25rem', flexShrink: 0 }}>
                     {[...Array(5)].map((_, i) => (
@@ -73,7 +77,7 @@ const TestimonialCard = ({ testimonial, index }) => {
                 flex: 1,
                 minHeight: '5rem'
             }}>
-                "{content}"
+                &ldquo;{content}&rdquo;
             </p>
 
             {/* Author Footer */}
@@ -170,7 +174,7 @@ const TestimonialCard = ({ testimonial, index }) => {
                     </span>
                 </div>
             </div>
-        </motion.div>
+        </Motion.div>
     );
 };
 
@@ -186,7 +190,7 @@ const Testimonials = () => {
     return (
         <div className="editorial-page-container" ref={ref}>
             {/* Opening Editorial Header */}
-            <motion.div
+            <Motion.div
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7 }}
@@ -194,16 +198,18 @@ const Testimonials = () => {
             >
                 <div className="editorial-eyebrow-container" style={{ marginBottom: '0.8rem' }}>
                     <span className="editorial-eyebrow-text">
-                        ENDORSEMENTS & COLLABORATIONS.
+                        ENDORSEMENTS &amp; COLLABORATIONS.
                     </span>
                 </div>
-                <h1 className="editorial-page-title">
-                    PEER & LEADERSHIP <span style={{ color: '#ef4444' }}>ENDORSEMENTS</span>.
-                </h1>
-                <p style={{ maxWidth: '600px', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.7, margin: 0 }}>
-                    Direct feedback from engineering mentors, technical collaborators, and teams I've partnered with.
-                </p>
-            </motion.div>
+                <LineReveal as="h1" className="editorial-page-title">
+                    PEER &amp; LEADERSHIP <span style={{ color: '#ef4444' }}>ENDORSEMENTS</span>.
+                </LineReveal>
+                <RuleDraw />
+                <CharScrollText
+                    text="Direct field perspectives from engineering mentors, teammates, and mobile architecture reviewers I have partnered with."
+                    className="kinetic-subpage-scroll-lead"
+                />
+            </Motion.div>
 
             {/* Testimonials Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '2.5rem', maxWidth: '1100px', margin: '0 auto' }}>
@@ -213,12 +219,12 @@ const Testimonials = () => {
             </div>
 
             {/* Bottom Callout Banner */}
-            <motion.div
+            <Motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="editorial-card"
+                className="editorial-card kinetic-glass-panel"
                 style={{
                     textAlign: 'center',
                     padding: '3.5rem 2rem',
@@ -235,14 +241,16 @@ const Testimonials = () => {
                     READY TO BUILD SOMETHING EXTRAORDINARY?
                 </h2>
                 <p style={{ marginBottom: '2.5rem', maxWidth: '500px', margin: '0 auto 2.5rem', color: 'var(--text-muted)', fontSize: '0.92rem', lineHeight: 1.7 }}>
-                    Let's discuss technical architecture, system design, and production engineering.
+                    Let&apos;s discuss technical architecture, system design, and production engineering.
                 </p>
-                <MagneticWrapper>
-                    <Link to="/contact" className="editorial-btn-primary" style={{ padding: '0.9rem 2.2rem', fontSize: '0.85rem' }}>
-                        GET IN TOUCH →
-                    </Link>
-                </MagneticWrapper>
-            </motion.div>
+                <MagnetContainer strength={3.5}>
+                    <MagneticWrapper>
+                        <Link to="/contact" className="editorial-btn-primary" style={{ padding: '0.9rem 2.2rem', fontSize: '0.85rem' }}>
+                            GET IN TOUCH →
+                        </Link>
+                    </MagneticWrapper>
+                </MagnetContainer>
+            </Motion.div>
         </div>
     );
 };
