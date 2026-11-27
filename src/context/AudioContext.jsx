@@ -7,11 +7,11 @@ const DUCKED_VOLUME = 0.08;
 
 export const GlobalAudioProvider = ({ children }) => {
     const audioRef = useRef(null);
-    const mutedRef = useRef(false);
+    const userMutedRef = useRef(false);
     const duckRef = useRef(false);
     const fadeRafRef = useRef(null);
 
-    const [isMuted, setIsMuted] = useState(false);
+    const [userMuted, setUserMuted] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
 
     const rampVolumeTo = useCallback((target) => {
@@ -40,56 +40,88 @@ export const GlobalAudioProvider = ({ children }) => {
         audio.volume = BASE_VOLUME;
         audioRef.current = audio;
 
-        const onPlay = () => setIsPlaying(true);
-        const onPause = () => setIsPlaying(false);
-        audio.addEventListener('play', onPlay);
-        audio.addEventListener('pause', onPause);
+        const syncPlaybackUI = () => {
+            setIsPlaying(!audio.paused && !audio.muted);
+        };
+        audio.addEventListener('play', syncPlaybackUI);
+        audio.addEventListener('pause', syncPlaybackUI);
+        audio.addEventListener('volumechange', syncPlaybackUI);
 
         let unlockAttached = false;
+        const UNLOCK_EVENTS = ['click', 'mousedown', 'mouseup', 'pointerup', 'touchend', 'keydown'];
+
         const detachUnlock = () => {
             if (!unlockAttached) return;
             unlockAttached = false;
-            window.removeEventListener('pointerdown', handleFirstInteraction, true);
-            window.removeEventListener('click', handleFirstInteraction, true);
-            window.removeEventListener('keydown', handleFirstInteraction, true);
-            window.removeEventListener('touchend', handleFirstInteraction, true);
+            UNLOCK_EVENTS.forEach((evt) => {
+                window.removeEventListener(evt, handleFirstInteraction, true);
+            });
         };
 
-        function handleFirstInteraction() {
-            if (mutedRef.current || !audioRef.current) {
+        function handleFirstInteraction(e) {
+            const target = e?.target;
+            // Let the sound toggle button handle its own click without capture-phase race
+            if (target instanceof Element && target.closest('.navbar-audio-btn, #sound')) {
+                return;
+            }
+            const el = audioRef.current;
+            if (!el || userMutedRef.current) {
                 detachUnlock();
                 return;
             }
-            audioRef.current
-                .play()
-                .then(() => {
+            el.muted = false;
+            el.volume = duckRef.current ? DUCKED_VOLUME : BASE_VOLUME;
+            const p = el.play();
+            if (p && typeof p.then === 'function') {
+                p.then(() => {
+                    syncPlaybackUI();
                     detachUnlock();
-                })
-                .catch(() => {});
+                }).catch(() => {});
+            } else {
+                syncPlaybackUI();
+                detachUnlock();
+            }
         }
 
         const attachUnlock = () => {
             if (unlockAttached) return;
             unlockAttached = true;
-            window.addEventListener('pointerdown', handleFirstInteraction, { capture: true, passive: true });
-            window.addEventListener('click', handleFirstInteraction, { capture: true, passive: true });
-            window.addEventListener('keydown', handleFirstInteraction, { capture: true, passive: true });
-            window.addEventListener('touchend', handleFirstInteraction, { capture: true, passive: true });
+            UNLOCK_EVENTS.forEach((evt) => {
+                window.addEventListener(evt, handleFirstInteraction, { capture: true, passive: true });
+            });
         };
 
-        // Start playback immediately if permitted by browser policy; otherwise unlock cleanly on first gesture
-        const tryPlay = audio.play();
-        if (tryPlay && typeof tryPlay.catch === 'function') {
-            tryPlay.catch(() => {
-                attachUnlock();
-            });
-        }
+        const attemptAutoplay = () => {
+            if (!audioRef.current || userMutedRef.current) return;
+            audio.muted = false;
+            audio.volume = duckRef.current ? DUCKED_VOLUME : BASE_VOLUME;
+            const tryPlay = audio.play();
+            if (tryPlay && typeof tryPlay.then === 'function') {
+                tryPlay
+                    .then(() => {
+                        syncPlaybackUI();
+                        detachUnlock();
+                    })
+                    .catch(() => {
+                        // Browser blocked unmuted autoplay on cold load: attach global activation hooks
+                        syncPlaybackUI();
+                        attachUnlock();
+                    });
+            }
+        };
+
+        // Attach unlock immediately AND attempt immediate autoplay on load + when buffer finishes decoding
+        attachUnlock();
+        attemptAutoplay();
+        audio.addEventListener('canplaythrough', attemptAutoplay, { once: true });
 
         return () => {
             detachUnlock();
             if (fadeRafRef.current) cancelAnimationFrame(fadeRafRef.current);
-            audio.removeEventListener('play', onPlay);
-            audio.removeEventListener('pause', onPause);
+            audio.removeEventListener('canplaythrough', attemptAutoplay);
+            audio.removeEventListener('play', syncPlaybackUI);
+            audio.removeEventListener('pause', syncPlaybackUI);
+            audio.removeEventListener('volumechange', syncPlaybackUI);
             audio.pause();
             audio.src = '';
             audioRef.current = null;
@@ -98,21 +130,33 @@ export const GlobalAudioProvider = ({ children }) => {
 
     const toggleMute = useCallback(() => {
         const audio = audioRef.current;
-        const nextMuted = !mutedRef.current;
-        mutedRef.current = nextMuted;
-        setIsMuted(nextMuted);
+        if (!audio) {
+            const next = !userMutedRef.current;
+            userMutedRef.current = next;
+            setUserMuted(next);
+            return next;
+        }
 
-        if (!audio) return nextMuted;
-
-        if (nextMuted) {
-            audio.muted = true;
-            audio.pause();
-        } else {
+        // If browser blocked initial autoplay (paused or muted), first click starts playback instead of muting
+        if (audio.paused || audio.muted) {
+            userMutedRef.current = false;
+            setUserMuted(false);
             audio.muted = false;
             audio.volume = duckRef.current ? DUCKED_VOLUME : BASE_VOLUME;
-            audio.play().catch(() => {});
+            audio
+                .play()
+                .then(() => setIsPlaying(true))
+                .catch(() => {});
+            return false;
         }
-        return nextMuted;
+
+        // Otherwise toggle cleanly to muted/paused
+        userMutedRef.current = true;
+        setUserMuted(true);
+        audio.muted = true;
+        audio.pause();
+        setIsPlaying(false);
+        return true;
     }, []);
 
     const setDuck = useCallback(
@@ -120,14 +164,17 @@ export const GlobalAudioProvider = ({ children }) => {
             const nextDuck = Boolean(ducked);
             if (duckRef.current === nextDuck) return;
             duckRef.current = nextDuck;
-            if (!audioRef.current || mutedRef.current) return;
+            if (!audioRef.current || userMutedRef.current || audioRef.current.paused) return;
             rampVolumeTo(nextDuck ? DUCKED_VOLUME : BASE_VOLUME);
         },
         [rampVolumeTo]
     );
 
+    // Report true audible status so navbar/about speaker icon accurately syncs whether autoplay was allowed or pending first click
+    const effectiveMuted = userMuted || !isPlaying;
+
     return (
-        <GlobalAudioContext.Provider value={{ isMuted, isPlaying, toggleMute, setDuck }}>
+        <GlobalAudioContext.Provider value={{ isMuted: effectiveMuted, isPlaying, toggleMute, setDuck }}>
             {children}
         </GlobalAudioContext.Provider>
     );
