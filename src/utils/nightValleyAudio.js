@@ -1,4 +1,4 @@
-// Generative Web Audio night wind + harmonic ambient store with low-pass muffle hover transition.
+// Generative Web Audio night wind + harmonic ambient store (default unmuted with auto-unlock fallback + warp sweep).
 
 export function createValleyAudioStore() {
     let ctx = null;
@@ -6,8 +6,10 @@ export function createValleyAudioStore() {
     let lowPass = null;
     let nodes = [];
     let isInitialized = false;
-    let isMuted = true;
+    let isMuted = false;
+    let explicitlyMuted = false;
     let isMuffled = false;
+    let unlockBound = false;
 
     const createNoiseBuffer = (audioCtx) => {
         const length = audioCtx.sampleRate * 4;
@@ -24,6 +26,42 @@ export function createValleyAudioStore() {
             data[i] = (b0 + b1 + b2 + white * 0.1848) * 0.08;
         }
         return buffer;
+    };
+
+    const syncGainState = () => {
+        if (!ctx || !masterGain) return;
+        const active = !explicitlyMuted && ctx.state === 'running';
+        isMuted = explicitlyMuted;
+        const target = active ? 0.15 : 0.0001;
+        masterGain.gain.cancelScheduledValues(ctx.currentTime);
+        masterGain.gain.setTargetAtTime(target, ctx.currentTime, 0.25);
+    };
+
+    const handleFirstUnlockGesture = () => {
+        if (explicitlyMuted || !ctx) return;
+        if (ctx.state === 'suspended') {
+            ctx.resume().then(syncGainState).catch(() => {});
+        } else {
+            syncGainState();
+        }
+    };
+
+    const attachAutoUnlock = () => {
+        if (unlockBound || typeof window === 'undefined') return;
+        unlockBound = true;
+        window.addEventListener('pointerdown', handleFirstUnlockGesture, { passive: true, once: true });
+        window.addEventListener('keydown', handleFirstUnlockGesture, { passive: true, once: true });
+        window.addEventListener('wheel', handleFirstUnlockGesture, { passive: true, once: true });
+        window.addEventListener('touchstart', handleFirstUnlockGesture, { passive: true, once: true });
+    };
+
+    const detachAutoUnlock = () => {
+        if (!unlockBound || typeof window === 'undefined') return;
+        unlockBound = false;
+        window.removeEventListener('pointerdown', handleFirstUnlockGesture);
+        window.removeEventListener('keydown', handleFirstUnlockGesture);
+        window.removeEventListener('wheel', handleFirstUnlockGesture);
+        window.removeEventListener('touchstart', handleFirstUnlockGesture);
     };
 
     const ensureAudioGraph = () => {
@@ -60,7 +98,7 @@ export function createValleyAudioStore() {
             noiseSrc.start();
             nodes.push(noiseSrc);
 
-            // Warm nocturnal harmonic drone (A2, E3, B3, F#4 soft detuned voices)
+            // Warm nocturnal harmonic drone (A2, E3, B3, F#4)
             const freqs = [110, 164.81, 246.94, 369.99];
             freqs.forEach((f, idx) => {
                 const osc = ctx.createOscillator();
@@ -100,21 +138,27 @@ export function createValleyAudioStore() {
             return isMuted;
         },
         initAudio() {
-            // Keeps startup lazy-safe until user gesture toggles audio on
+            ensureAudioGraph();
+            if (!ctx) return;
+            if (ctx.state === 'running' && !explicitlyMuted) {
+                syncGainState();
+            } else {
+                attachAutoUnlock();
+            }
             isInitialized = true;
         },
         toggleMute() {
             if (!ctx) {
                 ensureAudioGraph();
             }
+            explicitlyMuted = !explicitlyMuted;
+            isMuted = explicitlyMuted;
             if (!ctx || !masterGain) return isMuted;
-            if (ctx.state === 'suspended') {
-                ctx.resume().catch(() => {});
+            if (!explicitlyMuted && ctx.state === 'suspended') {
+                ctx.resume().then(syncGainState).catch(() => {});
+            } else {
+                syncGainState();
             }
-            isMuted = !isMuted;
-            const target = isMuted ? 0.0001 : 0.15;
-            masterGain.gain.cancelScheduledValues(ctx.currentTime);
-            masterGain.gain.setTargetAtTime(target, ctx.currentTime, 0.24);
             return isMuted;
         },
         setHoverMuffle(active) {
@@ -124,7 +168,39 @@ export function createValleyAudioStore() {
             lowPass.frequency.cancelScheduledValues(ctx.currentTime);
             lowPass.frequency.setTargetAtTime(targetFreq, ctx.currentTime, 0.22);
         },
+        playWarpSweep() {
+            if (explicitlyMuted) return;
+            if (!ctx) ensureAudioGraph();
+            if (!ctx || !lowPass || !masterGain) return;
+            if (ctx.state === 'suspended') {
+                ctx.resume().catch(() => {});
+            }
+            const now = ctx.currentTime;
+            // Sub-bass gravitational dive sweep + lowpass vortex pull
+            lowPass.frequency.cancelScheduledValues(now);
+            lowPass.frequency.setTargetAtTime(4200, now, 0.2);
+            lowPass.frequency.setTargetAtTime(220, now + 0.85, 0.3);
+            lowPass.frequency.setTargetAtTime(2200, now + 1.5, 0.35);
+
+            try {
+                const sub = ctx.createOscillator();
+                const subGain = ctx.createGain();
+                sub.type = 'sine';
+                sub.frequency.setValueAtTime(125, now);
+                sub.frequency.exponentialRampToValueAtTime(34, now + 1.15);
+                subGain.gain.setValueAtTime(0.001, now);
+                subGain.gain.linearRampToValueAtTime(0.22, now + 0.25);
+                subGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.35);
+                sub.connect(subGain);
+                subGain.connect(masterGain);
+                sub.start(now);
+                sub.stop(now + 1.4);
+            } catch {
+                // Ignore if context cannot schedule transient sub
+            }
+        },
         dispose() {
+            detachAutoUnlock();
             nodes.forEach((n) => {
                 try {
                     n.stop?.();

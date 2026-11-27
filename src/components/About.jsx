@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion as Motion, useInView } from 'framer-motion';
-import { ArrowRight, Compass, Cpu, Zap } from 'lucide-react';
+import { ArrowRight, ArrowUp, Compass, Cpu, Zap } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import portraitImg from '../assets/vivaswan_portrait.webp';
 import { NightValleyEngine } from '../utils/nightValleyEngine';
@@ -103,7 +103,8 @@ const About = () => {
 
     const [loaded, setLoaded] = useState(false);
     const [introDone, setIntroDone] = useState(false);
-    const [soundActive, setSoundActive] = useState(false);
+    const [soundActive, setSoundActive] = useState(true);
+    const [isDiving, setIsDiving] = useState(false);
     const [heroScrolledRatio, setHeroScrolledRatio] = useState(0);
 
     // Mount persistent Three.js Night Valley Engine for /about
@@ -179,9 +180,34 @@ const About = () => {
 
     const handleEnterClick = (e) => {
         e.preventDefault();
-        valleyEngineRef.current?.stopHoverTransition();
+        if (isDiving) return;
+
+        setIsDiving(true);
         audioStoreRef.current?.setHoverMuffle(false);
-        storyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        audioStoreRef.current?.playWarpSweep();
+
+        const engine = valleyEngineRef.current;
+        if (!engine) {
+            setIsDiving(false);
+            storyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+
+        engine.triggerWarpHole().then(() => {
+            if (storyRef.current) {
+                const top = storyRef.current.getBoundingClientRect().top + window.scrollY;
+                window.scrollTo({ top, behavior: 'instant' });
+            }
+            engine.resetWarp();
+            engine.setScrollDim(1);
+            setIsDiving(false);
+        });
+    };
+
+    const handleReturnToValley = () => {
+        valleyEngineRef.current?.resetWarp();
+        valleyEngineRef.current?.setScrollDim(0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handlePortraitMove = (e) => {
@@ -201,12 +227,12 @@ const About = () => {
 
     return (
         <div className="about-valley-page">
-            {/* Fixed Interactive 3D Night Flower Valley Stage */}
+            {/* Fixed Interactive 3D Crystal Canyon Stage */}
             <div id="valley" className="valley-canvas-host" aria-hidden="true">
                 <div ref={valleyContainerRef} className="js-canvas-container" />
                 <div
                     className="valley-depth-scrim"
-                    style={{ opacity: Math.min(1, 0.08 + heroScrolledRatio * 0.84) }}
+                    style={{ opacity: isDiving ? 0.04 : Math.min(1, 0.08 + heroScrolledRatio * 0.84) }}
                 />
             </div>
 
@@ -215,31 +241,33 @@ const About = () => {
                 <span />
             </div>
 
-            {/* Section 1: 100vh Entry Hero overlaid on Night Valley */}
+            {/* Section 1: 100vh Entry Hero overlaid on Faceted Crystal Canyon */}
             <section className="valley-entry" aria-label="About entry">
                 <div
-                    className={`valley-ui${introDone ? ' on' : ''}`}
+                    className={`valley-ui${introDone ? ' on' : ''}${isDiving ? ' diving' : ''}`}
                     style={{
-                        opacity: introDone ? Math.max(0, 1 - heroScrolledRatio * 1.45) : 0,
-                        transform: `translateY(${(-heroScrolledRatio * 28).toFixed(1)}px)`,
-                        pointerEvents: heroScrolledRatio > 0.45 ? 'none' : undefined,
+                        opacity: isDiving ? 0 : introDone ? Math.max(0, 1 - heroScrolledRatio * 1.45) : 0,
+                        transform: isDiving
+                            ? 'scale(0.84) translateZ(0)'
+                            : `translateY(${(-heroScrolledRatio * 28).toFixed(1)}px)`,
+                        pointerEvents: isDiving || heroScrolledRatio > 0.45 ? 'none' : undefined,
                     }}
                 >
                     <div className="valley-hero">
-                        <span className="valley-eyebrow">ABOUT & PHILOSOPHY · BENGALURU</span>
+                        <span className="valley-eyebrow">ZERO HANDOUTS · BUILT FROM SCRATCH</span>
                         <h1>
-                            Grown, not built<span className="valley-accent-dot">.</span>
+                            No teacher. Self-built<span className="valley-accent-dot">.</span>
                         </h1>
                         <p className="valley-cap">
-                            Rooted in nature.
+                            No one ever showed me the way.
                             <br />
-                            Built for what&apos;s next.
+                            I learned everything myself—to build a legacy.
                         </p>
                         <a
                             href="#about-story"
                             id="go"
                             className="valley-go"
-                            aria-label="Enter About story"
+                            aria-label="Enter About story through vortex"
                             onPointerEnter={handleEnterPointerEnter}
                             onPointerLeave={handleEnterPointerLeave}
                             onClick={handleEnterClick}
@@ -273,6 +301,16 @@ const About = () => {
 
             {/* Section 2+: Architectural Liquid Glass Narrative Over the Living Valley */}
             <div ref={storyRef} id="about-story" className="about-story-shell">
+                <div className="about-story-topbar">
+                    <button
+                        type="button"
+                        className="about-reenter-btn"
+                        onClick={handleReturnToValley}
+                    >
+                        <ArrowUp size={13} />
+                        <span>Return To Crystal Canyon</span>
+                    </button>
+                </div>
                 {/* Chapter 1: Portrait & Identity Manifesto */}
                 <Motion.section
                     className="about-chapter about-identity-grid"

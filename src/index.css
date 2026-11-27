@@ -5895,11 +5895,15 @@ body.about-valley-route footer {
   width: 100%;
   height: 100%;
   opacity: 0;
-  transition: opacity 1.6s ease;
+  transition: opacity 0.85s ease, transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .valley-ui.on {
   opacity: 1;
+}
+
+.valley-ui.diving {
+  transition: opacity 0.55s ease, transform 0.75s cubic-bezier(0.55, 0, 1, 0.45);
 }
 
 .valley-ui a,
@@ -5941,17 +5945,49 @@ body.about-valley-route footer {
 .valley-hero h1 {
   font-family: var(--font-heading) !important;
   font-weight: 900 !important;
-  font-size: calc(144 * var(--u)) !important;
-  line-height: 0.92 !important;
-  letter-spacing: -0.035em;
+  font-size: calc(112 * var(--u)) !important;
+  line-height: 0.94 !important;
+  letter-spacing: -0.032em;
   color: var(--cream);
   white-space: nowrap;
   margin: 0 !important;
-  text-shadow: 0 8px 44px rgba(0, 0, 0, 0.72), 0 0 60px rgba(239, 68, 68, 0.14);
+  text-shadow: 0 8px 44px rgba(0, 0, 0, 0.72), 0 0 60px rgba(239, 68, 68, 0.16);
 }
 
 .valley-accent-dot {
   color: #ef4444;
+}
+
+.about-story-topbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: -18px;
+}
+
+.about-reenter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)), rgba(10, 12, 18, 0.72);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: rgba(248, 250, 252, 0.82);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.about-reenter-btn:hover {
+  border-color: #ef4444;
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .valley-cap {
@@ -6532,7 +6568,7 @@ body.about-valley-route footer {
   }
 
   .valley-hero h1 {
-    font-size: clamp(54px, 16vw, 90px) !important;
+    font-size: clamp(36px, 10.5vw, 64px) !important;
     white-space: normal;
   }
 
