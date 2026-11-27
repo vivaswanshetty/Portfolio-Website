@@ -5656,6 +5656,10 @@ body.projects-archive.lit #lit {
   }
 }
 
+body.projects-archive.projects-intro #projects-dot {
+  opacity: 0 !important;
+}
+
 /* Responsive Breakpoints matching spec */
 @media (max-width: 900px) {
   .projects-sphere-shell .bio {

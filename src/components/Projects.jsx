@@ -12,8 +12,7 @@ import {
 } from '../utils/projectSphere';
 
 const HEADLINE_WORDS = ['I', 'Build', 'Systems', 'That', 'Scale'];
-const INTRO_FILM_URL =
-    'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260922_195107_ed3f055a-3a13-4a71-b743-e10310454246.mp4';
+const INTRO_FILM_URL = '/projects-eye-intro.mp4';
 const INTRO_FILM_BACKSTOP_MS = 14000;
 const AUTOPLAY_STALL_MS = 2600;
 const IDLE_SCROLL_SNAP_LIMIT_PX = 20;
