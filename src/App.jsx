@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion as Motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Home from './components/Hero'; // Kept eager for instantaneous first paint
 
@@ -44,7 +44,7 @@ const RouteLoader = () => (
         overflow: 'hidden',
         pointerEvents: 'none'
     }}>
-        <motion.div
+        <Motion.div
             style={{
                 height: '100%',
                 width: '40%',
@@ -97,6 +97,7 @@ const AnimatedRoutes = () => {
     };
 
     const isProjectsSphere = location.pathname === '/projects';
+    const isSpatialScene = isProjectsSphere || location.pathname === '/about';
 
     const routeElement = (
         <Routes location={location} key={location.pathname}>
@@ -114,7 +115,7 @@ const AnimatedRoutes = () => {
         </Routes>
     );
 
-    if (isProjectsSphere) {
+    if (isSpatialScene) {
         return (
             <Suspense fallback={<RouteLoader />}>
                 <div key={location.pathname}>{routeElement}</div>
@@ -125,7 +126,7 @@ const AnimatedRoutes = () => {
     return (
         <AnimatePresence mode="wait">
             <Suspense fallback={<RouteLoader />}>
-                <motion.div
+                <Motion.div
                     key={location.pathname}
                     initial={skipInitialHomeMotion ? false : "initial"}
                     animate="enter"
@@ -133,7 +134,7 @@ const AnimatedRoutes = () => {
                     variants={pageVariants}
                 >
                     {routeElement}
-                </motion.div>
+                </Motion.div>
             </Suspense>
         </AnimatePresence>
     );

@@ -345,6 +345,7 @@ const CyberDrone = () => {
             const hasOverlay =
                 b.contains('lit') ||
                 b.contains('projects-splash') ||
+                b.contains('valley-loading') ||
                 Boolean(document.querySelector('.lightbox-overlay')) ||
                 Boolean(document.querySelector('#mobile-navigation-menu'));
             setDomSuppressed(hasOverlay);

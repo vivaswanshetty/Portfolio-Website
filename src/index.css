@@ -5787,3 +5787,772 @@ body.projects-archive.lit #lit {
   }
 }
 
+/* ==========================================================================
+   /ABOUT: 3D NIGHT FLOWER VALLEY ENTRY & LIQUID GLASS ARCHITECTURAL STORY
+   ========================================================================== */
+body.about-valley-route {
+  --u: min(calc(100vw / 1600), calc(100vh / 900));
+  --cream: #f8fafc;
+  background-color: #060709 !important;
+}
+
+body.valley-loading .navbar-main {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.6s ease;
+}
+
+body.about-valley-route footer {
+  position: relative;
+  z-index: 14;
+}
+
+.about-valley-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Fixed interactive Three.js Night Valley host */
+.valley-canvas-host {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: #060709;
+  pointer-events: none;
+}
+
+.valley-canvas-host .js-canvas-container {
+  position: absolute;
+  inset: 0;
+}
+
+.valley-canvas-host .js-canvas-container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.valley-depth-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(6, 7, 9, 0.25) 0%,
+    rgba(6, 7, 9, 0.78) 55%,
+    rgba(6, 7, 9, 0.94) 100%
+  );
+  pointer-events: none;
+  transition: opacity 0.2s linear;
+}
+
+/* Loader Curtain with single pulsing 9u luminous dot */
+.valley-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1150;
+  display: grid;
+  place-items: center;
+  background: #060709;
+  transition: opacity 1s ease;
+  pointer-events: none;
+}
+
+.valley-loader.gone {
+  opacity: 0;
+}
+
+.valley-loader span {
+  width: calc(9 * var(--u));
+  height: calc(9 * var(--u));
+  min-width: 7px;
+  min-height: 7px;
+  border-radius: 50%;
+  background: var(--cream);
+  box-shadow: 0 0 18px rgba(239, 68, 68, 0.85), 0 0 6px rgba(248, 250, 252, 0.95);
+  animation: valleyPulseDot 1.2s ease-in-out infinite;
+}
+
+@keyframes valleyPulseDot {
+  50% {
+    transform: scale(0.4);
+    opacity: 0.38;
+  }
+}
+
+/* Entry Hero Viewport (100vh overlay matching Fernhollow layout scaled onto Outfit + Inter + Obsidian/Crimson) */
+.valley-entry {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.valley-ui {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.6s ease;
+}
+
+.valley-ui.on {
+  opacity: 1;
+}
+
+.valley-ui a,
+.valley-ui button {
+  pointer-events: auto;
+}
+
+.valley-hero {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-44%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 calc(24 * var(--u));
+}
+
+.valley-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: calc(6 * var(--u)) calc(14 * var(--u));
+  margin-bottom: calc(20 * var(--u));
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)), rgba(10, 12, 18, 0.65);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-family: var(--font-heading);
+  font-size: max(10.5px, calc(11.5 * var(--u)));
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(248, 250, 252, 0.86);
+}
+
+.valley-hero h1 {
+  font-family: var(--font-heading) !important;
+  font-weight: 900 !important;
+  font-size: calc(144 * var(--u)) !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.035em;
+  color: var(--cream);
+  white-space: nowrap;
+  margin: 0 !important;
+  text-shadow: 0 8px 44px rgba(0, 0, 0, 0.72), 0 0 60px rgba(239, 68, 68, 0.14);
+}
+
+.valley-accent-dot {
+  color: #ef4444;
+}
+
+.valley-cap {
+  margin: calc(40 * var(--u)) 0 0 !important;
+  font-family: var(--font-body);
+  font-size: max(15px, calc(20 * var(--u))) !important;
+  line-height: 1.38;
+  color: rgba(248, 250, 252, 0.88);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75);
+}
+
+.valley-go {
+  display: grid;
+  place-items: center;
+  margin-top: calc(34 * var(--u));
+  width: calc(58 * var(--u));
+  height: calc(58 * var(--u));
+  min-width: 48px;
+  min-height: 48px;
+  border: 1.5px solid rgba(248, 250, 252, 0.85);
+  border-radius: 50%;
+  background: rgba(10, 12, 18, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--cream);
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.valley-go:hover {
+  background: var(--cream);
+  border-color: var(--cream);
+  color: #060709;
+  transform: scale(1.06);
+  box-shadow: 0 0 34px rgba(239, 68, 68, 0.45);
+}
+
+.valley-go svg {
+  width: calc(22 * var(--u));
+  height: calc(22 * var(--u));
+  min-width: 18px;
+  min-height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Bottom-right Scroll to Wander + Ambient Audio Toggle */
+.valley-corner {
+  position: absolute;
+  right: calc(44 * var(--u));
+  bottom: calc(44 * var(--u));
+  display: flex;
+  align-items: center;
+  gap: calc(18 * var(--u));
+  font-family: var(--font-heading);
+  font-size: max(11px, calc(12.5 * var(--u)));
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(248, 250, 252, 0.86);
+}
+
+.valley-corner i {
+  width: 1px;
+  height: calc(26 * var(--u));
+  min-height: 20px;
+  background: rgba(248, 250, 252, 0.38);
+}
+
+.valley-sound {
+  display: grid;
+  place-items: center;
+  width: calc(28 * var(--u));
+  height: calc(28 * var(--u));
+  min-width: 26px;
+  min-height: 26px;
+  background: none;
+  border: 0;
+  color: var(--cream);
+  cursor: pointer;
+}
+
+.valley-sound:hover {
+  color: #ef4444;
+}
+
+.valley-sound svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.valley-sound .w {
+  transition: opacity 0.3s ease;
+}
+
+.valley-sound[aria-pressed="false"] .w {
+  opacity: 0;
+}
+
+.valley-sound[aria-pressed="true"] .x {
+  opacity: 0;
+}
+
+/* Redesigned Multi-Chapter Liquid Glass About Body */
+.about-story-shell {
+  position: relative;
+  z-index: 12;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(56px, 8vh, 96px) clamp(18px, 4vw, 44px) clamp(88px, 10vh, 130px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(52px, 7vh, 84px);
+}
+
+.about-glass-card {
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.085) 0%, rgba(255, 255, 255, 0.015) 100%), rgba(10, 12, 18, 0.72);
+  backdrop-filter: blur(28px) saturate(185%);
+  -webkit-backdrop-filter: blur(28px) saturate(185%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 24px 60px -16px rgba(0, 0, 0, 0.78),
+    inset 0 1px 1px rgba(255, 255, 255, 0.22),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.4);
+  transition: border-color 0.3s ease, transform 0.3s var(--ease), box-shadow 0.3s ease;
+}
+
+.about-glass-card:hover {
+  border-color: rgba(239, 68, 68, 0.42);
+}
+
+.about-identity-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+  gap: clamp(22px, 3vw, 34px);
+  align-items: stretch;
+}
+
+.about-portrait-panel {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.about-portrait-media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0b0d14;
+}
+
+.about-portrait-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.about-portrait-vignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(6, 7, 9, 0.78) 0%, transparent 45%);
+  pointer-events: none;
+}
+
+.about-portrait-tag {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(10, 12, 18, 0.78);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: var(--font-heading);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #f8fafc;
+}
+
+.about-portrait-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 2px 6px 4px;
+}
+
+.about-portrait-caption strong {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.about-portrait-caption span {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.about-manifesto-panel {
+  padding: clamp(24px, 3.6vw, 42px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.about-kicker-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.about-kicker {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ef4444;
+}
+
+.about-rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.about-manifesto-heading {
+  font-family: var(--font-heading) !important;
+  font-size: clamp(26px, 3vw, 40px) !important;
+  font-weight: 900 !important;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0 0 20px !important;
+}
+
+.about-manifesto-heading span {
+  color: #ef4444;
+}
+
+.about-lead-copy {
+  font-family: var(--font-body);
+  font-size: 16px !important;
+  line-height: 1.72;
+  color: #f8fafc;
+  margin: 0 0 14px !important;
+}
+
+.about-body-copy {
+  font-family: var(--font-body);
+  font-size: 14.5px !important;
+  line-height: 1.75;
+  color: var(--text-muted);
+  margin: 0 0 26px !important;
+}
+
+.about-sub-kicker {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(248, 250, 252, 0.56);
+  margin-bottom: 12px;
+}
+
+.about-glass-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-family: var(--font-heading);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f8fafc;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.about-glass-badge:hover {
+  border-color: rgba(239, 68, 68, 0.65);
+  background: rgba(239, 68, 68, 0.14);
+}
+
+.about-section-head {
+  margin-bottom: 22px;
+}
+
+.about-section-head h3 {
+  font-family: var(--font-heading) !important;
+  font-size: clamp(22px, 2.6vw, 34px) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 8px 0 0 !important;
+}
+
+.about-stats-bento {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.about-stat-tile {
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about-stat-index {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #ef4444;
+}
+
+.about-stat-value {
+  font-family: var(--font-heading);
+  font-size: clamp(30px, 3vw, 42px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.about-stat-name {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.about-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.about-pillar-card {
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.about-pillar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.about-pillar-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: rgba(239, 68, 68, 0.14);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #f8fafc;
+}
+
+.about-pillar-code {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: rgba(248, 250, 252, 0.45);
+}
+
+.about-pillar-card h4 {
+  font-family: var(--font-heading) !important;
+  font-size: 19px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 !important;
+}
+
+.about-pillar-card p {
+  font-family: var(--font-body);
+  font-size: 13.5px !important;
+  line-height: 1.68;
+  color: var(--text-muted);
+  margin: 0 !important;
+  flex: 1;
+}
+
+.about-pillar-tag {
+  align-self: flex-start;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #ef4444;
+}
+
+.about-trajectory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.about-trajectory-item {
+  padding: 22px 26px;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+}
+
+.about-trajectory-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about-trajectory-period {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #f8fafc;
+}
+
+.about-trajectory-badge {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(239, 68, 68, 0.14);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #fca5a5;
+}
+
+.about-trajectory-content h4 {
+  font-family: var(--font-heading) !important;
+  font-size: 17px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 6px !important;
+}
+
+.about-trajectory-content p {
+  font-family: var(--font-body);
+  font-size: 13.5px !important;
+  line-height: 1.62;
+  color: var(--text-muted);
+  margin: 0 !important;
+}
+
+.about-cta-dock {
+  padding: clamp(24px, 3.4vw, 38px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.about-cta-dock h3 {
+  font-family: var(--font-heading) !important;
+  font-size: clamp(20px, 2.2vw, 28px) !important;
+  font-weight: 800 !important;
+  color: #ffffff;
+  margin: 6px 0 0 !important;
+}
+
+.about-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.about-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.about-btn-primary:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+.about-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f8fafc;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.about-btn-secondary:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 960px) {
+  .about-identity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-portrait-panel {
+    max-width: 360px;
+  }
+
+  .about-stats-bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .about-pillars-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-trajectory-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 820px) {
+  body.about-valley-route {
+    --u: 1px;
+  }
+
+  .valley-hero {
+    left: 20px;
+    right: 20px;
+  }
+
+  .valley-hero h1 {
+    font-size: clamp(54px, 16vw, 90px) !important;
+    white-space: normal;
+  }
+
+  .valley-cap {
+    font-size: 17px !important;
+  }
+
+  .valley-corner {
+    left: 20px;
+    right: 20px;
+    bottom: 30px;
+    justify-content: center;
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .valley-loader span {
+    animation: none;
+  }
+}
+
+
