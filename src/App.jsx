@@ -25,6 +25,7 @@ import ScrollToTop from './components/ScrollToTop';
 import SpotlightCursor from './components/SpotlightCursor';
 import CookieBanner from './components/CookieBanner';
 import { ToastProvider } from './context/ToastContext';
+const CyberDrone = lazy(() => import('./components/CyberDrone'));
 import { IntroProvider } from './context/IntroContext';
 import { useIntro } from './context/useIntro';
 import { ToastContainer } from './components/Toast';
@@ -156,6 +157,9 @@ const AppLayout = () => {
             <Analytics />
             <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
                 <Navbar />
+                <Suspense fallback={null}>
+                    <CyberDrone />
+                </Suspense>
                 <main id="main-content" tabIndex="-1" style={{ flex: 1, display: 'flex', flexDirection: 'column', outline: 'none' }}>
                     <ErrorBoundary>
                         <AnimatedRoutes />
