@@ -6073,12 +6073,12 @@ body.about-valley-route footer {
 }
 
 .valley-loader span {
-  width: calc(9 * var(--u));
-  height: calc(9 * var(--u));
+  width: calc(9 * var(--u, 0.9px));
+  height: calc(9 * var(--u, 0.9px));
   min-width: 7px;
   min-height: 7px;
   border-radius: 50%;
-  background: var(--cream);
+  background: var(--cream, #ffffff);
   box-shadow: 0 0 18px rgba(239, 68, 68, 0.85), 0 0 6px rgba(248, 250, 252, 0.95);
   animation: valleyPulseDot 1.2s ease-in-out infinite;
 }

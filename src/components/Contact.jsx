@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { X, Loader2, CheckCircle2, AlertCircle, RefreshCw, Copy, Check, ArrowUpRight } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 
@@ -48,12 +48,19 @@ const Contact = () => {
     const [status, setStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
     const [errorMessage, setErrorMessage] = useState('');
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const prevTitle = document.title;
         document.title = "Contact | Vivaswan Shetty — Let's Architect What Comes Next";
         document.documentElement.classList.add('contact-cinema-html');
         document.body.classList.add('contact-cinema-route');
+        return () => {
+            document.title = prevTitle;
+            document.documentElement.classList.remove('contact-cinema-html');
+            document.body.classList.remove('contact-cinema-route');
+        };
+    }, []);
 
+    useEffect(() => {
         const video = videoRef.current;
         if (video) {
             video.muted = true;
@@ -64,12 +71,6 @@ const Contact = () => {
                 playPromise.catch(() => {});
             }
         }
-
-        return () => {
-            document.title = prevTitle;
-            document.documentElement.classList.remove('contact-cinema-html');
-            document.body.classList.remove('contact-cinema-route');
-        };
     }, []);
 
     const closeComposer = useCallback(() => {

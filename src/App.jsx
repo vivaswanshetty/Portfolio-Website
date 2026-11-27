@@ -32,36 +32,61 @@ import { useIntro } from './context/useIntro';
 import { ToastContainer } from './components/Toast';
 import { Analytics } from '@vercel/analytics/react';
 
-// Sleek editorial top progress bar loader for instant route transitions
-const RouteLoader = () => (
-    <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '2px',
-        zIndex: 9999,
-        background: 'rgba(255, 255, 255, 0.04)',
-        overflow: 'hidden',
-        pointerEvents: 'none'
-    }}>
-        <Motion.div
-            style={{
-                height: '100%',
-                width: '40%',
-                background: 'linear-gradient(90deg, transparent, #ef4444, #f87171, transparent)',
-                boxShadow: '0 0 12px rgba(239, 68, 68, 0.8)'
-            }}
-            initial={{ x: '-100%' }}
-            animate={{ x: '350%' }}
-            transition={{
-                repeat: Infinity,
-                duration: 0.9,
-                ease: 'easeInOut'
-            }}
-        />
-    </div>
-);
+// Route transition loader: keeps /about and /contact seamless without flashing the cosmos backdrop
+const RouteLoader = ({ pathname }) => {
+    if (pathname === '/about') {
+        return (
+            <div className="valley-loader" aria-hidden="true">
+                <span />
+            </div>
+        );
+    }
+
+    if (pathname === '/contact') {
+        return (
+            <div
+                aria-hidden="true"
+                style={{
+                    position: 'fixed',
+                    inset: 0,
+                    background: '#050505',
+                    zIndex: 9998,
+                    pointerEvents: 'none',
+                }}
+            />
+        );
+    }
+
+    return (
+        <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '2px',
+            zIndex: 9999,
+            background: 'rgba(255, 255, 255, 0.04)',
+            overflow: 'hidden',
+            pointerEvents: 'none'
+        }}>
+            <Motion.div
+                style={{
+                    height: '100%',
+                    width: '40%',
+                    background: 'linear-gradient(90deg, transparent, #ef4444, #f87171, transparent)',
+                    boxShadow: '0 0 12px rgba(239, 68, 68, 0.8)'
+                }}
+                initial={{ x: '-100%' }}
+                animate={{ x: '350%' }}
+                transition={{
+                    repeat: Infinity,
+                    duration: 0.9,
+                    ease: 'easeInOut'
+                }}
+            />
+        </div>
+    );
+};
 
 const AnimatedRoutes = () => {
     const location = useLocation();
@@ -118,7 +143,7 @@ const AnimatedRoutes = () => {
 
     if (isSpatialScene) {
         return (
-            <Suspense fallback={<RouteLoader />}>
+            <Suspense fallback={<RouteLoader pathname={location.pathname} />}>
                 <div key={location.pathname}>{routeElement}</div>
             </Suspense>
         );
@@ -126,7 +151,7 @@ const AnimatedRoutes = () => {
 
     return (
         <AnimatePresence mode="wait">
-            <Suspense fallback={<RouteLoader />}>
+            <Suspense fallback={<RouteLoader pathname={location.pathname} />}>
                 <Motion.div
                     key={location.pathname}
                     initial={skipInitialHomeMotion ? false : "initial"}
@@ -145,7 +170,9 @@ const AppLayout = () => {
     const location = useLocation();
     const isProjectsSphere = location.pathname === '/projects';
     const isCinemaContact = location.pathname === '/contact';
+    const isAboutValley = location.pathname === '/about';
     const hideChromeExtras = isProjectsSphere || isCinemaContact;
+    const hideStarfield = isAboutValley || isCinemaContact;
 
     return (
         <>
@@ -153,7 +180,7 @@ const AppLayout = () => {
                 Skip to content
             </a>
             <ScrollToTop />
-            <Starfield />
+            {!hideStarfield && <Starfield />}
             {!hideChromeExtras && <SpotlightCursor />}
             {!hideChromeExtras && <ScrollProgress />}
             {!isProjectsSphere && <CookieBanner />}

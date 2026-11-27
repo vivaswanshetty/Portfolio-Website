@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion as Motion, useInView } from 'framer-motion';
 import { ArrowRight, ArrowUp, Compass, Cpu, Zap } from 'lucide-react';
@@ -106,12 +106,20 @@ const About = () => {
     const [isDiving, setIsDiving] = useState(false);
     const [storyEntered, setStoryEntered] = useState(false);
 
+    // Apply pure-black portal body state before first paint so no background peeks through
+    useLayoutEffect(() => {
+        document.documentElement.classList.add('about-valley-locked-html');
+        document.body.classList.add('about-valley-route', 'about-valley-locked', 'valley-loading');
+        return () => {
+            document.body.classList.remove('about-valley-route', 'about-valley-locked', 'valley-loading');
+            document.documentElement.classList.remove('about-valley-locked-html');
+        };
+    }, []);
+
     // Mount persistent Three.js Night Valley Engine for /about
     useEffect(() => {
         const container = valleyContainerRef.current;
         if (!container) return undefined;
-
-        document.body.classList.add('about-valley-route', 'valley-loading');
 
         let shown = false;
         const engine = new NightValleyEngine(container, {
@@ -136,8 +144,6 @@ const About = () => {
 
         return () => {
             clearTimeout(backstop);
-            document.body.classList.remove('about-valley-route', 'about-valley-locked', 'valley-loading');
-            document.documentElement.classList.remove('about-valley-locked-html');
             engine.dispose();
             setDuck(false);
             valleyEngineRef.current = null;
