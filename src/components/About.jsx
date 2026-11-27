@@ -144,20 +144,39 @@ const About = () => {
         };
     }, [setDuck]);
 
-    // Lock page scroll strictly inside Valley Portal mode until visitor enters through the #go arrow
+    // Lock page scroll strictly inside Valley Portal mode until visitor enters through the #go arrow,
+    // and make Story Mode scrolling drive dynamic valley speed, bloom & luminescence!
     useEffect(() => {
         const html = document.documentElement;
         const body = document.body;
-        if (storyEntered) {
-            html.classList.remove('about-valley-locked-html');
-            body.classList.remove('about-valley-locked');
-            valleyEngineRef.current?.setScrollDim(0.82);
-        } else {
+        if (!storyEntered) {
             html.classList.add('about-valley-locked-html');
             body.classList.add('about-valley-locked');
             window.scrollTo({ top: 0, behavior: 'instant' });
             valleyEngineRef.current?.setScrollDim(0);
+            return undefined;
         }
+
+        html.classList.remove('about-valley-locked-html');
+        body.classList.remove('about-valley-locked');
+        valleyEngineRef.current?.setScrollDim(0.32);
+
+        let lastY = window.scrollY;
+        const onStoryScroll = () => {
+            const curY = window.scrollY;
+            const dy = curY - lastY;
+            lastY = curY;
+            valleyEngineRef.current?.pulseScroll(dy * 1.4);
+            const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+            const prog = Math.max(0, Math.min(1, curY / maxScroll));
+            // Progressively lift dark dimming into luminous flower flight as visitor reads deeper
+            valleyEngineRef.current?.setScrollDim(0.38 - prog * 0.26);
+        };
+
+        window.addEventListener('scroll', onStoryScroll, { passive: true });
+        return () => {
+            window.removeEventListener('scroll', onStoryScroll);
+        };
     }, [storyEntered]);
 
     const handleToggleSound = () => {
@@ -229,7 +248,7 @@ const About = () => {
                 <div ref={valleyContainerRef} className="js-canvas-container" />
                 <div
                     className="valley-depth-scrim"
-                    style={{ opacity: storyEntered ? 0.78 : isDiving ? 0.04 : 0 }}
+                    style={{ opacity: storyEntered ? 0.28 : isDiving ? 0.04 : 0 }}
                 />
             </div>
 

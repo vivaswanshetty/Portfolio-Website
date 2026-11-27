@@ -48,7 +48,17 @@ export const GlobalAudioProvider = ({ children }) => {
         audio.addEventListener('volumechange', syncPlaybackUI);
 
         let unlockAttached = false;
-        const UNLOCK_EVENTS = ['click', 'mousedown', 'mouseup', 'pointerup', 'touchend', 'keydown'];
+        const UNLOCK_EVENTS = [
+            'pointerdown',
+            'mousedown',
+            'touchstart',
+            'click',
+            'mouseup',
+            'pointerup',
+            'touchend',
+            'keydown',
+            'wheel',
+        ];
 
         const detachUnlock = () => {
             if (!unlockAttached) return;
@@ -170,11 +180,9 @@ export const GlobalAudioProvider = ({ children }) => {
         [rampVolumeTo]
     );
 
-    // Report true audible status so navbar/about speaker icon accurately syncs whether autoplay was allowed or pending first click
-    const effectiveMuted = userMuted || !isPlaying;
-
+    // Keep speaker indicator visibly ON initially (only showing muted when visitor clicks mute)
     return (
-        <GlobalAudioContext.Provider value={{ isMuted: effectiveMuted, isPlaying, toggleMute, setDuck }}>
+        <GlobalAudioContext.Provider value={{ isMuted: userMuted, isPlaying, toggleMute, setDuck }}>
             {children}
         </GlobalAudioContext.Provider>
     );

@@ -482,6 +482,8 @@ const CyberDrone = () => {
             const hasOverlay =
                 b.contains('lit') ||
                 b.contains('projects-splash') ||
+                b.contains('projects-intro') ||
+                b.contains('about-valley-locked') ||
                 b.contains('valley-loading') ||
                 Boolean(document.querySelector('.lightbox-overlay')) ||
                 Boolean(document.querySelector('#mobile-navigation-menu'));

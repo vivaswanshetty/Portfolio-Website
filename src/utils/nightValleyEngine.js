@@ -169,6 +169,7 @@ uniform float uMouseActive;
 uniform float uAspect;
 uniform float uDisperse;
 uniform float uWarp;
+uniform float uScrollSurge;
 
 attribute float aScale;
 attribute float aPhase;
@@ -241,7 +242,7 @@ void main() {
     vMouseGlow = pushStrength;
 
     float baseSize = aScale * (aIsLeaf > 0.5 ? 12.0 : 14.5) * (0.28 + 0.88 * stageScale);
-    baseSize *= (1.0 + pushStrength * 0.45 - uDisperse * 0.15) * (1.0 + uWarp * 0.35);
+    baseSize *= (1.0 + pushStrength * 0.45 - uDisperse * 0.15 + uScrollSurge * 0.24) * (1.0 + uWarp * 0.35);
 
     gl_Position = clipPos;
     gl_PointSize = clamp((baseSize * uPixelRatio * 48.0) / dist, 2.0, 62.0);
@@ -450,6 +451,7 @@ export class NightValleyEngine {
         this.scrollDimTarget = 0;
         this.scrollDimValue = 0;
         this.scrollVelocity = 0;
+        this.scrollSurge = 0;
         this.travelDistance = 0;
         this.introElapsed = 0;
         this.introReported = false;
@@ -666,6 +668,7 @@ export class NightValleyEngine {
             uDisperse: { value: 0 },
             uScrollDim: { value: 0 },
             uWarp: { value: 0 },
+            uScrollSurge: { value: 0 },
         };
 
         const mat = new THREE.ShaderMaterial({
@@ -712,6 +715,7 @@ export class NightValleyEngine {
             uDisperse: { value: 0 },
             uScrollDim: { value: 0 },
             uWarp: { value: 0 },
+            uScrollSurge: { value: 0 },
         };
 
         const mat = new THREE.ShaderMaterial({
@@ -770,7 +774,8 @@ export class NightValleyEngine {
         };
 
         this._onWheel = (e) => {
-            this.scrollVelocity += e.deltaY * 0.015;
+            this.scrollVelocity += e.deltaY * 0.022;
+            this.scrollSurge = Math.min(1, this.scrollSurge + Math.min(0.35, Math.abs(e.deltaY) * 0.0025));
         };
 
         this._onTouchStart = (e) => {
@@ -783,7 +788,8 @@ export class NightValleyEngine {
             if (e.touches && e.touches[0] && lastTouchY !== null) {
                 const dy = lastTouchY - e.touches[0].clientY;
                 lastTouchY = e.touches[0].clientY;
-                this.scrollVelocity += dy * 0.048;
+                this.scrollVelocity += dy * 0.062;
+                this.scrollSurge = Math.min(1, this.scrollSurge + Math.min(0.35, Math.abs(dy) * 0.005));
             }
         };
 
@@ -821,6 +827,11 @@ export class NightValleyEngine {
 
     setScrollDim(dim) {
         this.scrollDimTarget = Math.max(0, Math.min(1, dim));
+    }
+
+    pulseScroll(delta = 0) {
+        this.scrollVelocity += delta * 0.022;
+        this.scrollSurge = Math.min(1, this.scrollSurge + Math.min(0.35, Math.abs(delta) * 0.0028));
     }
 
     triggerWarpHole() {
@@ -874,22 +885,24 @@ export class NightValleyEngine {
 
         const flightActive = 1 - this.disperseValue;
         const idleDrift = 2.6 * flightActive + wCurve * 34.0;
-        this.scrollVelocity *= Math.pow(0.06, dt);
-        const speed = idleDrift + this.scrollVelocity * flightActive;
+        this.scrollVelocity *= Math.pow(0.08, dt);
+        this.scrollSurge *= Math.pow(0.22, dt);
+        const speed = idleDrift + this.scrollVelocity * flightActive * 1.45;
         this.travelDistance += speed * dt;
 
         const camZ = -this.travelDistance;
         const targetX = getValleyCenterX(camZ);
         const floorY = getValleyTerrainY(targetX, camZ);
         const introDrop = (1 - Math.pow(introT, 2)) * 4.5;
-        const camY = floorY + 3.25 + Math.sin(elapsed * 0.45) * 0.14 + introDrop;
+        const surgeDrop = this.scrollSurge * 0.72;
+        const camY = floorY + 3.25 - surgeDrop + Math.sin(elapsed * 0.45) * 0.14 + introDrop;
 
-        // Gaze downward into the lush meadow floor while opening dark night sky across upper half
+        // Gaze downward into the lush meadow floor while immersing deeper into flowers when scrolling
         const lookZ = camZ - 16;
         const lookX = getValleyCenterX(lookZ) + this.mouseTilt.x * 1.85;
-        const lookY = getValleyTerrainY(lookX, lookZ) + 0.18 + this.mouseTilt.y * 1.15;
+        const lookY = getValleyTerrainY(lookX, lookZ) + 0.18 - surgeDrop * 0.35 + this.mouseTilt.y * 1.15;
 
-        const targetFov = 56 + wCurve * 36;
+        const targetFov = 56 + this.scrollSurge * 11.5 + wCurve * 36;
         if (Math.abs(this.camera.fov - targetFov) > 0.08) {
             this.camera.fov = targetFov;
             this.camera.updateProjectionMatrix();
@@ -908,6 +921,7 @@ export class NightValleyEngine {
         this.floraUniforms.uDisperse.value = this.disperseValue;
         this.floraUniforms.uScrollDim.value = this.scrollDimValue;
         this.floraUniforms.uWarp.value = this.warpProgress;
+        this.floraUniforms.uScrollSurge.value = this.scrollSurge;
 
         this.dustUniforms.uTime.value = elapsed;
         this.dustUniforms.uCameraZ.value = camZ;
@@ -927,14 +941,14 @@ export class NightValleyEngine {
             ray.position.set(wx, wy, wz);
             ray.lookAt(this.camera.position.x, wy, this.camera.position.z);
         });
-        this.rayMat.opacity = 0.16 * (1 - this.scrollDimValue * 0.65) * (1 - wCurve * 0.8);
+        this.rayMat.opacity = (0.16 + this.scrollSurge * 0.16) * (1 - this.scrollDimValue * 0.55) * (1 - wCurve * 0.8);
 
-        const normSpeed = Math.min(1, Math.abs(this.scrollVelocity) * 0.085);
+        const normSpeed = Math.min(1, Math.abs(this.scrollVelocity) * 0.095 + this.scrollSurge * 0.55);
         this.postPass.uniforms.uTime.value = elapsed;
         this.postPass.uniforms.uSpeed.value = normSpeed;
         this.postPass.uniforms.uScrollDim.value = this.scrollDimValue;
         this.postPass.uniforms.uWarp.value = this.warpProgress;
-        this.bloomPass.strength = 0.52 * (1 - this.scrollDimValue * 0.45) + this.disperseValue * 0.28 + wCurve * 0.25;
+        this.bloomPass.strength = 0.52 * (1 - this.scrollDimValue * 0.35) + this.disperseValue * 0.28 + this.scrollSurge * 0.34 + wCurve * 0.25;
     }
 
     _loop() {

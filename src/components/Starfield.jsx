@@ -9,7 +9,7 @@ void main() {
 }
 `;
 
-// Volumetric cerulean/sapphire drifting cosmic clouds around obsidian core + multi-layer tumbling starfield
+// High-clarity Quintic FBM sapphire cosmic nebula + non-repeating rotated pinpoint starfield
 const FRAGMENT_SHADER = `
 precision highp float;
 
@@ -19,105 +19,120 @@ uniform float uTime;
 uniform vec2 uMouse;
 uniform float uScrollZoom;
 
-float hash21(vec2 p) {
-    p = fract(p * vec2(123.34, 456.21));
-    p += dot(p, p + 45.32);
-    return fract(p.x * p.y);
+vec2 hash22(vec2 p) {
+    vec3 p3 = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973));
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.xx + p3.yz) * p3.zy);
+}
+
+float hash12(vec2 p) {
+    vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
 }
 
 float noise2(vec2 p) {
     vec2 i = floor(p);
     vec2 f = fract(p);
-    f = f * f * (3.0 - 2.0 * f);
-    float a = hash21(i);
-    float b = hash21(i + vec2(1.0, 0.0));
-    float c = hash21(i + vec2(0.0, 1.0));
-    float d = hash21(i + vec2(1.0, 1.0));
-    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+    // Quintic curve eliminates C1 cubic square grid lines completely in soft mist
+    vec2 u = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
+    float a = hash12(i);
+    float b = hash12(i + vec2(1.0, 0.0));
+    float c = hash12(i + vec2(0.0, 1.0));
+    float d = hash12(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
 
 float fbm(vec2 p) {
     float v = 0.0;
-    float a = 0.5;
+    float a = 0.52;
     mat2 rot = mat2(0.8, 0.6, -0.6, 0.8);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         v += a * noise2(p);
-        p = rot * p * 2.04 + vec2(13.1, 7.7);
+        p = rot * p * 2.02 + vec2(17.1, 31.7);
         a *= 0.5;
     }
     return v;
 }
 
-float starLayer(vec2 uv, float scale, float speed, float time, float seedShift) {
-    vec2 gUv = uv * scale;
-    gUv.y += time * speed;
+vec3 crispStarLayer(vec2 uv, float scale, float speed, float time, float angleRad, float threshold) {
+    float ca = cos(angleRad);
+    float sa = sin(angleRad);
+    vec2 rotUv = mat2(ca, -sa, sa, ca) * uv;
+    rotUv.y += time * speed;
+
+    vec2 gUv = rotUv * scale;
     vec2 id = floor(gUv);
     vec2 gv = fract(gUv) - 0.5;
 
-    float col = 0.0;
+    vec3 acc = vec3(0.0);
     for (int dy = -1; dy <= 1; dy++) {
         for (int dx = -1; dx <= 1; dx++) {
             vec2 offs = vec2(float(dx), float(dy));
             vec2 cell = id + offs;
-            float n = hash21(cell + seedShift);
-            if (n > 0.72) {
-                vec2 starPos = offs + vec2(hash21(cell * 1.7 + 3.1), hash21(cell * 2.3 + 9.4)) - 0.5;
-                starPos *= 0.76;
+            vec2 rnd = hash22(cell);
+            float chance = fract(rnd.x * 13.7 + rnd.y * 7.3);
+            if (chance > threshold) {
+                // Keep jitter strictly inside each neighbor cell WITHOUT scaling offs (fixes repeating clusters!)
+                vec2 starPos = offs + (rnd - 0.5) * 0.78;
                 float d = length(gv - starPos);
-                float size = mix(0.014, 0.046, fract(n * 37.3));
-                float twinkle = 0.65 + 0.35 * sin(time * (1.2 + fract(n * 19.1) * 2.4) + n * 42.0);
-                float core = smoothstep(size, 0.0, d);
-                float halo = exp(-d * 18.0) * 0.45;
-                col += (core + halo) * twinkle * mix(0.35, 1.0, fract(n * 71.7));
+
+                float bright = pow(fract(rnd.x * 31.1 + rnd.y * 19.7), 1.6);
+                float radius = mix(0.012, 0.036, bright);
+                float twinkle = 0.72 + 0.28 * sin(time * (1.1 + rnd.y * 2.6) + rnd.x * 6.2831);
+
+                float pinpoint = smoothstep(radius, 0.0, d);
+                float halo = exp(-d * 48.0) * 0.28 * bright;
+                vec3 sCol = mix(vec3(0.72, 0.88, 1.0), vec3(1.0, 0.96, 0.90), rnd.y);
+                acc += sCol * (pinpoint + halo) * twinkle * mix(0.32, 1.0, bright);
             }
         }
     }
-    return col;
+    return acc;
 }
 
 void main() {
     float aspect = uRes.x / max(1.0, uRes.y);
     vec2 centered = (vUv - 0.5) * vec2(aspect, 1.0);
-    vec2 zoomUv = centered * (1.0 - uScrollZoom * 0.16);
+    vec2 zoomUv = centered * (1.0 - uScrollZoom * 0.24);
+    vec2 parallax = uMouse * 0.028;
 
-    // Subtle parallax sway with mouse pointer
-    vec2 parallax = uMouse * 0.025;
+    // Deep cosmic midnight nebula Clouds framing obsidian center sky
+    vec2 cloudUv = zoomUv * 1.38 + parallax + vec2(0.0, uTime * 0.015);
+    float warp = fbm(cloudUv * 0.85 - vec2(uTime * 0.006, 0.0));
+    float n1 = fbm(cloudUv + vec2(warp * 0.65, warp * 0.42));
+    float n2 = fbm(cloudUv * 1.9 - vec2(uTime * 0.008, -uTime * 0.012));
+    float mist = smoothstep(0.32, 0.88, n1 * 0.66 + n2 * 0.34);
 
-    // Deep obsidian void core surrounded by sapphire-teal nebula mist matching reference video
-    vec2 cloudUv = zoomUv * 1.45 + parallax + vec2(0.0, uTime * 0.018);
-    float n1 = fbm(cloudUv + vec2(fbm(cloudUv * 0.8 - uTime * 0.008) * 0.55));
-    float n2 = fbm(cloudUv * 1.9 - vec2(uTime * 0.01, -uTime * 0.015));
-    float cloudDensity = smoothstep(0.28, 0.85, n1 * 0.68 + n2 * 0.36);
+    // Organic center hollow keeps UI & floating typography ultra-clean
+    float centerDist = length(zoomUv * vec2(1.05, 1.15) + vec2(0.0, 0.05));
+    float edgeBreakup = fbm(zoomUv * 2.4 + vec2(0.0, uTime * 0.01)) * 0.28;
+    float hollowMask = smoothstep(0.22, 0.74, centerDist + edgeBreakup - 0.14);
 
-    // Organic dark central rift (keeps UI & typography high-contrast over rich cosmos)
-    float centerDist = length(zoomUv * vec2(1.05, 1.18) + vec2(0.0, 0.06));
-    float riftNoise = fbm(zoomUv * 2.6 + vec2(0.0, uTime * 0.012)) * 0.32;
-    float centerHollow = smoothstep(0.18, 0.72, centerDist + riftNoise - 0.12);
-
-    // Soft cyan-ice zenith skylight source at top center
+    // Top-center subtle arctic skylight glow
     vec2 zenithVec = vUv - vec2(0.5 + uMouse.x * 0.03, 0.99);
     float zenithDist = length(zenithVec * vec2(aspect * 0.72, 1.15));
     float zenithGlow = exp(-zenithDist * 3.1);
 
-    vec3 col = vec3(0.014, 0.02, 0.035);
-    vec3 deepSapphire = vec3(0.055, 0.16, 0.28);
-    vec3 ceruleanMist = vec3(0.14, 0.34, 0.49);
-    vec3 arcticTop = vec3(0.42, 0.76, 0.94);
+    vec3 col = vec3(0.010, 0.016, 0.030);
+    vec3 deepSapphire = vec3(0.045, 0.14, 0.26);
+    vec3 ceruleanMist = vec3(0.13, 0.33, 0.49);
+    vec3 arcticSky = vec3(0.40, 0.74, 0.94);
 
-    col += mix(deepSapphire, ceruleanMist, n2) * cloudDensity * centerHollow * 0.92;
-    col += arcticTop * zenithGlow * (0.48 + n1 * 0.24);
+    col += mix(deepSapphire, ceruleanMist, n2) * mist * hollowMask * (0.85 + uScrollZoom * 0.32);
+    col += arcticSky * zenithGlow * (0.44 + n1 * 0.24);
 
-    // 3 parallax drifting & twinkling star layers
-    float sFar = starLayer(zoomUv + parallax * 0.35, 34.0, 0.055, uTime, 11.0);
-    float sMid = starLayer(zoomUv + parallax * 0.75, 18.0, 0.095, uTime, 47.0);
-    float sNear = starLayer(zoomUv + parallax * 1.25, 8.5, 0.145, uTime, 93.0);
+    // Four rotated independent star layers: zero grid symmetry, razor crisp pinpoints
+    vec3 stars = vec3(0.0);
+    stars += crispStarLayer(zoomUv + parallax * 0.25, 42.0, 0.025, uTime, 0.28, 0.76) * 0.55;
+    stars += crispStarLayer(zoomUv + parallax * 0.50, 26.0, 0.048, uTime, 1.04, 0.80) * 0.78;
+    stars += crispStarLayer(zoomUv + parallax * 0.85, 15.0, 0.075, uTime, -0.52, 0.84) * 0.95;
+    stars += crispStarLayer(zoomUv + parallax * 1.15, 9.0, 0.105, uTime, 2.08, 0.90) * 1.10;
+    col += stars;
 
-    vec3 starTint = mix(vec3(0.76, 0.89, 1.0), vec3(1.0, 0.98, 0.95), 0.45);
-    col += starTint * (sFar * 0.55 + sMid * 0.82 + sNear * 1.05);
-
-    // Subtle soft radial edge vignette
-    float edgeVig = 1.0 - smoothstep(0.55, 1.15, length(vUv - 0.5) * 1.35);
-    col *= mix(0.62, 1.0, edgeVig);
+    // Gentle edge vignette
+    float vig = 1.0 - smoothstep(0.56, 1.18, length(vUv - 0.5) * 1.35);
+    col *= mix(0.65, 1.0, vig);
 
     gl_FragColor = vec4(col, 1.0);
 }

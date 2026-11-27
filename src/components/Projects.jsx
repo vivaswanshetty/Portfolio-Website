@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, ExternalLink, Github, Layers, Search, X } from 'lucide-react';
+import { ArrowRight, ExternalLink, Github, LayoutGrid, Search, X } from 'lucide-react';
 import portraitImg from '../assets/vivaswan_portrait.webp';
 import { portfolioData } from '../data/portfolioData';
 import { PROJECTS_SPHERE_ITEMS } from '../data/projectSphereItems';
@@ -14,8 +14,6 @@ import {
 const HEADLINE_WORDS = ['I', 'Build', 'Systems', 'That', 'Scale'];
 const INTRO_FILM_URL =
     'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260922_195107_ed3f055a-3a13-4a71-b743-e10310454246.mp4';
-const MIN_SPLASH_MS = 1050;
-const SPLASH_BACKSTOP_MS = 8500;
 const INTRO_FILM_BACKSTOP_MS = 14000;
 const AUTOPLAY_STALL_MS = 2600;
 const IDLE_SCROLL_SNAP_LIMIT_PX = 20;
@@ -45,27 +43,23 @@ const Projects = () => {
     const headlineRef = useRef(null);
     const cardRefs = useRef([]);
     const washRefs = useRef([]);
-    const splashRef = useRef(null);
-    const splashBarRef = useRef(null);
     const introRef = useRef(null);
     const filmRef = useRef(null);
     const revealIntroRef = useRef(null);
     const litOverlayRef = useRef(null);
     const plateRef = useRef(null);
     const dotRef = useRef(null);
+    const spotlightIdxRef = useRef(-1);
 
     const spherePoints = useMemo(() => buildSpherePoints(PROJECTS_SPHERE_ITEMS.length), []);
 
     const [imagesReady, setImagesReady] = useState(false);
-    const [splashMounted, setSplashMounted] = useState(() => {
-        if (typeof window === 'undefined') return false;
-        return !window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
-    });
     const [introMounted, setIntroMounted] = useState(() => {
         if (typeof window === 'undefined') return false;
         return !window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
     });
 
+    const [spotlightIdx, setSpotlightIdx] = useState(-1);
     const [gridOpen, setGridOpen] = useState(false);
     const [gridFilter, setGridFilter] = useState('All');
     const [gridQuery, setGridQuery] = useState('');
@@ -161,7 +155,7 @@ const Projects = () => {
         if (prefersReduced) {
             body.classList.add('revealed');
         } else {
-            body.classList.add('locked', 'projects-splash', 'projects-intro');
+            body.classList.add('locked', 'projects-intro');
             html.style.overflow = 'hidden';
         }
 
@@ -199,7 +193,6 @@ const Projects = () => {
                 'bio-out',
                 'gridview',
                 'lit',
-                'projects-splash',
                 'projects-intro'
             );
             body.style.removeProperty('--persp');
@@ -208,29 +201,16 @@ const Projects = () => {
         };
     }, [applySphereLayout]);
 
-    // Preload 21 project images + avatar with splash bar, then play #intro film at 2x -> veil reveal -> sphere
+    // Preload 21 project images silently in background while opening directly into #intro film -> black veil -> sphere
     useEffect(() => {
         let cancelled = false;
         const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
-        const birthTime = performance.now();
 
-        let doneCount = 0;
-        const total = PROJECTS_SPHERE_ITEMS.length + 2; // 21 cards + avatar + intro film ready
-        const updateBar = () => {
-            doneCount += 1;
-            if (splashBarRef.current) {
-                splashBarRef.current.style.transform = `scaleX(${Math.min(1, doneCount / total)})`;
-            }
-        };
-
-        let splashFinishTimer = null;
-        let removeSplashTimer = null;
         let revealScheduleTimer = null;
         let veilDoneTimer = null;
         let removeIntroTimer = null;
         let filmBackstopTimer = null;
         let autoplayStallTimer = null;
-        let splashClosed = false;
         let introRevealed = false;
         let unlockBound = false;
 
@@ -269,7 +249,7 @@ const Projects = () => {
             veilDoneTimer = setTimeout(() => {
                 if (cancelled) return;
                 applySphereLayout(true);
-                body.classList.remove('projects-splash', 'projects-intro');
+                body.classList.remove('projects-intro');
                 body.classList.add('revealed');
                 if (introRef.current) {
                     introRef.current.classList.add('gone');
@@ -330,10 +310,8 @@ const Projects = () => {
             if (introRef.current) {
                 introRef.current.classList.add('novideo');
             }
-            if (splashClosed) {
-                clearTimeout(revealScheduleTimer);
-                revealScheduleTimer = setTimeout(revealFromIntro, 1300);
-            }
+            clearTimeout(revealScheduleTimer);
+            revealScheduleTimer = setTimeout(revealFromIntro, 1300);
         };
 
         if (video) {
@@ -343,42 +321,21 @@ const Projects = () => {
             video.addEventListener('error', onVideoError);
         }
 
-        const startIntroFilm = () => {
-            if (splashClosed || cancelled) return;
-            splashClosed = true;
-            setImagesReady(true);
-            if (splashBarRef.current) splashBarRef.current.style.transform = 'scaleX(1)';
+        // Preload card imagery silently in background without blocking the eye intro
+        Promise.all([
+            preloadImage(portraitImg),
+            ...PROJECTS_SPHERE_ITEMS.map((item) => preloadImage(item.src)),
+        ]).then(() => {
+            if (!cancelled) setImagesReady(true);
+        });
 
-            document.body.classList.remove('projects-splash');
-            if (splashRef.current) {
-                splashRef.current.classList.add('out');
-            }
-            removeSplashTimer = setTimeout(() => {
-                if (!cancelled) setSplashMounted(false);
-            }, 700);
-
-            if (prefersReduced || !video) {
-                revealFromIntro();
-                return;
-            }
-
-            if (introRef.current?.classList.contains('novideo') || video.error) {
-                introRef.current?.classList.add('novideo');
-                revealScheduleTimer = setTimeout(revealFromIntro, 1300);
-                return;
-            }
-
+        if (prefersReduced || !video) {
+            revealFromIntro();
+        } else {
             video.muted = true;
             video.defaultMuted = true;
             video.playsInline = true;
             video.setAttribute('webkit-playsinline', 'true');
-            if (video.currentTime > 0.05) {
-                try {
-                    video.currentTime = 0;
-                } catch {
-                    // Ignore seek errors before metadata is ready
-                }
-            }
             video.playbackRate = 2;
 
             filmBackstopTimer = setTimeout(revealFromIntro, INTRO_FILM_BACKSTOP_MS);
@@ -395,55 +352,11 @@ const Projects = () => {
                 });
             }
             bindUnlockGestures();
-        };
-
-        const backstopTimer = setTimeout(startIntroFilm, SPLASH_BACKSTOP_MS);
-
-        const waitForFilmReady = new Promise((resolve) => {
-            let settled = false;
-            const settle = () => {
-                if (settled) return;
-                settled = true;
-                updateBar();
-                resolve();
-            };
-            if (!video || prefersReduced || video.readyState >= 2) {
-                settle();
-                return;
-            }
-            const onReady = () => {
-                video.removeEventListener('canplaythrough', onReady);
-                video.removeEventListener('loadeddata', onReady);
-                video.removeEventListener('error', onReady);
-                settle();
-            };
-            video.addEventListener('canplaythrough', onReady, { once: true });
-            video.addEventListener('loadeddata', onReady, { once: true });
-            video.addEventListener('error', onReady, { once: true });
-            setTimeout(onReady, 2500);
-        });
-
-        const preloadAndTrack = (src) => preloadImage(src).then(updateBar);
-
-        Promise.all([
-            preloadAndTrack(portraitImg),
-            ...PROJECTS_SPHERE_ITEMS.map((item) => preloadAndTrack(item.src)),
-            waitForFilmReady,
-        ]).then(() => {
-            if (cancelled) return;
-            clearTimeout(backstopTimer);
-            setImagesReady(true);
-            const elapsed = performance.now() - birthTime;
-            const wait = prefersReduced ? 0 : Math.max(0, MIN_SPLASH_MS - elapsed);
-            splashFinishTimer = setTimeout(startIntroFilm, wait);
-        });
+        }
 
         return () => {
             cancelled = true;
             revealIntroRef.current = null;
-            clearTimeout(backstopTimer);
-            clearTimeout(splashFinishTimer);
-            clearTimeout(removeSplashTimer);
             clearTimeout(revealScheduleTimer);
             clearTimeout(veilDoneTimer);
             clearTimeout(removeIntroTimer);
@@ -459,7 +372,7 @@ const Projects = () => {
         };
     }, [applySphereLayout]);
 
-    // Main 60 FPS Camera & World Rotation Loop
+    // Main 60 FPS Camera, Spotlight Zoom Focus, and Deep Zoom Portal to Overview Grid
     useEffect(() => {
         let rafId = null;
 
@@ -471,14 +384,17 @@ const Projects = () => {
 
             const { p, camZTarget } = computeScrollDolly(rawScroll, vh, R);
 
-            // Fade .bio early (p > 0.08) before revealing bottom-left .gridbtn (p > 0.28) so they never overlap
             const shouldFadeBio = p > 0.08;
             if (shouldFadeBio !== document.body.classList.contains('bio-out')) {
                 document.body.classList.toggle('bio-out', shouldFadeBio);
             }
-            const shouldBeDeep = p > 0.28;
+            const shouldBeDeep = p > 0.24;
             if (shouldBeDeep !== document.body.classList.contains('deep')) {
                 document.body.classList.toggle('deep', shouldBeDeep);
+            }
+
+            if (p < 0.55) {
+                cam.zoomLatched = false;
             }
 
             if (!cam.dragging && !cam.hasLit) {
@@ -488,7 +404,6 @@ const Projects = () => {
                 cam.velY *= 0.94;
                 if (Math.abs(cam.velX) < 0.002) cam.velX = 0;
                 if (Math.abs(cam.velY) < 0.002) cam.velY = 0;
-                // Clamp pitch so tilt + dragY stays inside ±32deg
                 const clampedPitch = Math.max(-32, Math.min(32, cam.tilt + cam.dragY));
                 cam.dragY = clampedPitch - cam.tilt;
             }
@@ -502,14 +417,60 @@ const Projects = () => {
                 worldRef.current.style.transform = `translateZ(${cam.camZ.toFixed(2)}px) rotateY(${sy.toFixed(3)}deg) rotateX(${sx.toFixed(3)}deg)`;
             }
 
-            // Counter-rotate headline forward of front meridian and gently zoom back relative to camera dive
             if (headlineRef.current) {
                 const headZ = R * 0.96 - cam.camZ * 0.42;
                 headlineRef.current.style.transform = `rotateX(${(-sx).toFixed(3)}deg) rotateY(${(-sy).toFixed(3)}deg) translateZ(${headZ.toFixed(2)}px)`;
                 headlineRef.current.style.opacity = Math.max(0, 1 - p * 0.72).toFixed(3);
             }
 
-            // Evaluate per-card atmospheric dark wash & near-plane fade only when values change
+            // Identify closest front-center card during scroll-zoom so zooming actively focuses & unlocks inspection
+            let nextSpotlight = -1;
+            if (p > 0.14 && p < 0.94 && !cam.hasLit && !cam.gridOpen) {
+                const radX = (sx * Math.PI) / 180;
+                const radY = (sy * Math.PI) / 180;
+                const cosX = Math.cos(radX);
+                const sinX = Math.sin(radX);
+                const cosY = Math.cos(radY);
+                const sinY = Math.sin(radY);
+
+                let bestScore = -Infinity;
+                for (let i = 0; i < spherePoints.length; i++) {
+                    const u = spherePoints[i];
+                    const py = -u.y;
+                    const y1 = py * cosX - u.z * sinX;
+                    const z1 = py * sinX + u.z * cosX;
+                    const x2 = u.x * cosY + z1 * sinY;
+                    const z2 = -u.x * sinY + z1 * cosY;
+                    if (z2 > 0.25 && z2 * R + cam.camZ < persp * 0.72) {
+                        const score = z2 - Math.hypot(x2, y1) * 0.65;
+                        if (score > bestScore) {
+                            bestScore = score;
+                            nextSpotlight = i;
+                        }
+                    }
+                }
+            }
+
+            if (spotlightIdxRef.current !== nextSpotlight) {
+                if (spotlightIdxRef.current >= 0 && cardRefs.current[spotlightIdxRef.current]) {
+                    cardRefs.current[spotlightIdxRef.current].classList.remove('is-spotlight');
+                }
+                if (nextSpotlight >= 0 && cardRefs.current[nextSpotlight]) {
+                    cardRefs.current[nextSpotlight].classList.add('is-spotlight');
+                }
+                spotlightIdxRef.current = nextSpotlight;
+                setSpotlightIdx(nextSpotlight);
+            }
+
+            // Diving all the way in (p >= 0.94) smoothly transitions through the constellation into the full Overview Grid
+            if (p >= 0.94 && !cam.gridOpen && !cam.hasLit && !cam.zoomLatched) {
+                cam.zoomLatched = true;
+                cam.gridOpen = true;
+                document.body.classList.add('gridview');
+                document.documentElement.style.overflow = 'hidden';
+                setGridOpen(true);
+            }
+
             for (let i = 0; i < spherePoints.length; i++) {
                 const cardEl = cardRefs.current[i];
                 if (!cardEl) continue;
@@ -646,6 +607,10 @@ const Projects = () => {
             camRef.current.gridOpen = next;
             document.body.classList.toggle('gridview', next);
             document.documentElement.style.overflow = next ? 'hidden' : '';
+            if (!next) {
+                camRef.current.zoomLatched = false;
+                window.scrollTo({ top: 0, behavior: 'instant' });
+            }
             return next;
         });
     }, []);
@@ -923,29 +888,32 @@ const Projects = () => {
                     className="colophon-grid-shortcut"
                     onClick={() => toggleGrid(!gridOpen)}
                 >
-                    {gridOpen ? 'Sphere View' : 'Grid View'}
+                    <LayoutGrid size={13} />
+                    <span>{gridOpen ? 'Sphere View' : 'Grid View'}</span>
                 </button>
             </div>
 
-            {/* Bottom-Left 2x2 Grid Toggle Button (revealed on deep zoom / grid mode) */}
-            <button
-                type="button"
-                id="gridBtn"
-                className="gridbtn chrome"
-                onClick={() => toggleGrid()}
-                aria-label="Toggle grid view"
-                aria-pressed={gridOpen}
-            >
-                <b />
-                <b />
-                <b />
-                <b />
-            </button>
+            {/* Interactive Zoom Spotlight HUD (lets zoom inspect front card or dive straight into Overview Grid) */}
+            {spotlightIdx >= 0 && PROJECTS_SPHERE_ITEMS[spotlightIdx] && (
+                <button
+                    type="button"
+                    className="projects-zoom-hud"
+                    onClick={() =>
+                        openLightbox(
+                            spotlightIdx,
+                            cardRefs.current[spotlightIdx],
+                            'sphere'
+                        )
+                    }
+                >
+                    Inspect {PROJECTS_SPHERE_ITEMS[spotlightIdx].projectTitle} · <span>Keep scrolling for Grid ↓</span>
+                </button>
+            )}
 
             {/* Bottom-Center Drag / Scroll Cue */}
             <div className="cue chrome" aria-hidden="true">
                 <s />
-                <span>Drag to rotate · Scroll to zoom</span>
+                <span>Drag to rotate · Scroll to zoom into Grid</span>
             </div>
 
             {/* Project Overview Grid View (#projects-grid) matching editorial project overviews */}
@@ -1235,19 +1203,6 @@ const Projects = () => {
                     >
                         Skip
                     </button>
-                </div>
-            )}
-
-            {/* Minimal Preload Splash */}
-            {splashMounted && (
-                <div ref={splashRef} id="projects-splash" aria-hidden="true">
-                    <div className="mark">
-                        Vivaswan<em>Archive</em>
-                    </div>
-                    <div className="bar">
-                        <s ref={splashBarRef} />
-                    </div>
-                    <div className="tag">Engineering Systems 2026</div>
                 </div>
             )}
 
