@@ -1088,6 +1088,18 @@ const HOME_MARQUEE_SHOTS = [
 const HOME_ROW_1 = HOME_MARQUEE_SHOTS.slice(0, 10);
 const HOME_ROW_2 = HOME_MARQUEE_SHOTS.slice(10);
 
+function wrapMarqueeOffset(offset, span) {
+    if (!span || span <= 0) return offset;
+    return (((offset % span) + span) % span) - span;
+}
+
+function measureMarqueeSpan(rowEl) {
+    if (!rowEl) return 0;
+    const cs = getComputedStyle(rowEl);
+    const gap = parseFloat(cs.columnGap || cs.gap) || 14;
+    return (rowEl.scrollWidth + gap) / 3;
+}
+
 const PortfolioMarqueeSection = () => {
     const navigate = useNavigate();
     const sectionRef = useRef(null);
@@ -1096,30 +1108,80 @@ const PortfolioMarqueeSection = () => {
 
     useEffect(() => {
         const el = sectionRef.current;
-        if (!el || window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) return undefined;
+        const row1 = row1Ref.current;
+        const row2 = row2Ref.current;
+        if (!el || !row1 || !row2) return undefined;
 
+        const reducedMotion = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches);
+        let span1 = measureMarqueeSpan(row1);
+        let span2 = measureMarqueeSpan(row2);
+        let drift1 = 0;
+        let drift2 = 0;
+        let lastScrollY = window.scrollY;
+        let lastTime = 0;
+        let inView = true;
         let rafId = null;
-        const update = () => {
-            const rect = el.getBoundingClientRect();
-            const vh = window.innerHeight || 900;
-            const travel = (vh - rect.top) * 0.28;
-            if (row1Ref.current) {
-                row1Ref.current.style.transform = `translate3d(${(travel - 240).toFixed(1)}px, 0, 0)`;
-            }
-            if (row2Ref.current) {
-                row2Ref.current.style.transform = `translate3d(${(-(travel - 180)).toFixed(1)}px, 0, 0)`;
-            }
+
+        const renderRows = () => {
+            const x1 = wrapMarqueeOffset(drift1 - 240, span1);
+            const x2 = wrapMarqueeOffset(drift2 - 180, span2);
+            row1.style.transform = `translate3d(${x1.toFixed(2)}px, 0, 0)`;
+            row2.style.transform = `translate3d(${x2.toFixed(2)}px, 0, 0)`;
         };
+
+        const ro = typeof ResizeObserver === 'function'
+            ? new ResizeObserver(() => {
+                span1 = measureMarqueeSpan(row1);
+                span2 = measureMarqueeSpan(row2);
+                renderRows();
+            })
+            : null;
+        ro?.observe(row1);
+        ro?.observe(row2);
+
+        const io = typeof IntersectionObserver === 'function'
+            ? new IntersectionObserver(
+                ([entry]) => {
+                    inView = Boolean(entry?.isIntersecting);
+                    if (!inView) lastTime = 0;
+                },
+                { rootMargin: '240px' }
+            )
+            : null;
+        io?.observe(el);
 
         const onScroll = () => {
-            if (rafId) cancelAnimationFrame(rafId);
-            rafId = requestAnimationFrame(update);
+            const sy = window.scrollY;
+            const dy = sy - lastScrollY;
+            lastScrollY = sy;
+            if (!reducedMotion) {
+                drift1 += dy * 0.24;
+                drift2 -= dy * 0.24;
+                if (!inView) renderRows();
+            }
         };
 
-        update();
+        const tick = (now) => {
+            const dt = lastTime ? Math.min(0.05, Math.max(0, (now - lastTime) / 1000)) : 0;
+            lastTime = now;
+            if (inView && !document.hidden) {
+                drift1 += dt * 42;
+                drift2 -= dt * 36;
+                renderRows();
+            }
+            rafId = requestAnimationFrame(tick);
+        };
+
+        renderRows();
         window.addEventListener('scroll', onScroll, { passive: true });
+        if (!reducedMotion) {
+            rafId = requestAnimationFrame(tick);
+        }
+
         return () => {
             window.removeEventListener('scroll', onScroll);
+            ro?.disconnect();
+            io?.disconnect();
             if (rafId) cancelAnimationFrame(rafId);
         };
     }, []);

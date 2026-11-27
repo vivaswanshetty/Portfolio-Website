@@ -425,7 +425,8 @@ export class NightValleyEngine {
         this.postPass = postPass;
 
         this._bindEvents();
-        this.clock = new THREE.Clock();
+        this.timer = new THREE.Timer();
+        this.timer.connect(document);
 
         this._updateScene(0.016);
         composer.render();
@@ -724,7 +725,7 @@ export class NightValleyEngine {
     triggerWarpHole() {
         if (!this.renderer || !this.composer || this.warpActive) return Promise.resolve();
         this.warpActive = true;
-        this.warpStart = this.clock ? this.clock.elapsedTime : 0;
+        this.warpStart = this.timer ? this.timer.getElapsed() : 0;
         this.warpProgress = 0;
         this.hoverTarget = 0;
         return new Promise((resolve) => {
@@ -742,7 +743,7 @@ export class NightValleyEngine {
     }
 
     _updateScene(dt) {
-        const elapsed = this.clock.elapsedTime;
+        const elapsed = this.timer ? this.timer.getElapsed() : 0;
 
         this.introElapsed += dt;
         const introT = Math.min(1, this.introElapsed / 0.9);
@@ -839,12 +840,11 @@ export class NightValleyEngine {
 
     _loop() {
         if (this.disposed) return;
+        this.timer.update();
         if (!document.hidden) {
-            const dt = Math.min(0.05, this.clock.getDelta() || 0.016);
+            const dt = Math.min(0.05, this.timer.getDelta() || 0.016);
             this._updateScene(dt);
             this.composer.render();
-        } else {
-            this.clock.getDelta();
         }
         this.rafId = requestAnimationFrame(() => this._loop());
     }
@@ -852,6 +852,7 @@ export class NightValleyEngine {
     dispose() {
         this.disposed = true;
         if (this.rafId) cancelAnimationFrame(this.rafId);
+        this.timer?.dispose();
 
         if (this._onPointerMove) {
             window.removeEventListener('pointermove', this._onPointerMove);

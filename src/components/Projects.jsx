@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, ExternalLink, Github, LayoutGrid, Search, X } from 'lucide-react';
+import { ArrowRight, ExternalLink, Github, Layers, LayoutGrid, Search, X } from 'lucide-react';
 import portraitImg from '../assets/vivaswan_portrait.webp';
 import { portfolioData } from '../data/portfolioData';
 import { PROJECTS_SPHERE_ITEMS } from '../data/projectSphereItems';

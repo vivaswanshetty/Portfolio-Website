@@ -591,7 +591,8 @@ const CyberDrone = () => {
         };
 
         const mouse = { tx: 0, ty: 0, sx: 0, sy: 0, vx: 0, vy: 0, lastT: performance.now(), active: false };
-        const clock = new THREE.Clock();
+        const timer = new THREE.Timer();
+        timer.connect(document);
         const projVec = new THREE.Vector3();
 
         // Autonomous non-repeating flight director (organic reconnaissance orbits + reactive evasion)
@@ -641,7 +642,7 @@ const CyberDrone = () => {
                 navAI.dodgeVy = Math.sin(pushAngle) * 0.52;
                 navAI.rollKick = (mouse.vx >= 0 ? -1 : 1) * 38;
                 navAI.boost = 1.0;
-                pickNextSector(clock.elapsedTime);
+                pickNextSector(timer.getElapsed());
             }
         };
 
@@ -662,8 +663,9 @@ const CyberDrone = () => {
         let markedReady = false;
 
         const tick = () => {
-            const dt = Math.max(0.001, Math.min(clock.getDelta(), 0.05));
-            const t = clock.elapsedTime;
+            timer.update();
+            const dt = Math.max(0.001, Math.min(timer.getDelta(), 0.05));
+            const t = timer.getElapsed();
             const reduced = Boolean(mqReduced?.matches);
 
             const vw = window.innerWidth || 1440;
@@ -845,6 +847,7 @@ const CyberDrone = () => {
             drone.dispose();
             rotorBlurTex?.dispose();
             envRT.dispose();
+            timer.dispose();
             renderer.dispose();
         };
     }, []);
