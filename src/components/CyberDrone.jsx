@@ -28,7 +28,7 @@ const PERIMETER_SECTORS = [
 const QUICK_ROUTES = [
     { label: 'Home', path: '/' },
     { label: 'About', path: '/about' },
-    { label: 'Projects (3D)', path: '/projects' },
+    { label: 'Projects', path: '/projects' },
     { label: 'Skills', path: '/skills' },
     { label: 'Resume', path: '/resume' },
     { label: 'Contact', path: '/contact' },
@@ -908,7 +908,7 @@ const CyberDrone = () => {
                     }}
                 >
                     <div className="cyber-drone-menu-hdr">
-                        <span>V-CORE NAVIGATOR</span>
+                        <span>NAVIGATOR DRONE</span>
                         <button
                             type="button"
                             onClick={() => setMenuOpen(false)}

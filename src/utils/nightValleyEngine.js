@@ -184,17 +184,17 @@ void main() {
     float morph = max(vDisperse * 0.94, vWarp * 0.95);
     shapeAlpha = mix(shapeAlpha, orb, morph);
 
-    vec3 centerGold = vec3(1.0, 0.95, 0.76);
-    vec3 petalTint = mix(vColor * petalShade, centerGold, stamenGlow * 0.72);
-    vec3 orbTint = vColor * 1.65;
-    vec3 tint = mix(petalTint, orbTint, morph * 0.85);
+    vec3 centerGold = vec3(1.0, 0.93, 0.72);
+    vec3 petalTint = mix(vColor * petalShade, centerGold, stamenGlow * 0.54);
+    vec3 orbTint = vColor * 1.32;
+    vec3 tint = mix(petalTint, orbTint, morph * 0.82);
 
-    vec3 hoverGlowCol = vec3(1.0, 0.94, 0.82);
-    tint = mix(tint, hoverGlowCol, vMouseGlow * 0.76);
-    tint *= (1.0 + vMouseGlow * 1.15);
+    vec3 hoverGlowCol = vec3(1.0, 0.92, 0.78);
+    tint = mix(tint, hoverGlowCol, vMouseGlow * 0.62);
+    tint *= (1.0 + vMouseGlow * 0.75);
 
-    float dimFactor = mix(1.0, 0.36, uScrollDim);
-    float finalAlpha = shapeAlpha * vAlpha * mix(1.0, 0.62, uScrollDim);
+    float dimFactor = mix(0.86, 0.34, uScrollDim);
+    float finalAlpha = shapeAlpha * vAlpha * mix(0.88, 0.58, uScrollDim);
     if (finalAlpha < 0.015) discard;
 
     gl_FragColor = vec4(tint * dimFactor, finalAlpha);
@@ -318,6 +318,10 @@ const VALLEY_POST_SHADER = {
             float vig = 1.0 - smoothstep(vigRadius - 0.36, vigRadius + 0.16, radial * 1.28);
             col *= mix(0.24, 1.0, vig);
 
+            // Subtle optical contrast cushion behind centered entry typography (fades out once scrolled/entered)
+            float textZone = exp(-dot(centered * vec2(1.4, 2.3), centered * vec2(1.4, 2.3)) * 5.2);
+            col *= mix(1.0, 0.56, textZone * (1.0 - uScrollDim));
+
             float n = (hash12(gl_FragCoord.xy + fract(uTime * 17.3) * 100.0) - 0.5) * 0.02;
             col += n * (1.0 - uScrollDim * 0.5);
 
@@ -383,7 +387,7 @@ export class NightValleyEngine {
         renderer.setPixelRatio(pixelRatio);
         renderer.setSize(width, height, false);
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.08;
+        renderer.toneMappingExposure = 0.98;
         renderer.setClearColor(0x000000, 1);
         this.container.appendChild(renderer.domElement);
 
@@ -408,9 +412,9 @@ export class NightValleyEngine {
         const renderPass = new RenderPass(scene, camera);
         const bloomPass = new UnrealBloomPass(
             new THREE.Vector2(width, height),
-            0.52,
-            0.44,
-            0.44
+            0.34,
+            0.38,
+            0.54
         );
         const postPass = new ShaderPass(VALLEY_POST_SHADER);
         const outputPass = new OutputPass();
@@ -835,7 +839,7 @@ export class NightValleyEngine {
         this.postPass.uniforms.uSpeed.value = normSpeed;
         this.postPass.uniforms.uScrollDim.value = this.scrollDimValue;
         this.postPass.uniforms.uWarp.value = this.warpProgress;
-        this.bloomPass.strength = 0.52 * (1 - this.scrollDimValue * 0.35) + this.disperseValue * 0.28 + this.scrollSurge * 0.34 + wCurve * 0.25;
+        this.bloomPass.strength = 0.34 * (1 - this.scrollDimValue * 0.35) + this.disperseValue * 0.24 + this.scrollSurge * 0.28 + wCurve * 0.22;
     }
 
     _loop() {

@@ -131,6 +131,7 @@ const Projects = () => {
             cam.metrics = metrics;
 
             const body = document.body;
+            body.style.setProperty('--R', `${metrics.R}px`);
             body.style.setProperty('--persp', `${metrics.persp}px`);
             body.style.setProperty('--cw', `${metrics.cw}px`);
             body.style.setProperty('--hw', `${metrics.headlineWidth}px`);
@@ -195,6 +196,7 @@ const Projects = () => {
                 'lit',
                 'projects-intro'
             );
+            body.style.removeProperty('--R');
             body.style.removeProperty('--persp');
             body.style.removeProperty('--cw');
             body.style.removeProperty('--hw');
@@ -372,11 +374,16 @@ const Projects = () => {
         };
     }, [applySphereLayout]);
 
-    // Main 60 FPS Camera, Spotlight Zoom Focus, and Deep Zoom Portal to Overview Grid
+    // Main 60 FPS Camera, Gentle Orbital Drift, Spotlight Zoom Focus, and Deep Zoom Portal to Overview Grid
     useEffect(() => {
         let rafId = null;
+        let lastFrameAt = 0;
+        const prefersReduced = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches);
 
-        const renderFrame = () => {
+        const renderFrame = (now = 0) => {
+            const dt = lastFrameAt ? Math.min(0.05, Math.max(0, (now - lastFrameAt) / 1000)) : 0;
+            lastFrameAt = now;
+
             const cam = camRef.current;
             const { R, persp } = cam.metrics;
             const vh = window.innerHeight || 900;
@@ -404,6 +411,15 @@ const Projects = () => {
                 cam.velY *= 0.94;
                 if (Math.abs(cam.velX) < 0.002) cam.velX = 0;
                 if (Math.abs(cam.velY) < 0.002) cam.velY = 0;
+                if (
+                    !prefersReduced &&
+                    !cam.hoveringCard &&
+                    !cam.gridOpen &&
+                    p <= 0.14 &&
+                    Math.abs(cam.velX) < 0.05
+                ) {
+                    cam.spin = (cam.spin + dt * 3.4) % 360;
+                }
                 const clampedPitch = Math.max(-32, Math.min(32, cam.tilt + cam.dragY));
                 cam.dragY = clampedPitch - cam.tilt;
             }
@@ -808,7 +824,22 @@ const Projects = () => {
             {/* Fixed 3D Fibonacci Sphere Stage */}
             <div ref={stageRef} id="stage" aria-label="Interactive 3D projects sphere">
                 <div ref={worldRef} id="world">
-                    <div id="orb">
+                    <div className="sphere-aura" aria-hidden="true" />
+                    <div
+                        id="orb"
+                        onPointerOver={(e) => {
+                            if (e.target.closest('.sphere-card')) camRef.current.hoveringCard = true;
+                        }}
+                        onPointerOut={(e) => {
+                            if (e.target.closest('.sphere-card') && !e.relatedTarget?.closest?.('.sphere-card')) {
+                                camRef.current.hoveringCard = false;
+                            }
+                        }}
+                    >
+                        <div className="sphere-orbit o-eq" aria-hidden="true" />
+                        <div className="sphere-orbit o-m1" aria-hidden="true" />
+                        <div className="sphere-orbit o-m2" aria-hidden="true" />
+                        <div className="sphere-orbit o-crimson" aria-hidden="true" />
                         {PROJECTS_SPHERE_ITEMS.map((item, i) => (
                             <div
                                 key={item.id}
@@ -835,6 +866,10 @@ const Projects = () => {
                                         decoding="async"
                                         draggable={false}
                                     />
+                                    <span className="sphere-card-caption" aria-hidden="true">
+                                        <b>{item.projectTitle}</b>
+                                        <span>{String(i + 1).padStart(2, '0')}</span>
+                                    </span>
                                     <span
                                         ref={(el) => {
                                             washRefs.current[i] = el;
@@ -843,6 +878,9 @@ const Projects = () => {
                                         aria-hidden="true"
                                     />
                                 </figure>
+                                <span className="sphere-card-back" aria-hidden="true">
+                                    <span>ARC // {String(i + 1).padStart(2, '0')}</span>
+                                </span>
                             </div>
                         ))}
                     </div>

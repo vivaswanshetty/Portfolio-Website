@@ -87,7 +87,7 @@ export function computeCardDepthStyle({
     const zf = -unitVec.x * sinY + z1 * cosY;
 
     const clampedT = Math.max(0, Math.min(1, (zf + 1) / 2));
-    const base = 0.14 + 0.86 * Math.pow(clampedT, 0.85);
+    const base = 0.14 + 0.86 * Math.pow(clampedT, 0.55);
     const shade = 1 - Math.min(1, scrollP * 1.6);
     let dim = shade * (1 - base);
 
