@@ -4,6 +4,7 @@ import {
     lerpAngle,
     computeRouteTargetPose,
     computeDocumentScrollProgress,
+    enforcePerimeterExclusion,
 } from '../src/utils/companionFlight.js';
 
 // 1. Easing & shortest-angle wrap verification
@@ -32,7 +33,19 @@ for (const route of routes) {
 const projMobile = computeRouteTargetPose('/projects', 0, true);
 assert.ok(projMobile.y > 0.5, 'mobile projects perch must stay in top corner clear of center sphere & bottom bio');
 
-// 4. Document scroll normalization
+// 4. Desktop center content & navbar exclusion check (prevents hovering over story headlines)
+const centerBlocked = enforcePerimeterExclusion(0.12, 0.16, false);
+assert.ok(
+    Math.abs(centerBlocked.x) >= 0.73 || Math.abs(centerBlocked.y) >= 0.54,
+    `drone allowed inside center text zone: (${centerBlocked.x}, ${centerBlocked.y})`
+);
+const aboutEntryPose = computeRouteTargetPose('/about', 0.21, false);
+assert.ok(
+    Math.abs(aboutEntryPose.x) >= 0.73 || Math.abs(aboutEntryPose.y) >= 0.54,
+    `/about story entry at 21% overlaps headline zone: (${aboutEntryPose.x}, ${aboutEntryPose.y})`
+);
+
+// 5. Document scroll normalization
 assert.equal(computeDocumentScrollProgress(0, 900, 900), 0);
 assert.equal(computeDocumentScrollProgress(450, 1800, 900), 0.5);
 assert.equal(computeDocumentScrollProgress(9999, 1800, 900), 1);

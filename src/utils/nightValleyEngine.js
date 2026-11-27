@@ -9,43 +9,151 @@ import {
     mulberry32,
     getValleyCenterX,
     getValleyTerrainY,
+    createValleyPathPoints,
 } from './nightValleyMath';
 
-function createCrystalSpireGeometry() {
-    // 6-sided asymmetric pointed crystal prism converted to non-indexed for crisp flat facets
-    const shaft = new THREE.CylinderGeometry(0.16, 0.34, 1.35, 6, 1, false);
-    shaft.translate(0, 0.675, 0);
-    const tip = new THREE.ConeGeometry(0.16, 0.65, 6, 1);
-    tip.translate(0, 1.675, 0);
+function drawPetalBlossom(ctx, cx, cy, outerR, petals, palette, variant = 0) {
+    ctx.save();
+    ctx.translate(cx, cy);
 
-    const sNon = shaft.toNonIndexed();
-    const tNon = tip.toNonIndexed();
-    const sPos = sNon.attributes.position.array;
-    const tPos = tNon.attributes.position.array;
+    // Soft luminous nocturnal halo safely well inside cell bounds
+    const halo = ctx.createRadialGradient(0, 0, outerR * 0.06, 0, 0, outerR * 0.94);
+    halo.addColorStop(0, palette.haloInner);
+    halo.addColorStop(0.52, palette.haloMid);
+    halo.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(0, 0, outerR * 0.94, 0, Math.PI * 2);
+    ctx.fill();
 
-    const merged = new Float32Array(sPos.length + tPos.length);
-    merged.set(sPos, 0);
-    merged.set(tPos, sPos.length);
+    // Crisp layered botanical petals
+    for (let i = 0; i < petals; i++) {
+        const angle = (i / petals) * Math.PI * 2 + variant * 0.22;
+        ctx.save();
+        ctx.rotate(angle);
 
-    shaft.dispose();
-    tip.dispose();
-    sNon.dispose();
-    tNon.dispose();
+        const grad = ctx.createRadialGradient(0, -outerR * 0.42, 2, 0, -outerR * 0.42, outerR * 0.56);
+        grad.addColorStop(0, palette.tip);
+        grad.addColorStop(0.55, palette.mid);
+        grad.addColorStop(1, palette.base);
 
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(merged, 3));
-    geo.computeVertexNormals();
-    return geo;
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(0, -outerR * 0.08);
+        ctx.bezierCurveTo(
+            outerR * (variant === 1 ? 0.2 : 0.32),
+            -outerR * 0.3,
+            outerR * (variant === 1 ? 0.16 : 0.36),
+            -outerR * 0.82,
+            0,
+            -outerR * 0.9
+        );
+        ctx.bezierCurveTo(
+            -outerR * (variant === 1 ? 0.16 : 0.36),
+            -outerR * 0.82,
+            -outerR * (variant === 1 ? 0.2 : 0.32),
+            -outerR * 0.3,
+            0,
+            -outerR * 0.08
+        );
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // Glowing stamen core
+    const core = ctx.createRadialGradient(0, 0, 0, 0, 0, outerR * 0.22);
+    core.addColorStop(0, '#ffffff');
+    core.addColorStop(0.45, palette.core);
+    core.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = core;
+    ctx.beginPath();
+    ctx.arc(0, 0, outerR * 0.22, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
 }
 
-function createShardClusterGeometry() {
-    // Sharp faceted octahedron elongated vertically into a dual-tip quartz shard
-    const oct = new THREE.OctahedronGeometry(0.45, 0);
-    oct.scale(0.58, 1.85, 0.48);
-    const nonIdx = oct.toNonIndexed();
-    oct.dispose();
-    nonIdx.computeVertexNormals();
-    return nonIdx;
+function drawNightLeaf(ctx, cx, cy, radius) {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(-0.35);
+
+    const grad = ctx.createLinearGradient(0, -radius * 0.86, 0, radius * 0.86);
+    grad.addColorStop(0, 'rgba(148, 163, 184, 0.92)');
+    grad.addColorStop(0.55, 'rgba(71, 85, 105, 0.78)');
+    grad.addColorStop(1, 'rgba(15, 23, 42, 0.38)');
+
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(0, -radius * 0.84);
+    ctx.bezierCurveTo(radius * 0.42, -radius * 0.28, radius * 0.38, radius * 0.42, 0, radius * 0.82);
+    ctx.bezierCurveTo(-radius * 0.38, radius * 0.42, -radius * 0.42, -radius * 0.28, 0, -radius * 0.84);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(226, 232, 240, 0.48)';
+    ctx.lineWidth = 3.5;
+    ctx.beginPath();
+    ctx.moveTo(0, radius * 0.74);
+    ctx.lineTo(0, -radius * 0.74);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function createBotanicalAtlasTexture() {
+    // High-res 1024x1024 atlas with generous transparent margin in each 512px cell (prevents square seam clamping)
+    const size = 1024;
+    const cell = 512;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+
+    ctx.clearRect(0, 0, size, size);
+
+    // Quadrant 0: 5-petal Crimson-Porcelain Night Cosmos
+    drawPetalBlossom(ctx, cell * 0.5, cell * 0.5, 196, 5, {
+        haloInner: 'rgba(239, 68, 68, 0.24)',
+        haloMid: 'rgba(159, 18, 57, 0.08)',
+        tip: 'rgba(248, 250, 252, 0.96)',
+        mid: 'rgba(244, 63, 94, 0.88)',
+        base: 'rgba(136, 19, 55, 0.42)',
+        core: 'rgba(254, 226, 226, 0.96)',
+    }, 0);
+
+    // Quadrant 1: 6-petal Moonlit Star Lily
+    drawPetalBlossom(ctx, cell * 1.5, cell * 0.5, 200, 6, {
+        haloInner: 'rgba(244, 63, 94, 0.24)',
+        haloMid: 'rgba(190, 18, 60, 0.08)',
+        tip: 'rgba(255, 241, 242, 0.96)',
+        mid: 'rgba(239, 68, 68, 0.85)',
+        base: 'rgba(76, 5, 25, 0.35)',
+        core: 'rgba(253, 230, 138, 0.94)',
+    }, 1);
+
+    // Quadrant 2: 8-petal Ember Aster
+    drawPetalBlossom(ctx, cell * 0.5, cell * 1.5, 192, 8, {
+        haloInner: 'rgba(225, 29, 72, 0.26)',
+        haloMid: 'rgba(136, 19, 55, 0.09)',
+        tip: 'rgba(254, 215, 170, 0.95)',
+        mid: 'rgba(239, 68, 68, 0.85)',
+        base: 'rgba(69, 10, 10, 0.38)',
+        core: 'rgba(255, 255, 255, 0.98)',
+    }, 2);
+
+    // Quadrant 3: Midnight Slate Leaf
+    drawNightLeaf(ctx, cell * 1.5, cell * 1.5, 190);
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.minFilter = THREE.LinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+    tex.generateMipmaps = false;
+    tex.needsUpdate = true;
+    return tex;
 }
 
 function createLightRayTexture() {
@@ -57,16 +165,16 @@ function createLightRayTexture() {
 
     const grad = ctx.createLinearGradient(0, 0, 0, 512);
     grad.addColorStop(0, 'rgba(248, 250, 252, 0.0)');
-    grad.addColorStop(0.25, 'rgba(248, 250, 252, 0.09)');
-    grad.addColorStop(0.6, 'rgba(239, 68, 68, 0.05)');
+    grad.addColorStop(0.2, 'rgba(248, 250, 252, 0.14)');
+    grad.addColorStop(0.55, 'rgba(239, 68, 68, 0.08)');
     grad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
 
     ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.moveTo(108, 0);
-    ctx.lineTo(148, 0);
-    ctx.lineTo(232, 512);
-    ctx.lineTo(24, 512);
+    ctx.moveTo(96, 0);
+    ctx.lineTo(160, 0);
+    ctx.lineTo(246, 512);
+    ctx.lineTo(10, 512);
     ctx.closePath();
     ctx.fill();
 
@@ -74,6 +182,149 @@ function createLightRayTexture() {
     tex.colorSpace = THREE.SRGBColorSpace;
     return tex;
 }
+
+const FLORA_VERTEX_SHADER = `
+uniform float uTime;
+uniform float uCameraZ;
+uniform float uLoopLen;
+uniform float uPixelRatio;
+uniform vec2 uMouseNDC;
+uniform float uMouseActive;
+uniform float uAspect;
+uniform float uDisperse;
+uniform float uWarp;
+
+attribute float aScale;
+attribute float aPhase;
+attribute float aVariant;
+attribute float aAngle;
+attribute float aIsLeaf;
+attribute vec3 aColor;
+attribute vec3 aDisperseDir;
+
+varying float vVariant;
+varying float vAngle;
+varying float vAlpha;
+varying float vMouseGlow;
+varying float vDisperse;
+varying float vWarp;
+varying vec3 vColor;
+
+void main() {
+    vVariant = aVariant;
+    vAngle = aAngle + sin(uTime * 0.45 + aPhase) * 0.12 + uWarp * (2.6 + aPhase);
+    vColor = aColor;
+    vDisperse = uDisperse;
+    vWarp = uWarp;
+
+    // Seamless infinite canyon modulo around active camera Z
+    float halfLoop = uLoopLen * 0.5;
+    float relZ = mod(position.z - uCameraZ + halfLoop, uLoopLen) - halfLoop;
+    vec3 worldPos = vec3(position.x, position.y, uCameraZ + relZ);
+
+    // Gentle living breeze across stems + petals
+    float breeze = sin(uTime * 1.15 + aPhase + worldPos.x * 0.25) * 0.16;
+    worldPos.x += breeze * (1.0 - aIsLeaf * 0.45);
+    worldPos.y += cos(uTime * 0.9 + aPhase) * 0.07;
+
+    // Hover dispersal lifts flora outward into glowing floating particles
+    worldPos += aDisperseDir * (uDisperse * (4.2 + 2.8 * sin(aPhase + uTime * 0.6)));
+    worldPos.y += uDisperse * (1.1 + sin(aPhase * 2.0 + uTime) * 0.65);
+
+    // Black-hole dive spiral: swirl & pull petals into the gravitational vortex
+    float swirlAngle = uWarp * (2.4 + aPhase * 0.25);
+    float sc = cos(swirlAngle);
+    float ss = sin(swirlAngle);
+    vec2 spunXY = mat2(sc, -ss, ss, sc) * (worldPos.xy - vec2(0.0, 2.2));
+    worldPos.xy = mix(worldPos.xy, spunXY * max(0.08, 1.0 - uWarp * 0.72) + vec2(0.0, 2.2), uWarp);
+    worldPos.z += uWarp * 24.0;
+
+    vec4 mvPosition = modelViewMatrix * vec4(worldPos, 1.0);
+    float dist = max(0.5, -mvPosition.z);
+
+    // Distance growth staging: flowers bloom close-up; leaves populate deeper slopes
+    float flowerGrow = smoothstep(78.0, 14.0, dist) * (1.0 - smoothstep(4.2, 1.2, dist));
+    float leafGrow = smoothstep(95.0, 28.0, dist) * (1.0 - smoothstep(7.5, 2.2, dist));
+    float stageScale = mix(flowerGrow, leafGrow, aIsLeaf);
+
+    vec4 clipPos = projectionMatrix * mvPosition;
+    float absW = max(0.001, clipPos.w);
+    vec2 ndc = clipPos.xy / absW;
+
+    // Screen-space radial cursor repulsion + proximity luminescence
+    vec2 diff = ndc - uMouseNDC;
+    diff.x *= uAspect;
+    float mouseDist = length(diff);
+    float radius = 0.36;
+    float pushStrength = pow(max(0.0, 1.0 - smoothstep(0.0, radius, mouseDist)), 2.0) * uMouseActive * (1.0 - uWarp);
+    vec2 pushDir = mouseDist > 0.0005 ? normalize(diff) : vec2(0.0, 1.0);
+    pushDir.x /= max(0.35, uAspect);
+    clipPos.xy += pushDir * (pushStrength * 0.28 * absW);
+    clipPos.y += pushStrength * 0.05 * absW;
+
+    vMouseGlow = pushStrength;
+
+    float baseSize = aScale * (aIsLeaf > 0.5 ? 24.0 : 28.0) * (0.28 + 0.95 * stageScale);
+    baseSize *= (1.0 + pushStrength * 0.42 - uDisperse * 0.25) * (1.0 + uWarp * 0.35);
+
+    gl_Position = clipPos;
+    gl_PointSize = clamp((baseSize * uPixelRatio * 96.0) / dist, 1.5, 132.0);
+
+    float farFade = 1.0 - smoothstep(55.0, 108.0, dist);
+    float nearFade = smoothstep(1.3, 4.4, dist);
+    float baseAlpha = mix(0.95, 0.62, aIsLeaf);
+    vAlpha = farFade * nearFade * stageScale * baseAlpha * (1.0 - smoothstep(0.68, 1.0, uWarp));
+}
+`;
+
+const FLORA_FRAGMENT_SHADER = `
+uniform sampler2D uAtlas;
+uniform float uScrollDim;
+
+varying float vVariant;
+varying float vAngle;
+varying float vAlpha;
+varying float vMouseGlow;
+varying float vDisperse;
+varying float vWarp;
+varying vec3 vColor;
+
+void main() {
+    if (vAlpha <= 0.01) discard;
+
+    vec2 centered = gl_PointCoord - 0.5;
+    float r = length(centered) * 2.0;
+
+    // Rotate sprite UVs cleanly and discard outside tile bounds (prevents square clamped border seams)
+    float c = cos(vAngle);
+    float s = sin(vAngle);
+    vec2 rotated = mat2(c, -s, s, c) * centered + 0.5;
+    if (rotated.x < 0.015 || rotated.x > 0.985 || rotated.y < 0.015 || rotated.y > 0.985) discard;
+
+    float col = mod(vVariant, 2.0);
+    float row = floor(vVariant * 0.5);
+    vec2 atlasUV = (rotated + vec2(col, 1.0 - row)) * 0.5;
+
+    vec4 tex = texture2D(uAtlas, atlasUV);
+    float orb = exp(-r * r * 3.4);
+
+    // Morph crisp blossoms into glowing luminous pollen orbs on hover / warp
+    float morph = max(vDisperse * 0.85, vWarp * 0.92);
+    float shapeAlpha = mix(tex.a, orb, morph);
+    vec3 tint = mix(tex.rgb * vColor, vColor * 1.45, morph * 0.82);
+
+    // Cursor hover luminescence surge (#ef4444 -> warm porcelain incandescent peak)
+    vec3 hoverCol = vec3(1.0, 0.94, 0.95);
+    tint = mix(tint, hoverCol, vMouseGlow * 0.72);
+    tint *= (1.0 + vMouseGlow * 0.95);
+
+    float dimFactor = mix(1.0, 0.55, uScrollDim);
+    float finalAlpha = shapeAlpha * vAlpha * mix(1.0, 0.72, uScrollDim);
+    if (finalAlpha < 0.015) discard;
+
+    gl_FragColor = vec4(tint * dimFactor, finalAlpha);
+}
+`;
 
 const DUST_VERTEX_SHADER = `
 uniform float uTime;
@@ -93,22 +344,23 @@ void main() {
     float relZ = mod(position.z - uCameraZ + halfLoop, uLoopLen) - halfLoop;
     vec3 pos = vec3(position.x, position.y, uCameraZ + relZ);
 
-    pos.x += sin(uTime * 0.45 + aPhase) * 1.1;
+    pos.x += sin(uTime * 0.45 + aPhase) * 1.3;
     pos.y += mod(uTime * 0.35 + aPhase, 6.0) - 2.0;
 
-    // During black-hole dive, pull star motes radially toward camera corridor
-    if (uWarp > 0.001) {
-        float ang = aPhase + uWarp * 8.0;
-        pos.xy = mix(pos.xy, vec2(cos(ang), sin(ang)) * (1.2 + mod(aPhase * 3.0, 5.0)), uWarp * 0.65);
-    }
+    float swirl = uWarp * (3.2 + aPhase);
+    float sc = cos(swirl);
+    float ss = sin(swirl);
+    vec2 spun = mat2(sc, -ss, ss, sc) * (pos.xy - vec2(0.0, 2.2));
+    pos.xy = mix(pos.xy, spun * (1.0 - uWarp * 0.7) + vec2(0.0, 2.2), uWarp);
+    pos.z += uWarp * 36.0;
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     float dist = max(1.0, -mv.z);
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = clamp((aScale * uPixelRatio * 34.0) / dist, 1.0, 9.0);
+    gl_PointSize = clamp((aScale * uPixelRatio * 48.0 * (1.0 + uWarp * 1.5)) / dist, 1.5, 18.0);
 
-    float fade = (1.0 - smoothstep(32.0, 72.0, dist)) * smoothstep(1.6, 5.0, dist);
-    vAlpha = fade * (0.28 + 0.35 * sin(uTime * 1.9 + aPhase)) * (1.0 + uDisperse * 0.65 + uWarp * 1.2);
+    float fade = (1.0 - smoothstep(32.0, 75.0, dist)) * smoothstep(1.8, 6.0, dist);
+    vAlpha = fade * (0.35 + 0.35 * sin(uTime * 1.7 + aPhase)) * (1.0 + uDisperse * 0.75 + uWarp);
 }
 `;
 
@@ -120,9 +372,9 @@ void main() {
     vec2 d = gl_PointCoord - 0.5;
     float r = dot(d, d) * 4.0;
     if (r > 1.0) discard;
-    float glow = smoothstep(1.0, 0.0, r);
-    vec3 col = mix(vec3(0.94, 0.27, 0.27), vec3(0.98, 0.98, 1.0), glow * 0.75);
-    gl_FragColor = vec4(col * mix(1.0, 0.45, uScrollDim), glow * vAlpha);
+    float glow = exp(-r * 3.2);
+    vec3 col = mix(vec3(0.94, 0.27, 0.27), vec3(0.98, 0.97, 0.98), glow);
+    gl_FragColor = vec4(col * mix(1.0, 0.5, uScrollDim), glow * vAlpha);
 }
 `;
 
@@ -158,49 +410,49 @@ const VALLEY_POST_SHADER = {
         void main() {
             vec2 centered = vUv - 0.5;
             float radial = length(centered);
-            float angle = atan(centered.y, centered.x);
 
-            // Black-hole gravitational lensing swirl & tunnel pinch during uWarp dive
-            float pinch = mix(1.0, 0.42, uWarp * smoothstep(0.65, 0.0, radial));
-            float swirl = uWarp * 1.65 * (1.0 - smoothstep(0.0, 0.62, radial));
-            float rotAng = angle + swirl;
-            vec2 warpedUV = 0.5 + vec2(cos(rotAng), sin(rotAng)) * (radial * pinch);
-            vec2 sampleCenter = warpedUV - 0.5;
+            // Black-hole gravitational swirl & inward pinch when diving through the #go button
+            vec2 sampleVec = centered;
+            if (uWarp > 0.001) {
+                float theta = atan(sampleVec.y, sampleVec.x);
+                float swirlAngle = uWarp * (4.2 * (1.0 - smoothstep(0.0, 0.75, radial)) + 1.8);
+                float pinch = radial * (1.0 - uWarp * 0.36 * exp(-radial * 2.2));
+                sampleVec = vec2(cos(theta + swirlAngle), sin(theta + swirlAngle)) * pinch;
+            }
+            vec2 sampleUv = clamp(0.5 + sampleVec, 0.002, 0.998);
 
-            // Split-RGB chromatic displacement strongest at screen edges + warp dive speed
-            float warpSpeedBoost = uWarp * 0.018;
-            float chromaOffset = (0.0012 + clamp(uSpeed * 0.0034 + warpSpeedBoost, 0.0, 0.02)) * radial * radial;
-            vec2 dir = radial > 0.0001 ? sampleCenter / radial : vec2(0.0);
+            // Split-RGB chromatic displacement strongest toward corners, velocity & warp
+            float chromaOffset = (0.0014 + clamp(uSpeed * 0.0038, 0.0, 0.005) + uWarp * 0.018) * (radial * radial + uWarp * 0.25);
+            vec2 dir = radial > 0.0001 ? centered / radial : vec2(0.0);
 
-            float r = texture2D(tDiffuse, warpedUV + dir * chromaOffset).r;
-            float g = texture2D(tDiffuse, warpedUV).g;
-            float b = texture2D(tDiffuse, warpedUV - dir * chromaOffset).b;
+            float r = texture2D(tDiffuse, clamp(sampleUv + dir * chromaOffset, 0.001, 0.999)).r;
+            float g = texture2D(tDiffuse, sampleUv).g;
+            float b = texture2D(tDiffuse, clamp(sampleUv - dir * chromaOffset, 0.001, 0.999)).b;
             vec3 col = vec3(r, g, b);
 
-            // Dynamic vignette tightening with movement velocity
-            float vigRadius = mix(0.86, 0.56, clamp(uSpeed * 1.0 + uWarp * 0.9, 0.0, 1.0));
-            float vig = 1.0 - smoothstep(vigRadius - 0.35, vigRadius + 0.16, radial * 1.25);
-            col *= mix(0.28, 1.0, vig);
-
-            // Molten accretion horizon ring + dark singularity core during warp loop dive
+            // Luminous accretion ring + obsidian event horizon core during the black-hole dive
             if (uWarp > 0.001) {
-                float ringTarget = mix(0.32, 0.06, clamp(uWarp * 1.05, 0.0, 1.0));
-                float ringBand = exp(-pow((radial - ringTarget) * 16.0, 2.0)) * sin(clamp(uWarp, 0.0, 1.0) * 3.14159);
-                col += vec3(0.96, 0.32, 0.34) * (ringBand * 1.6);
-                col += vec3(0.45, 0.85, 1.0) * (ringBand * 0.45);
+                float horizonR = mix(0.01, 0.56, pow(uWarp, 1.35));
+                float ringMask = exp(-pow((radial - horizonR * 1.15) * 14.0, 2.0)) * sin(clamp(uWarp, 0.0, 1.0) * 3.14159);
+                col += vec3(0.96, 0.26, 0.30) * (ringMask * 0.9);
+                col += vec3(0.45, 0.85, 0.98) * (ringMask * 0.32);
 
-                // Event-horizon black core swells smoothly to transition into About
-                float horizonRadius = smoothstep(0.28, 0.95, uWarp) * 0.85;
-                float insideVoid = 1.0 - smoothstep(horizonRadius - 0.08, horizonRadius + 0.04, radial);
-                col *= (1.0 - insideVoid * smoothstep(0.35, 0.98, uWarp));
+                float swallow = smoothstep(horizonR + 0.08, max(0.0, horizonR - 0.14), radial);
+                col *= (1.0 - swallow * min(1.0, uWarp * 1.18));
+                col *= (1.0 - smoothstep(0.76, 1.0, uWarp));
             }
 
-            // Crisp micro grain
-            float n = (hash12(gl_FragCoord.xy + fract(uTime * 17.3) * 100.0) - 0.5) * 0.018;
+            // Dynamic vignette tightening with movement velocity
+            float vigRadius = mix(0.84, 0.62, clamp(uSpeed * 1.1, 0.0, 1.0));
+            float vig = 1.0 - smoothstep(vigRadius - 0.36, vigRadius + 0.16, radial * 1.28);
+            col *= mix(0.28, 1.0, vig);
+
+            // Subtle organic nocturnal film noise
+            float n = (hash12(gl_FragCoord.xy + fract(uTime * 17.3) * 100.0) - 0.5) * 0.022;
             col += n * (1.0 - uScrollDim * 0.5);
 
-            // Soften contrast cleanly behind Liquid Glass About prose
-            col = mix(col, vec3(0.024, 0.027, 0.035), uScrollDim * 0.45);
+            // Deepen into obsidian tint when viewing editorial story chapters
+            col = mix(col, vec3(0.024, 0.027, 0.035), uScrollDim * 0.44);
 
             gl_FragColor = vec4(max(col, 0.0), 1.0);
         }
@@ -242,7 +494,7 @@ export class NightValleyEngine {
         let renderer;
         try {
             renderer = new THREE.WebGLRenderer({
-                antialias: true,
+                antialias: false,
                 powerPreference: 'high-performance',
                 alpha: false,
             });
@@ -259,47 +511,39 @@ export class NightValleyEngine {
         renderer.setPixelRatio(pixelRatio);
         renderer.setSize(width, height, false);
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.15;
+        renderer.toneMappingExposure = 1.05;
         renderer.setClearColor(0x060709, 1);
         this.container.appendChild(renderer.domElement);
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x060709);
-        scene.fog = new THREE.FogExp2(0x060709, 0.0175);
+        scene.fog = new THREE.FogExp2(0x060709, 0.02);
         this.scene = scene;
 
-        const camera = new THREE.PerspectiveCamera(54, width / height, 0.35, 160);
+        const camera = new THREE.PerspectiveCamera(54, width / height, 0.4, 150);
         this.camera = camera;
 
-        // Sharp directional specular key + crimson ridge rim + roving camera torch & cursor glint
-        const hemi = new THREE.HemisphereLight(0xf8fafc, 0x060709, 0.55);
-        const moonKey = new THREE.DirectionalLight(0xe2e8f0, 1.85);
-        moonKey.position.set(16, 28, -24);
-        const crimsonRim = new THREE.DirectionalLight(0xef4444, 2.2);
-        crimsonRim.position.set(-18, 12, 16);
+        const hemi = new THREE.HemisphereLight(0xf8fafc, 0x060709, 0.16);
+        const rim = new THREE.DirectionalLight(0xef4444, 0.28);
+        rim.position.set(12, 18, -30);
+        scene.add(hemi, rim);
 
-        this.cameraTorch = new THREE.PointLight(0xffffff, 3.2, 42, 1.3);
-        this.crimsonTorch = new THREE.PointLight(0xef4444, 4.0, 48, 1.2);
-        this.cursorLight = new THREE.PointLight(0x38bdf8, 4.5, 24, 1.4);
+        const pathPoints = createValleyPathPoints(VALLEY_LOOP_LENGTH, 18).map(
+            (p) => new THREE.Vector3(p.x, p.y, p.z)
+        );
+        this.valleySpline = new THREE.CatmullRomCurve3(pathPoints, true, 'catmullrom', 0.5);
 
-        scene.add(hemi, moonKey, crimsonRim, this.cameraTorch, this.crimsonTorch, this.cursorLight);
-
-        this._buildCrystalValley();
+        this._buildFloraAndLeaves(pixelRatio);
         this._buildDustParticles(pixelRatio);
         this._buildLightRays();
 
-        // Crisp MSAA-backed EffectComposer with tight-threshold bloom so crystals stay razor sharp
-        const renderTarget = new THREE.WebGLRenderTarget(width, height, {
-            samples: 4,
-            type: THREE.HalfFloatType,
-        });
-        const composer = new EffectComposer(renderer, renderTarget);
+        const composer = new EffectComposer(renderer);
         const renderPass = new RenderPass(scene, camera);
         const bloomPass = new UnrealBloomPass(
             new THREE.Vector2(width, height),
-            0.34,
-            0.22,
-            0.78
+            0.52,
+            0.42,
+            0.46
         );
         const postPass = new ShaderPass(VALLEY_POST_SHADER);
         const outputPass = new OutputPass();
@@ -310,7 +554,6 @@ export class NightValleyEngine {
         composer.addPass(outputPass);
 
         this.composer = composer;
-        this.renderTarget = renderTarget;
         this.bloomPass = bloomPass;
         this.postPass = postPass;
 
@@ -327,203 +570,110 @@ export class NightValleyEngine {
         });
     }
 
-    _buildCrystalMesh(geometry, count, isCoreShard, rand) {
-        this.crystalShaderUniforms = this.crystalShaderUniforms || {
+    _buildFloraAndLeaves(pixelRatio) {
+        this.atlasTex = createBotanicalAtlasTexture();
+        const rand = mulberry32(2026);
+
+        const flowerCount = 3400;
+        const leafCount = 1500;
+        const total = flowerCount + leafCount;
+
+        const positions = new Float32Array(total * 3);
+        const scales = new Float32Array(total);
+        const phases = new Float32Array(total);
+        const variants = new Float32Array(total);
+        const angles = new Float32Array(total);
+        const isLeafAttr = new Float32Array(total);
+        const colors = new Float32Array(total * 3);
+        const disperseDirs = new Float32Array(total * 3);
+
+        const flowerPalette = [
+            new THREE.Color('#ef4444'), // Obsidian Ember Crimson
+            new THREE.Color('#f43f5e'), // Luminous Rose
+            new THREE.Color('#be123c'), // Deep Burgundy
+            new THREE.Color('#fda4af'), // Pale Rose-Gold Highlight
+            new THREE.Color('#f8fafc'), // Moonlit Porcelain
+        ];
+        const leafPalette = [
+            new THREE.Color('#64748b'),
+            new THREE.Color('#475569'),
+            new THREE.Color('#334155'),
+        ];
+
+        for (let i = 0; i < total; i++) {
+            const isLeaf = i >= flowerCount;
+            const z = -rand() * VALLEY_LOOP_LENGTH;
+            const centerX = getValleyCenterX(z);
+
+            const side = rand() > 0.5 ? 1 : -1;
+            const lateralPower = Math.pow(rand(), 0.72);
+            const lateral = (isLeaf ? 3.2 : 1.75) + lateralPower * (isLeaf ? 28.0 : 24.0);
+            const x = centerX + side * lateral;
+            const y = getValleyTerrainY(x, z) + (isLeaf ? 0.35 + rand() * 0.9 : 0.45 + rand() * 1.15);
+
+            positions[i * 3] = x;
+            positions[i * 3 + 1] = y;
+            positions[i * 3 + 2] = z;
+
+            scales[i] = isLeaf ? 0.75 + rand() * 1.25 : 0.65 + rand() * 1.35;
+            phases[i] = rand() * Math.PI * 2;
+            variants[i] = isLeaf ? 3 : Math.floor(rand() * 3);
+            angles[i] = rand() * Math.PI * 2;
+            isLeafAttr[i] = isLeaf ? 1 : 0;
+
+            const pal = isLeaf
+                ? leafPalette[Math.floor(rand() * leafPalette.length)]
+                : flowerPalette[Math.floor(Math.pow(rand(), 1.35) * flowerPalette.length)];
+            colors[i * 3] = pal.r;
+            colors[i * 3 + 1] = pal.g;
+            colors[i * 3 + 2] = pal.b;
+
+            const dAng = rand() * Math.PI * 2;
+            disperseDirs[i * 3] = Math.cos(dAng) * (0.6 + rand() * 0.9);
+            disperseDirs[i * 3 + 1] = 0.4 + rand() * 1.1;
+            disperseDirs[i * 3 + 2] = Math.sin(dAng) * (0.5 + rand() * 0.9);
+        }
+
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geo.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
+        geo.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
+        geo.setAttribute('aVariant', new THREE.BufferAttribute(variants, 1));
+        geo.setAttribute('aAngle', new THREE.BufferAttribute(angles, 1));
+        geo.setAttribute('aIsLeaf', new THREE.BufferAttribute(isLeafAttr, 1));
+        geo.setAttribute('aColor', new THREE.BufferAttribute(colors, 3));
+        geo.setAttribute('aDisperseDir', new THREE.BufferAttribute(disperseDirs, 3));
+
+        this.floraUniforms = {
             uTime: { value: 0 },
             uCameraZ: { value: 0 },
             uLoopLen: { value: VALLEY_LOOP_LENGTH },
-            uDisperse: { value: 0 },
-            uWarp: { value: 0 },
+            uPixelRatio: { value: pixelRatio },
             uMouseNDC: { value: new THREE.Vector2(99, 99) },
             uMouseActive: { value: 0 },
             uAspect: { value: 16 / 9 },
+            uDisperse: { value: 0 },
+            uScrollDim: { value: 0 },
+            uWarp: { value: 0 },
         };
-        const sharedUniforms = this.crystalShaderUniforms;
 
-        const mat = new THREE.MeshPhysicalMaterial({
-            color: 0xffffff,
-            flatShading: true,
-            metalness: isCoreShard ? 0.35 : 0.65,
-            roughness: isCoreShard ? 0.1 : 0.16,
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.06,
-            emissive: isCoreShard ? new THREE.Color('#be123c') : new THREE.Color('#0b070e'),
-            emissiveIntensity: isCoreShard ? 0.9 : 0.35,
-            reflectivity: 0.95,
+        const mat = new THREE.ShaderMaterial({
+            uniforms: this.floraUniforms,
+            vertexShader: FLORA_VERTEX_SHADER,
+            fragmentShader: FLORA_FRAGMENT_SHADER,
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.NormalBlending,
         });
 
-        mat.customProgramCacheKey = () => (isCoreShard ? 'crystal-core-v1' : 'crystal-dark-v1');
-        mat.onBeforeCompile = (shader) => {
-            Object.assign(shader.uniforms, sharedUniforms);
-
-            shader.vertexShader = shader.vertexShader
-                .replace(
-                    '#include <common>',
-                    `#include <common>
-                    uniform float uTime;
-                    uniform float uCameraZ;
-                    uniform float uLoopLen;
-                    uniform float uDisperse;
-                    uniform float uWarp;
-                    uniform vec2 uMouseNDC;
-                    uniform float uMouseActive;
-                    uniform float uAspect;
-                    attribute vec3 aAnchor;
-                    attribute float aSeed;
-                    varying float vProximityGlow;
-                    `
-                )
-                .replace(
-                    '#include <project_vertex>',
-                    `
-                    // Seamless infinite Z wrap around active camera depth
-                    float halfLoop = uLoopLen * 0.5;
-                    float relZ = mod(aAnchor.z - uCameraZ + halfLoop, uLoopLen) - halfLoop;
-                    vec3 anchorWorld = vec3(aAnchor.x, aAnchor.y, uCameraZ + relZ);
-
-                    vec4 transformedPos = vec4(transformed, 1.0);
-                    #ifdef USE_INSTANCING
-                        transformedPos = instanceMatrix * transformedPos;
-                    #endif
-
-                    // Replace instance translation with infinitely-wrapped anchor + dynamic hover/warp motion
-                    vec3 worldVertex = anchorWorld + transformedPos.xyz;
-
-                    // Distance crystal emergence: spires sprout upward cleanly as they enter mid-ground
-                    float camDist = length(worldVertex - vec3(aAnchor.x, aAnchor.y, uCameraZ));
-                    float grow = smoothstep(82.0, 20.0, abs(relZ));
-                    worldVertex = anchorWorld + (worldVertex - anchorWorld) * (0.25 + 0.75 * grow);
-
-                    // Hover dispersal lifts & floats crystal spires radially outward
-                    if (uDisperse > 0.001) {
-                        vec3 floatVec = vec3(cos(aSeed * 6.28), 0.75 + sin(aSeed * 12.0) * 0.4, sin(aSeed * 6.28));
-                        worldVertex += floatVec * (uDisperse * 3.4);
-                    }
-
-                    // Black-hole spiral vortex pull during warp entry
-                    if (uWarp > 0.001) {
-                        float spiralAng = uWarp * (4.5 + aSeed * 2.5);
-                        float cS = cos(spiralAng);
-                        float sS = sin(spiralAng);
-                        vec2 centerPull = vec2(worldVertex.x * cS - worldVertex.y * sS, worldVertex.x * sS + worldVertex.y * cS);
-                        worldVertex.xy = mix(worldVertex.xy, centerPull * 0.55, uWarp * 0.7);
-                        worldVertex.z += uWarp * 18.0 * (0.5 + aSeed);
-                    }
-
-                    vec4 mvPosition = viewMatrix * vec4(worldVertex, 1.0);
-                    vec4 clipPos = projectionMatrix * mvPosition;
-                    float absW = max(0.001, clipPos.w);
-                    vec2 ndc = clipPos.xy / absW;
-
-                    vec2 diff = ndc - uMouseNDC;
-                    diff.x *= uAspect;
-                    float mDist = length(diff);
-                    float glow = pow(max(0.0, 1.0 - smoothstep(0.0, 0.38, mDist)), 2.0) * uMouseActive;
-                    vProximityGlow = glow;
-
-                    // Subtle magnetic deflection near cursor
-                    vec2 push = mDist > 0.0005 ? normalize(diff) : vec2(0.0, 1.0);
-                    push.x /= max(0.35, uAspect);
-                    clipPos.xy += push * (glow * 0.14 * absW);
-
-                    mvPosition = vec4(worldVertex, 1.0);
-                    mvPosition = viewMatrix * mvPosition;
-                    gl_Position = clipPos;
-                    `
-                );
-
-            shader.fragmentShader = shader.fragmentShader
-                .replace(
-                    '#include <common>',
-                    `#include <common>
-                    varying float vProximityGlow;
-                    `
-                )
-                .replace(
-                    '#include <emissivemap_fragment>',
-                    `#include <emissivemap_fragment>
-                    totalEmissiveRadiance += vec3(0.18, 0.75, 1.0) * (vProximityGlow * 1.15);
-                    totalEmissiveRadiance += vec3(0.95, 0.25, 0.3) * (vProximityGlow * 0.45);
-                    `
-                );
-        };
-
-        const mesh = new THREE.InstancedMesh(geometry, mat, count);
-        mesh.frustumCulled = false;
-
-        const anchors = new Float32Array(count * 3);
-        const seeds = new Float32Array(count);
-        const dummy = new THREE.Object3D();
-        const palette = isCoreShard
-            ? [
-                  new THREE.Color('#ef4444'),
-                  new THREE.Color('#f43f5e'),
-                  new THREE.Color('#fb7185'),
-                  new THREE.Color('#f8fafc'),
-              ]
-            : [
-                  new THREE.Color('#0f121a'),
-                  new THREE.Color('#1e2433'),
-                  new THREE.Color('#2b111b'),
-                  new THREE.Color('#9f1239'),
-                  new THREE.Color('#475569'),
-              ];
-
-        for (let i = 0; i < count; i++) {
-            const z = -rand() * VALLEY_LOOP_LENGTH;
-            const cx = getValleyCenterX(z);
-            const side = rand() > 0.5 ? 1 : -1;
-            const lateralPower = Math.pow(rand(), 0.76);
-            const lateral = (isCoreShard ? 2.1 : 1.75) + lateralPower * 25.0;
-            const x = cx + side * lateral;
-            const y = getValleyTerrainY(x, z) - 0.15;
-
-            anchors[i * 3] = x;
-            anchors[i * 3 + 1] = y;
-            anchors[i * 3 + 2] = z;
-            seeds[i] = rand();
-
-            // Notice world anchor is supplied in shader via aAnchor, so dummy holds ONLY local scale & facet rotation
-            const sx = isCoreShard ? 0.55 + rand() * 0.9 : 0.7 + rand() * 1.35;
-            const sy = isCoreShard ? 0.9 + rand() * 1.65 : 0.75 + rand() * 2.1;
-            const sz = sx * (0.85 + rand() * 0.3);
-
-            dummy.position.set(0, 0, 0);
-            dummy.scale.set(sx, sy, sz);
-            dummy.rotation.set(
-                (rand() - 0.5) * 0.48,
-                rand() * Math.PI * 2,
-                -side * (0.14 + rand() * 0.42) // Lean crystals naturally inward toward the canyon path
-            );
-            dummy.updateMatrix();
-            mesh.setMatrixAt(i, dummy.matrix);
-
-            const col = palette[Math.floor(rand() * palette.length)];
-            mesh.setColorAt(i, col);
-        }
-
-        mesh.instanceMatrix.needsUpdate = true;
-        if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-
-        geometry.setAttribute('aAnchor', new THREE.InstancedBufferAttribute(anchors, 3));
-        geometry.setAttribute('aSeed', new THREE.InstancedBufferAttribute(seeds, 1));
-
-        this.scene.add(mesh);
-        return { mesh, geometry, mat };
-    }
-
-    _buildCrystalValley() {
-        const rand = mulberry32(2026);
-        this.spireGeo = createCrystalSpireGeometry();
-        this.shardGeo = createShardClusterGeometry();
-
-        this.darkSpires = this._buildCrystalMesh(this.spireGeo, 1100, false, rand);
-        this.glowShards = this._buildCrystalMesh(this.shardGeo, 620, true, rand);
+        this.floraPoints = new THREE.Points(geo, mat);
+        this.floraPoints.frustumCulled = false;
+        this.scene.add(this.floraPoints);
     }
 
     _buildDustParticles(pixelRatio) {
         const rand = mulberry32(8881);
-        const count = 320;
+        const count = 420;
         const positions = new Float32Array(count * 3);
         const scales = new Float32Array(count);
         const phases = new Float32Array(count);
@@ -531,10 +681,10 @@ export class NightValleyEngine {
         for (let i = 0; i < count; i++) {
             const z = -rand() * VALLEY_LOOP_LENGTH;
             const centerX = getValleyCenterX(z);
-            positions[i * 3] = centerX + (rand() - 0.5) * 32;
-            positions[i * 3 + 1] = getValleyTerrainY(centerX, z) + 0.6 + rand() * 9.0;
+            positions[i * 3] = centerX + (rand() - 0.5) * 34;
+            positions[i * 3 + 1] = getValleyTerrainY(centerX, z) + 0.5 + rand() * 9.5;
             positions[i * 3 + 2] = z;
-            scales[i] = 0.5 + rand() * 1.0;
+            scales[i] = 0.55 + rand() * 1.15;
             phases[i] = rand() * Math.PI * 2;
         }
 
@@ -569,22 +719,22 @@ export class NightValleyEngine {
 
     _buildLightRays() {
         this.rayTex = createLightRayTexture();
-        const rayGeo = new THREE.PlaneGeometry(8, 26);
+        const rayGeo = new THREE.PlaneGeometry(9, 26);
         this.rayMat = new THREE.MeshBasicMaterial({
             map: this.rayTex,
             transparent: true,
-            opacity: 0.14,
+            opacity: 0.24,
             depthWrite: false,
             blending: THREE.AdditiveBlending,
             side: THREE.DoubleSide,
         });
 
         this.rays = [];
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 8; i++) {
             const mesh = new THREE.Mesh(rayGeo, this.rayMat);
-            const z = -(i / 6) * VALLEY_LOOP_LENGTH;
-            const sideOffset = (i % 2 === 0 ? -1 : 1) * (6.0 + (i % 3) * 2.5);
-            mesh.userData = { baseZ: z, sideOffset, tilt: (i % 2 === 0 ? 1 : -1) * 0.2 };
+            const z = -(i / 8) * VALLEY_LOOP_LENGTH;
+            const sideOffset = (i % 2 === 0 ? -1 : 1) * (4.5 + (i % 3) * 2.2);
+            mesh.userData = { baseZ: z, sideOffset, tilt: (i % 2 === 0 ? 1 : -1) * 0.22 };
             mesh.rotation.z = mesh.userData.tilt;
             this.scene.add(mesh);
             this.rays.push(mesh);
@@ -638,6 +788,7 @@ export class NightValleyEngine {
             this.bloomPass.resolution.set(w, h);
             this.camera.aspect = w / h;
             this.camera.updateProjectionMatrix();
+            this.floraUniforms.uPixelRatio.value = pr;
             this.dustUniforms.uPixelRatio.value = pr;
         };
 
@@ -661,9 +812,6 @@ export class NightValleyEngine {
         this.scrollDimTarget = Math.max(0, Math.min(1, dim));
     }
 
-    /**
-     * Triggers the 1.35s gravitational black-hole loop & tunnel fall into the About story.
-     */
     triggerWarpHole() {
         if (!this.renderer || !this.composer || this.warpActive) return Promise.resolve();
         this.warpActive = true;
@@ -694,7 +842,7 @@ export class NightValleyEngine {
             this.onIntroDone?.();
         }
 
-        // Advance Black-Hole Warp Dive (0 -> 1 over ~1.35s, then completes cleanly)
+        // Advance Black-Hole Warp Dive (0 -> 1 over ~1.35s)
         if (this.warpActive) {
             const rawWarp = Math.min(1, (elapsed - this.warpStart) / 1.35);
             this.warpProgress = rawWarp;
@@ -714,61 +862,47 @@ export class NightValleyEngine {
         this.scrollDimValue += (this.scrollDimTarget - this.scrollDimValue) * Math.min(1, dt * 5.0);
         this.mouseActiveValue += (this.mouseActiveTarget - this.mouseActiveValue) * Math.min(1, dt * 5.0);
 
-        const flightActive = 1 - this.disperseValue;
-        const warpSpeedBoost = Math.pow(wCurve, 1.4) * 34.0;
-        const idleDrift = 2.6 * flightActive;
+        const flightActive = 1 - this.disperseValue * 0.92;
+        const idleDrift = 2.6 * flightActive + wCurve * 34.0;
         this.scrollVelocity *= Math.pow(0.06, dt);
-        const speed = idleDrift + this.scrollVelocity * flightActive + warpSpeedBoost;
+        const speed = idleDrift + this.scrollVelocity * flightActive;
         this.travelDistance += speed * dt;
 
         const camZ = -this.travelDistance;
         const targetX = getValleyCenterX(camZ);
         const floorY = getValleyTerrainY(targetX, camZ);
         const introDrop = (1 - Math.pow(introT, 2)) * 4.5;
-        const fallDiveDrop = Math.pow(wCurve, 1.8) * 1.8;
-        const camY = floorY + 2.85 + Math.sin(elapsed * 0.45) * 0.14 + introDrop - fallDiveDrop;
+        const camY = floorY + 2.85 + Math.sin(elapsed * 0.45) * 0.14 + introDrop;
 
-        // Expand FOV dynamically during tunnel fall (54 -> 92 deg hyper-warp) + loop barrel roll
-        const targetFov = 54 + Math.pow(wCurve, 1.25) * 38;
-        if (Math.abs(this.camera.fov - targetFov) > 0.05) {
+        const lookZ = camZ - 14;
+        const lookX = getValleyCenterX(lookZ) + this.mouseTilt.x * 1.85;
+        const lookY = getValleyTerrainY(lookX, lookZ) + 2.15 + this.mouseTilt.y * 1.15;
+
+        const targetFov = 54 + wCurve * 38;
+        if (Math.abs(this.camera.fov - targetFov) > 0.08) {
             this.camera.fov = targetFov;
             this.camera.updateProjectionMatrix();
         }
 
-        const lookZ = camZ - 14;
-        const lookX = getValleyCenterX(lookZ) + this.mouseTilt.x * 1.85;
-        const lookY = getValleyTerrainY(lookX, lookZ) + 2.15 + this.mouseTilt.y * 1.15 - fallDiveDrop * 0.5;
-
         this.camera.position.set(targetX + this.mouseTilt.x * 0.45, camY, camZ);
         this.camera.lookAt(lookX, lookY, lookZ);
-        // Full 360° barrel-loop sensation during warp fall!
-        this.camera.rotation.z = -this.mouseTilt.x * 0.045 + wCurve * Math.PI * 2;
-
-        // Keep dynamic crystal lights gliding alongside camera & pointer
-        this.cameraTorch.position.set(this.camera.position.x, camY + 2.2, camZ - 4.0);
-        this.crimsonTorch.position.set(lookX, camY + 0.5, camZ - 14.0);
-        this.cursorLight.position.set(
-            this.camera.position.x + this.mouseTilt.x * 9.0,
-            camY + this.mouseTilt.y * 5.0,
-            camZ - 9.0
-        );
+        this.camera.rotation.z = -this.mouseTilt.x * 0.045 + wCurve * Math.PI * 2.0;
 
         const aspect = this.camera.aspect || 16 / 9;
-        if (this.crystalShaderUniforms) {
-            this.crystalShaderUniforms.uTime.value = elapsed;
-            this.crystalShaderUniforms.uCameraZ.value = camZ;
-            this.crystalShaderUniforms.uDisperse.value = this.disperseValue;
-            this.crystalShaderUniforms.uWarp.value = wCurve;
-            this.crystalShaderUniforms.uMouseNDC.value.copy(this.mouseNDC);
-            this.crystalShaderUniforms.uMouseActive.value = this.mouseActiveValue;
-            this.crystalShaderUniforms.uAspect.value = aspect;
-        }
+        this.floraUniforms.uTime.value = elapsed;
+        this.floraUniforms.uCameraZ.value = camZ;
+        this.floraUniforms.uMouseNDC.value.copy(this.mouseNDC);
+        this.floraUniforms.uMouseActive.value = this.mouseActiveValue;
+        this.floraUniforms.uAspect.value = aspect;
+        this.floraUniforms.uDisperse.value = this.disperseValue;
+        this.floraUniforms.uScrollDim.value = this.scrollDimValue;
+        this.floraUniforms.uWarp.value = this.warpProgress;
 
         this.dustUniforms.uTime.value = elapsed;
         this.dustUniforms.uCameraZ.value = camZ;
         this.dustUniforms.uDisperse.value = this.disperseValue;
         this.dustUniforms.uScrollDim.value = this.scrollDimValue;
-        this.dustUniforms.uWarp.value = wCurve;
+        this.dustUniforms.uWarp.value = this.warpProgress;
 
         const halfLoop = VALLEY_LOOP_LENGTH * 0.5;
         this.rays.forEach((ray) => {
@@ -782,14 +916,14 @@ export class NightValleyEngine {
             ray.position.set(wx, wy, wz);
             ray.lookAt(this.camera.position.x, wy, this.camera.position.z);
         });
-        this.rayMat.opacity = 0.14 * (1 - this.scrollDimValue * 0.65) * (1 - wCurve * 0.5);
+        this.rayMat.opacity = 0.22 * (1 - this.scrollDimValue * 0.65) * (1 - wCurve * 0.8);
 
-        const normSpeed = Math.min(1, Math.abs(this.scrollVelocity) * 0.085 + wCurve * 0.9);
+        const normSpeed = Math.min(1, Math.abs(this.scrollVelocity) * 0.085);
         this.postPass.uniforms.uTime.value = elapsed;
         this.postPass.uniforms.uSpeed.value = normSpeed;
         this.postPass.uniforms.uScrollDim.value = this.scrollDimValue;
-        this.postPass.uniforms.uWarp.value = wCurve;
-        this.bloomPass.strength = 0.34 * (1 - this.scrollDimValue * 0.4) + wCurve * 0.45;
+        this.postPass.uniforms.uWarp.value = this.warpProgress;
+        this.bloomPass.strength = 0.52 * (1 - this.scrollDimValue * 0.45) + this.disperseValue * 0.18 + wCurve * 0.25;
     }
 
     _loop() {
@@ -808,37 +942,31 @@ export class NightValleyEngine {
         this.disposed = true;
         if (this.rafId) cancelAnimationFrame(this.rafId);
 
-        window.removeEventListener('pointermove', this._onPointerMove);
-        document.removeEventListener('pointerleave', this._onPointerLeave);
-        window.removeEventListener('wheel', this._onWheel);
-        window.removeEventListener('touchstart', this._onTouchStart);
-        window.removeEventListener('touchmove', this._onTouchMove);
-        window.removeEventListener('resize', this._onResize);
-
-        if (this.darkSpires) {
-            this.darkSpires.geometry.dispose();
-            this.darkSpires.mat.dispose();
+        if (this._onPointerMove) {
+            window.removeEventListener('pointermove', this._onPointerMove);
+            document.removeEventListener('pointerleave', this._onPointerLeave);
+            window.removeEventListener('wheel', this._onWheel);
+            window.removeEventListener('touchstart', this._onTouchStart);
+            window.removeEventListener('touchmove', this._onTouchMove);
+            window.removeEventListener('resize', this._onResize);
         }
-        if (this.glowShards) {
-            this.glowShards.geometry.dispose();
-            this.glowShards.mat.dispose();
+
+        if (this.floraPoints) {
+            this.floraPoints.geometry.dispose();
+            this.floraPoints.material.dispose();
         }
         if (this.dustPoints) {
             this.dustPoints.geometry.dispose();
             this.dustPoints.material.dispose();
         }
-        if (this.rays?.length) {
-            this.rays[0].geometry.dispose();
-            this.rayMat?.dispose();
-        }
+        this.rays?.forEach((r) => r.geometry.dispose());
+        this.rayMat?.dispose();
+        this.atlasTex?.dispose();
         this.rayTex?.dispose();
-        this.renderTarget?.dispose();
-        this.composer?.dispose?.();
+        this.composer?.dispose();
         if (this.renderer) {
             this.renderer.dispose();
-            if (this.renderer.domElement?.parentNode) {
-                this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
-            }
+            this.renderer.domElement?.remove();
         }
     }
 }

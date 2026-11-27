@@ -10,7 +10,20 @@ import {
     lerpAngle,
     computeRouteTargetPose,
     computeDocumentScrollProgress,
+    enforcePerimeterExclusion,
 } from '../utils/companionFlight';
+
+// Outer orbital patrol anchors around screen margins (never crossing center headlines)
+const PERIMETER_SECTORS = [
+    { x: 0.80, y: 0.56, yaw: 142 },
+    { x: 0.82, y: 0.14, yaw: 162 },
+    { x: 0.80, y: -0.50, yaw: 132 },
+    { x: 0.62, y: -0.62, yaw: 118 },
+    { x: -0.64, y: -0.62, yaw: 52 },
+    { x: -0.80, y: -0.44, yaw: 34 },
+    { x: -0.82, y: 0.18, yaw: 24 },
+    { x: -0.78, y: 0.56, yaw: 44 },
+];
 
 const QUICK_ROUTES = [
     { label: 'Home', path: '/' },
@@ -575,15 +588,59 @@ const CyberDrone = () => {
             roll: initPose.roll,
         };
 
-        const mouse = { tx: 0, ty: 0, sx: 0, sy: 0 };
+        const mouse = { tx: 0, ty: 0, sx: 0, sy: 0, vx: 0, vy: 0, lastT: performance.now(), active: false };
         const clock = new THREE.Clock();
         const projVec = new THREE.Vector3();
+
+        // Autonomous non-repeating flight director (organic reconnaissance orbits + reactive evasion)
+        const navAI = {
+            sectorIdx: 0,
+            nextSwitchAt: 2.8 + Math.random() * 2.0,
+            offsetX: 0,
+            offsetY: 0,
+            goalOffsetX: 0,
+            goalOffsetY: 0,
+            phase: Math.random() * Math.PI * 2,
+            dodgeVx: 0,
+            dodgeVy: 0,
+            rollKick: 0,
+            boost: 0,
+            lastDodgeAt: -10,
+        };
+
+        const pickNextSector = (nowElapsed) => {
+            // Choose a distinct non-adjacent perimeter sector so motion feels spontaneous & never loops identically
+            const step = 2 + Math.floor(Math.random() * (PERIMETER_SECTORS.length - 3));
+            navAI.sectorIdx = (navAI.sectorIdx + step) % PERIMETER_SECTORS.length;
+            navAI.nextSwitchAt = nowElapsed + 2.8 + Math.random() * 2.6;
+        };
 
         const onPointerMove = (e) => {
             const vw = window.innerWidth || 1;
             const vh = window.innerHeight || 1;
-            mouse.tx = clamp((e.clientX / vw) * 2 - 1, -1, 1);
-            mouse.ty = clamp(-((e.clientY / vh) * 2 - 1), -1, 1);
+            const nx = clamp((e.clientX / vw) * 2 - 1, -1, 1);
+            const ny = clamp(-((e.clientY / vh) * 2 - 1), -1, 1);
+            const now = performance.now();
+            const dtMs = Math.max(8, now - mouse.lastT);
+            mouse.vx = ((nx - mouse.tx) / dtMs) * 1000;
+            mouse.vy = ((ny - mouse.ty) / dtMs) * 1000;
+            mouse.lastT = now;
+            mouse.tx = nx;
+            mouse.ty = ny;
+            mouse.active = true;
+
+            // Reactive proximity evade when cursor sweeps rapidly right across the drone's flank
+            const distToDrone = Math.hypot(nx - cur.x, ny - cur.y);
+            const speed = Math.hypot(mouse.vx, mouse.vy);
+            if (distToDrone < 0.28 && speed > 1.75 && !hoveredRef.current && now - navAI.lastDodgeAt > 1200) {
+                navAI.lastDodgeAt = now;
+                const pushAngle = Math.atan2(cur.y - ny, cur.x - nx) + (Math.random() - 0.5) * 0.7;
+                navAI.dodgeVx = Math.cos(pushAngle) * 0.65;
+                navAI.dodgeVy = Math.sin(pushAngle) * 0.52;
+                navAI.rollKick = (mouse.vx >= 0 ? -1 : 1) * 38;
+                navAI.boost = 1.0;
+                pickNextSector(clock.elapsedTime);
+            }
         };
 
         const onResize = () => {
@@ -621,6 +678,41 @@ const CyberDrone = () => {
             const prevX = cur.x;
             const prevY = cur.y;
 
+            if (!reduced && !hoveredRef.current) {
+                if (t >= navAI.nextSwitchAt) {
+                    pickNextSector(t);
+                }
+                const sec = PERIMETER_SECTORS[navAI.sectorIdx];
+                // Blend route scroll flow (58%) with spontaneous outer-sector reconnaissance (42%)
+                const blendW = pathnameRef.current === '/projects' ? 0.14 : isMobile ? 0.18 : 0.42;
+                navAI.goalOffsetX = (sec.x - target.x) * blendW;
+                navAI.goalOffsetY = (sec.y - target.y) * blendW;
+            } else if (hoveredRef.current) {
+                navAI.goalOffsetX *= 0.92;
+                navAI.goalOffsetY *= 0.92;
+            }
+
+            navAI.offsetX = lerp(navAI.offsetX, navAI.goalOffsetX, 1 - Math.exp(-dt * 1.4));
+            navAI.offsetY = lerp(navAI.offsetY, navAI.goalOffsetY, 1 - Math.exp(-dt * 1.4));
+
+            // Irrational dual-frequency organic drift so patrol path never repeats identically
+            const ph = navAI.phase;
+            const freeWanderX = reduced || hoveredRef.current ? 0 : Math.sin(t * 0.71 + ph) * 0.055 + Math.cos(t * 1.19 + ph * 1.6) * 0.03;
+            const freeWanderY = reduced || hoveredRef.current ? 0 : Math.cos(t * 0.89 + ph * 1.3) * 0.065 + Math.sin(t * 1.43 + ph * 0.7) * 0.028;
+
+            // Cursor curiosity attraction (steers gently along outer flank toward pointer quad when pointer moves)
+            const cursorPullX = reduced || !mouse.active || hoveredRef.current ? 0 : clamp(mouse.sx * 0.12, -0.14, 0.14);
+            const cursorPullY = reduced || !mouse.active || hoveredRef.current ? 0 : clamp(mouse.sy * 0.10, -0.12, 0.12);
+
+            navAI.dodgeVx *= Math.exp(-dt * 3.8);
+            navAI.dodgeVy *= Math.exp(-dt * 3.8);
+            navAI.rollKick *= Math.exp(-dt * 4.5);
+            navAI.boost *= Math.exp(-dt * 2.8);
+
+            const rawGoalX = target.x + navAI.offsetX + freeWanderX + cursorPullX + navAI.dodgeVx;
+            const rawGoalY = target.y + navAI.offsetY + freeWanderY + cursorPullY + navAI.dodgeVy;
+            const safeGoal = enforcePerimeterExclusion(rawGoalX, rawGoalY, isMobile);
+
             if (reduced) {
                 cur.x = target.x;
                 cur.y = target.y;
@@ -629,51 +721,61 @@ const CyberDrone = () => {
                 cur.pitch = target.pitch;
                 cur.roll = target.roll;
             } else {
-                const k = 1 - Math.exp(-dt * 3.2);
-                const kYaw = 1 - Math.exp(-dt * 2.6);
-                cur.x = lerp(cur.x, target.x, k);
-                cur.y = lerp(cur.y, target.y, k);
-                cur.s = lerp(cur.s, target.s, k);
-                cur.yaw = lerpAngle(cur.yaw, hoveredRef.current ? 102 : target.yaw, kYaw);
-                cur.pitch = lerp(cur.pitch, target.pitch, k);
-                cur.roll = lerp(cur.roll, target.roll, k);
+                const steerSpeed = hoveredRef.current ? 4.2 : 1.9 + navAI.boost * 2.4;
+                const k = 1 - Math.exp(-dt * steerSpeed);
+                const kYaw = 1 - Math.exp(-dt * 3.2);
+                cur.x = lerp(cur.x, safeGoal.x, k);
+                cur.y = lerp(cur.y, safeGoal.y, k);
+                cur.s = lerp(cur.s, target.s * (1 + navAI.boost * 0.14), k);
+
+                // Orient drone naturally in flight direction OR track user pointer curiously
+                const moveDx = safeGoal.x - cur.x;
+                const lookTargetX = Math.abs(moveDx) > 0.06 ? moveDx : mouse.sx - cur.x;
+                const desiredHeadingYaw = lookTargetX >= 0 ? 42 : 138;
+                const desiredYaw = hoveredRef.current
+                    ? 102
+                    : lerpAngle(target.yaw, desiredHeadingYaw, mouse.active ? 0.65 : 0.4);
+
+                cur.yaw = lerpAngle(cur.yaw, desiredYaw, kYaw);
+                cur.pitch = lerp(cur.pitch, target.pitch + (mouse.sy - cur.y) * 5, k);
+                cur.roll = lerp(cur.roll, target.roll + navAI.rollKick, k);
             }
 
             const vx = (cur.x - prevX) / dt;
             const vy = (cur.y - prevY) / dt;
-            const flightSpeed = clamp(Math.hypot(vx, vy) * 0.45, 0, 1);
+            const flightSpeed = clamp(Math.hypot(vx, vy) * 0.55 + navAI.boost * 0.7, 0, 1);
             const moving = Math.max(target.moving, flightSpeed);
 
-            const km = 1 - Math.exp(-dt * 2);
+            const km = 1 - Math.exp(-dt * 2.2);
             mouse.sx = lerp(mouse.sx, reduced ? 0 : mouse.tx, km);
             mouse.sy = lerp(mouse.sy, reduced ? 0 : mouse.ty, km);
 
             const halfH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
             const halfW = halfH * camera.aspect;
-            const hover = reduced ? 0 : Math.sin(t * 2.1) * 0.045 + Math.sin(t * 3.7) * 0.015;
+            const hover = reduced ? 0 : Math.sin(t * 2.1 + navAI.phase) * 0.042 + Math.sin(t * 3.7) * 0.015;
 
             drone.flight.position.set(
-                cur.x * halfW + (reduced ? 0 : Math.sin(t * 1.3) * 0.035 + mouse.sx * 0.1),
-                cur.y * halfH + hover * halfH * 0.5 + mouse.sy * 0.06,
-                reduced ? 0 : Math.sin(t * 0.9) * 0.14
+                cur.x * halfW + (reduced ? 0 : Math.sin(t * 1.3 + navAI.phase) * 0.025),
+                cur.y * halfH + hover * halfH * 0.45,
+                reduced ? 0 : Math.sin(t * 0.9 + navAI.phase) * 0.18
             );
 
-            // ~19% viewport height base scale keeps companion sleek and unobstructed across routes
-            const droneScale = halfH * 2 * 0.19 * cur.s;
+            // ~18% viewport height base scale keeps companion sleek and unobstructed across routes
+            const droneScale = halfH * 2 * 0.185 * cur.s;
             drone.flight.scale.setScalar(droneScale);
 
-            const yawRad = THREE.MathUtils.degToRad(-(cur.yaw + mouse.sx * 12));
+            const yawRad = THREE.MathUtils.degToRad(-(cur.yaw + mouse.sx * 16));
             drone.flight.rotation.set(0, yawRad, 0);
 
             const pitchDeg =
                 cur.pitch -
-                clamp(vy * 18, -26, 26) +
-                (reduced ? 0 : Math.sin(t * 2.1 + 1) * 2.8) +
-                mouse.sy * 6;
+                clamp(vy * 22, -28, 28) +
+                (reduced ? 0 : Math.sin(t * 2.1 + 1) * 3.2) +
+                mouse.sy * 8;
             const rollDeg =
                 cur.roll +
-                clamp(vx * 14, -28, 28) +
-                (reduced ? 0 : Math.sin(t * 1.7) * 3.5);
+                clamp(vx * 18, -32, 32) +
+                (reduced ? 0 : Math.sin(t * 1.7 + navAI.phase) * 4.0);
 
             drone.droneRoot.rotation.set(
                 THREE.MathUtils.degToRad(rollDeg),

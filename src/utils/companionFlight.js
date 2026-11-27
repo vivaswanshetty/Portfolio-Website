@@ -1,4 +1,4 @@
-// Pure route flight paths, easing, and 3D banking/wing-beat math
+// Pure route flight paths, perimeter exclusion arcs, easing, and 3D banking/wing-beat math
 // for the persistent cross-page Cybernetic Night-Drone navigation companion.
 
 export function easeCubicInOut(t) {
@@ -18,50 +18,86 @@ export function clamp(val, min, max) {
     return Math.max(min, Math.min(max, val));
 }
 
-// Desktop waypoints (viewport half-axes: x, y in [-1, 1]; yaw 0 = facing right, 180 = left)
+/**
+ * Keeps autonomous or scroll-driven targets out of the central headline/story card corridor
+ * and top-center navbar while keeping waypoints inside visible non-clipped viewport gutters.
+ */
+export function enforcePerimeterExclusion(nx, ny, isMobile = false) {
+    let x = clamp(nx, -0.84, 0.84);
+    let y = clamp(ny, -0.72, 0.72);
+
+    if (isMobile) {
+        return { x, y };
+    }
+
+    // Avoid centered floating navbar at very top center
+    if (Math.abs(x) < 0.52 && y > 0.64) {
+        x = x >= 0 ? 0.62 : -0.62;
+    }
+
+    // Keep clear of central content cards / hero headlines (|x| < 0.73 && |y| < 0.54)
+    const halfBoxX = 0.73;
+    const halfBoxY = 0.54;
+    if (Math.abs(x) < halfBoxX && Math.abs(y) < halfBoxY) {
+        const pushRight = halfBoxX - Math.abs(x);
+        const pushTop = halfBoxY - Math.abs(y);
+        if (pushRight < pushTop * 1.2) {
+            x = x >= 0 ? 0.78 : -0.78;
+        } else {
+            y = y >= 0 ? 0.60 : -0.60;
+        }
+    }
+
+    return {
+        x: clamp(x, -0.84, 0.84),
+        y: clamp(y, -0.72, 0.72),
+    };
+}
+
+// Desktop outer perimeter waypoints (diverse orbital corners per route, never slicing horizontally across text)
 const DESKTOP_ROUTES = {
     '/': [
-        { x: 0.72, y: 0.38, s: 0.94, yaw: 148, pitch: 5, roll: -5 },
-        { x: -0.78, y: 0.14, s: 0.88, yaw: 34, pitch: 8, roll: 6 },
-        { x: 0.76, y: -0.22, s: 0.84, yaw: 132, pitch: 4, roll: 0 },
+        { x: 0.78, y: 0.44, s: 0.90, yaw: 146, pitch: 5, roll: -5 },
+        { x: 0.80, y: -0.34, s: 0.86, yaw: 132, pitch: 4, roll: -3 },
+        { x: -0.78, y: 0.52, s: 0.84, yaw: 38, pitch: 7, roll: 5 },
     ],
     '/about': [
-        { x: 0.72, y: 0.44, s: 0.88, yaw: 145, pitch: 6, roll: -4 },
-        { x: -0.78, y: 0.08, s: 0.84, yaw: 38, pitch: 7, roll: 6 },
-        { x: 0.76, y: -0.34, s: 0.82, yaw: 130, pitch: 4, roll: -2 },
+        { x: 0.78, y: 0.48, s: 0.86, yaw: 145, pitch: 6, roll: -4 },
+        { x: 0.81, y: 0.56, s: 0.80, yaw: 136, pitch: 5, roll: -3 },
+        { x: 0.80, y: -0.46, s: 0.82, yaw: 128, pitch: 4, roll: 2 },
+        { x: -0.79, y: -0.52, s: 0.80, yaw: 38, pitch: 6, roll: 4 },
     ],
     '/projects': [
-        // Pushed neatly into top-right open margin outside the 3D Fibonacci sphere and bio/colophon
         { x: 0.80, y: 0.58, s: 0.68, yaw: 135, pitch: 4, roll: -4 },
         { x: 0.78, y: 0.48, s: 0.70, yaw: 120, pitch: 6, roll: 2 },
     ],
     '/skills': [
-        { x: 0.74, y: 0.46, s: 0.88, yaw: 150, pitch: 6, roll: -5 },
-        { x: -0.78, y: -0.04, s: 0.84, yaw: 35, pitch: 8, roll: 5 },
-        { x: 0.76, y: -0.32, s: 0.82, yaw: 125, pitch: 4, roll: 0 },
+        { x: -0.79, y: 0.48, s: 0.84, yaw: 36, pitch: 6, roll: 5 },
+        { x: 0.79, y: 0.52, s: 0.84, yaw: 144, pitch: 5, roll: -4 },
+        { x: 0.80, y: -0.40, s: 0.80, yaw: 128, pitch: 4, roll: 0 },
     ],
     '/resume': [
-        { x: 0.74, y: 0.48, s: 0.86, yaw: 145, pitch: 5, roll: -4 },
-        { x: -0.78, y: 0.12, s: 0.82, yaw: 36, pitch: 7, roll: 6 },
-        { x: 0.76, y: -0.36, s: 0.80, yaw: 130, pitch: 4, roll: 0 },
+        { x: 0.80, y: 0.50, s: 0.82, yaw: 145, pitch: 5, roll: -4 },
+        { x: 0.81, y: -0.32, s: 0.80, yaw: 132, pitch: 5, roll: -2 },
+        { x: -0.79, y: -0.44, s: 0.78, yaw: 38, pitch: 6, roll: 5 },
     ],
     '/contact': [
-        { x: 0.74, y: 0.48, s: 0.86, yaw: 152, pitch: 6, roll: -5 },
-        { x: 0.78, y: -0.30, s: 0.82, yaw: 128, pitch: 4, roll: -2 },
+        { x: 0.79, y: 0.52, s: 0.84, yaw: 150, pitch: 6, roll: -5 },
+        { x: 0.80, y: -0.42, s: 0.80, yaw: 128, pitch: 4, roll: -2 },
     ],
     projectDetail: [
-        { x: 0.76, y: 0.46, s: 0.84, yaw: 144, pitch: 5, roll: -4 },
-        { x: -0.78, y: 0.08, s: 0.80, yaw: 40, pitch: 7, roll: 5 },
-        { x: 0.76, y: -0.34, s: 0.78, yaw: 124, pitch: 4, roll: 0 },
+        { x: -0.79, y: 0.52, s: 0.82, yaw: 42, pitch: 5, roll: 4 },
+        { x: 0.80, y: 0.46, s: 0.80, yaw: 140, pitch: 6, roll: -4 },
+        { x: 0.79, y: -0.42, s: 0.78, yaw: 126, pitch: 4, roll: 0 },
     ],
 };
 
 // Mobile / narrow screens (< 760px): compact, tucked cleanly into high/low edge gutters
 const MOBILE_ROUTES = {
     '/': [
-        { x: 0.70, y: 0.56, s: 0.62, yaw: 142, pitch: 6, roll: -4 },
-        { x: 0.72, y: 0.48, s: 0.60, yaw: 125, pitch: 8, roll: 4 },
-        { x: 0.68, y: -0.44, s: 0.58, yaw: 135, pitch: 4, roll: 0 },
+        { x: 0.72, y: 0.58, s: 0.60, yaw: 142, pitch: 6, roll: -4 },
+        { x: 0.74, y: 0.50, s: 0.58, yaw: 125, pitch: 8, roll: 4 },
+        { x: 0.68, y: -0.48, s: 0.56, yaw: 135, pitch: 4, roll: 0 },
     ],
     '/projects': [
         { x: 0.74, y: 0.64, s: 0.54, yaw: 138, pitch: 4, roll: -3 },
@@ -87,8 +123,8 @@ export function resolveRouteKeyframes(pathname = '/', isMobile = false) {
 }
 
 /**
- * Samples the drone's target pose along the current route keyframes for normalized scroll [0..1],
- * holding steady at section rest points and sweeping cleanly with a mid-flight dip in between.
+ * Samples the drone's anchor pose along the current route perimeter keyframes for normalized scroll [0..1],
+ * sweeping around the upper/lower outer rim whenever crossing screen sides so it never sits over center typography.
  */
 export function computeRouteTargetPose(pathname, scrollProgress = 0, isMobile = false) {
     const keyframes = resolveRouteKeyframes(pathname, isMobile);
@@ -101,16 +137,22 @@ export function computeRouteTargetPose(pathname, scrollProgress = 0, isMobile = 
     const i = Math.min(keyframes.length - 2, Math.floor(scaled));
     const f = scaled - i;
 
-    const t = easeCubicInOut(clamp((f - 0.1) / 0.8, 0, 1));
-    const dive = Math.sin(t * Math.PI) * -0.14;
-
+    const t = easeCubicInOut(clamp((f - 0.08) / 0.84, 0, 1));
     const a = keyframes[i];
     const b = keyframes[i + 1];
 
+    // Sweep along upper/outer perimeter arc if crossing horizontally across center
+    const crossesCenter = Math.sign(a.x) !== Math.sign(b.x);
+    const rawX = lerp(a.x, b.x, t);
+    const arcY = crossesCenter ? Math.sin(t * Math.PI) * (a.y + b.y >= 0 ? 0.34 : -0.24) : Math.sin(t * Math.PI) * -0.06;
+    const rawY = lerp(a.y, b.y, t) + arcY;
+
+    const guarded = enforcePerimeterExclusion(rawX, rawY, isMobile);
+
     return {
-        x: lerp(a.x, b.x, t),
-        y: lerp(a.y, b.y, t) + dive,
-        s: lerp(a.s, b.s, t) * (1 + Math.sin(t * Math.PI) * 0.12),
+        x: guarded.x,
+        y: guarded.y,
+        s: lerp(a.s, b.s, t) * (1 + Math.sin(t * Math.PI) * 0.10),
         yaw: lerpAngle(a.yaw, b.yaw, t),
         pitch: lerp(a.pitch, b.pitch, t),
         roll: lerp(a.roll, b.roll, t),

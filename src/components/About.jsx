@@ -308,7 +308,7 @@ const About = () => {
                         onClick={handleReturnToValley}
                     >
                         <ArrowUp size={13} />
-                        <span>Return To Crystal Canyon</span>
+                        <span>Return To Night Valley</span>
                     </button>
                 </div>
                 {/* Chapter 1: Portrait & Identity Manifesto */}
