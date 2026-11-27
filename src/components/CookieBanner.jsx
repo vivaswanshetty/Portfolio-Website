@@ -2,17 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Check, ArrowRight } from 'lucide-react';
+import { useIntro } from '../context/useIntro';
 
 export const CookieBanner = () => {
     const [isVisible, setIsVisible] = useState(false);
+    const { isIntroActive } = useIntro();
 
     useEffect(() => {
+        if (isIntroActive) return;
         const consent = localStorage.getItem('vivaswan_privacy_consent');
         if (!consent) {
             const timer = setTimeout(() => setIsVisible(true), 1200);
             return () => clearTimeout(timer);
         }
-    }, []);
+    }, [isIntroActive]);
 
     const handleAccept = () => {
         localStorage.setItem('vivaswan_privacy_consent', 'accepted');

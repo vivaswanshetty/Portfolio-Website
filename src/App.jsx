@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -25,6 +25,8 @@ import ScrollToTop from './components/ScrollToTop';
 import SpotlightCursor from './components/SpotlightCursor';
 import CookieBanner from './components/CookieBanner';
 import { ToastProvider } from './context/ToastContext';
+import { IntroProvider } from './context/IntroContext';
+import { useIntro } from './context/useIntro';
 import { ToastContainer } from './components/Toast';
 import { Analytics } from '@vercel/analytics/react';
 
@@ -61,6 +63,15 @@ const RouteLoader = () => (
 
 const AnimatedRoutes = () => {
     const location = useLocation();
+    const { isIntroActive, ensureDoneForSubroute } = useIntro();
+
+    useEffect(() => {
+        if (location.pathname !== '/' && isIntroActive) {
+            ensureDoneForSubroute();
+        }
+    }, [location.pathname, isIntroActive, ensureDoneForSubroute]);
+
+    const skipInitialHomeMotion = isIntroActive && location.pathname === '/';
 
     const pageVariants = {
         initial: {
@@ -89,7 +100,7 @@ const AnimatedRoutes = () => {
             <Suspense fallback={<RouteLoader />}>
                 <motion.div
                     key={location.pathname}
-                    initial="initial"
+                    initial={skipInitialHomeMotion ? false : "initial"}
                     animate="enter"
                     exit="exit"
                     variants={pageVariants}
@@ -116,27 +127,29 @@ const AnimatedRoutes = () => {
 function App() {
     return (
         <ToastProvider>
-            <Router>
-                <a href="#main-content" className="skip-to-content-link">
-                    Skip to content
-                </a>
-                <ScrollToTop />
-                <Starfield />
-                <SpotlightCursor />
-                <ScrollProgress />
-                <CookieBanner />
-                <ToastContainer />
-                <Analytics />
-                <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-                    <Navbar />
-                    <main id="main-content" tabIndex="-1" style={{ flex: 1, display: 'flex', flexDirection: 'column', outline: 'none' }}>
-                        <ErrorBoundary>
-                            <AnimatedRoutes />
-                        </ErrorBoundary>
-                    </main>
-                    <Footer />
-                </div>
-            </Router>
+            <IntroProvider>
+                <Router>
+                    <a href="#main-content" className="skip-to-content-link">
+                        Skip to content
+                    </a>
+                    <ScrollToTop />
+                    <Starfield />
+                    <SpotlightCursor />
+                    <ScrollProgress />
+                    <CookieBanner />
+                    <ToastContainer />
+                    <Analytics />
+                    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                        <Navbar />
+                        <main id="main-content" tabIndex="-1" style={{ flex: 1, display: 'flex', flexDirection: 'column', outline: 'none' }}>
+                            <ErrorBoundary>
+                                <AnimatedRoutes />
+                            </ErrorBoundary>
+                        </main>
+                        <Footer />
+                    </div>
+                </Router>
+            </IntroProvider>
         </ToastProvider>
     );
 }

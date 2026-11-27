@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, User, FolderGit2, FileText, Mail, Menu, X, Code } from 'lucide-react';
+import { useIntro } from '../context/useIntro';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
+    const { navVisible } = useIntro();
+    const isHome = location.pathname === '/';
     const toggleBtnRef = useRef(null);
     const firstNavLinkRef = useRef(null);
     const menuContainerRef = useRef(null);
@@ -75,13 +79,29 @@ const Navbar = () => {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [isOpen]);
 
+    const navClassName = [
+        'navbar-main',
+        isHome && !navVisible ? 'navbar-intro-hidden' : '',
+        isHome && navVisible ? 'navbar-intro-reveal' : '',
+    ]
+        .filter(Boolean)
+        .join(' ');
+
     return (
         <>
             <motion.nav
-                initial={{ y: -80, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="navbar-main"
+                initial={isHome ? false : { y: -80, opacity: 0 }}
+                animate={
+                    isHome
+                        ? { y: navVisible ? 0 : -6, opacity: navVisible ? 1 : 0 }
+                        : { y: 0, opacity: 1 }
+                }
+                transition={
+                    isHome
+                        ? { duration: 0.3, ease: 'easeOut' }
+                        : { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+                }
+                className={navClassName}
             >
                 {/* Brand Logo */}
                 <NavLink
