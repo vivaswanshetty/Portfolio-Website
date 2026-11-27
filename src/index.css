@@ -4254,6 +4254,7 @@ body.projects-archive.locked {
 }
 
 body.projects-archive.projects-splash .navbar-main,
+body.projects-archive.projects-intro .navbar-main,
 body.projects-archive.lit .navbar-main {
   opacity: 0 !important;
   pointer-events: none !important;
@@ -5352,6 +5353,89 @@ body.projects-archive.lit #lit {
 #lit .lit-ext-btn:hover {
   border-color: #fff;
   background: rgba(255, 255, 255, 0.1);
+}
+
+/* Intro Film Overlay (#projects-intro) */
+#projects-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1150;
+  background: #000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  transition: opacity 0.5s linear;
+}
+
+#projects-intro #film {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#projects-intro .fallback {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 46%, #14301a 0%, #060c07 42%, #000 72%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+#projects-intro.novideo .fallback {
+  opacity: 1;
+}
+
+#projects-intro .veil {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.15s ease;
+}
+
+#projects-intro.closing .veil {
+  opacity: 1;
+}
+
+#projects-intro.gone {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#projects-intro .skip {
+  position: absolute;
+  right: calc(var(--pad) + var(--safe-right));
+  bottom: calc(var(--pad) + var(--safe-bottom));
+  z-index: 2;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(244, 242, 239, 0.72);
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid rgba(244, 242, 239, 0.25);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: opacity 0.35s ease, color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+#projects-intro .skip:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.55);
+}
+
+#projects-intro.closing .skip {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Splash Veil for /projects Entry */

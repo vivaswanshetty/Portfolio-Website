@@ -1,46 +1,92 @@
-// Generative Web Audio night wind + harmonic ambient store (default unmuted with auto-unlock fallback + warp sweep).
+// Generative Web Audio peaceful nocturnal glass-pad + gentle chime soundscape (default unmuted with auto-unlock).
 
 export function createValleyAudioStore() {
     let ctx = null;
     let masterGain = null;
     let lowPass = null;
+    let delaySend = null;
     let nodes = [];
+    let chimeTimer = null;
     let isInitialized = false;
     let isMuted = false;
     let explicitlyMuted = false;
     let isMuffled = false;
     let unlockBound = false;
+    let chimeStep = 0;
 
-    const createNoiseBuffer = (audioCtx) => {
+    // Gentle Gmaj9 / pentatonic wind-chime sequence (pure midrange, zero low-end rumble)
+    const CHIME_NOTES = [587.33, 659.25, 783.99, 880.0, 987.77, 1174.66]; // D5, E5, G5, A5, B5, D6
+
+    const createSoftAirBuffer = (audioCtx) => {
         const length = audioCtx.sampleRate * 4;
         const buffer = audioCtx.createBuffer(1, length, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
-        let b0 = 0;
-        let b1 = 0;
-        let b2 = 0;
+        let prev = 0;
         for (let i = 0; i < length; i++) {
             const white = Math.random() * 2 - 1;
-            b0 = 0.99765 * b0 + white * 0.099046;
-            b1 = 0.963 * b1 + white * 0.2965164;
-            b2 = 0.57 * b2 + white * 1.0526913;
-            data[i] = (b0 + b1 + b2 + white * 0.1848) * 0.08;
+            prev = prev * 0.96 + white * 0.04;
+            data[i] = prev * 0.14;
         }
         return buffer;
+    };
+
+    const playSoftChime = (freq, peakGain = 0.045, duration = 4.2) => {
+        if (!ctx || !lowPass || ctx.state !== 'running' || explicitlyMuted) return;
+        try {
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const env = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+
+            env.gain.setValueAtTime(0.0001, now);
+            env.gain.linearRampToValueAtTime(peakGain, now + 0.14);
+            env.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+            osc.connect(env);
+            env.connect(lowPass);
+            if (delaySend) env.connect(delaySend);
+
+            osc.start(now);
+            osc.stop(now + duration + 0.1);
+        } catch {
+            // Ignore transient chime error on suspend/close
+        }
+    };
+
+    const scheduleNextChime = () => {
+        clearTimeout(chimeTimer);
+        if (!ctx) return;
+        const waitMs = 3400 + Math.random() * 2600;
+        chimeTimer = setTimeout(() => {
+            if (!ctx) return;
+            if (!explicitlyMuted && ctx.state === 'running') {
+                const idx = (chimeStep + Math.floor(Math.random() * 2)) % CHIME_NOTES.length;
+                chimeStep += 1;
+                playSoftChime(CHIME_NOTES[idx], 0.042, 4.4);
+            }
+            scheduleNextChime();
+        }, waitMs);
     };
 
     const syncGainState = () => {
         if (!ctx || !masterGain) return;
         const active = !explicitlyMuted && ctx.state === 'running';
         isMuted = explicitlyMuted;
-        const target = active ? 0.15 : 0.0001;
+        const target = active ? 0.115 : 0.0001;
         masterGain.gain.cancelScheduledValues(ctx.currentTime);
-        masterGain.gain.setTargetAtTime(target, ctx.currentTime, 0.25);
+        masterGain.gain.setTargetAtTime(target, ctx.currentTime, 0.55);
     };
 
     const handleFirstUnlockGesture = () => {
         if (explicitlyMuted || !ctx) return;
         if (ctx.state === 'suspended') {
-            ctx.resume().then(syncGainState).catch(() => {});
+            ctx.resume()
+                .then(() => {
+                    syncGainState();
+                    playSoftChime(783.99, 0.038, 4.0);
+                })
+                .catch(() => {});
         } else {
             syncGainState();
         }
@@ -71,10 +117,11 @@ export function createValleyAudioStore() {
 
         try {
             ctx = new AudioCtx();
+
             lowPass = ctx.createBiquadFilter();
             lowPass.type = 'lowpass';
-            lowPass.frequency.setValueAtTime(isMuffled ? 260 : 2200, ctx.currentTime);
-            lowPass.Q.setValueAtTime(0.85, ctx.currentTime);
+            lowPass.frequency.setValueAtTime(isMuffled ? 420 : 1250, ctx.currentTime);
+            lowPass.Q.setValueAtTime(0.35, ctx.currentTime);
 
             masterGain = ctx.createGain();
             masterGain.gain.setValueAtTime(0.0001, ctx.currentTime);
@@ -82,47 +129,65 @@ export function createValleyAudioStore() {
             lowPass.connect(masterGain);
             masterGain.connect(ctx.destination);
 
-            // Night canyon wind bed (warm filtered noise loop)
-            const noiseSrc = ctx.createBufferSource();
-            noiseSrc.buffer = createNoiseBuffer(ctx);
-            noiseSrc.loop = true;
-            const noiseBand = ctx.createBiquadFilter();
-            noiseBand.type = 'bandpass';
-            noiseBand.frequency.setValueAtTime(340, ctx.currentTime);
-            noiseBand.Q.setValueAtTime(0.9, ctx.currentTime);
-            const noiseGain = ctx.createGain();
-            noiseGain.gain.setValueAtTime(0.28, ctx.currentTime);
-            noiseSrc.connect(noiseBand);
-            noiseBand.connect(noiseGain);
-            noiseGain.connect(lowPass);
-            noiseSrc.start();
-            nodes.push(noiseSrc);
+            // Warm dual-tap ambient shimmer echo for smooth, spacious decay
+            delaySend = ctx.createGain();
+            delaySend.gain.setValueAtTime(0.55, ctx.currentTime);
+            const delayA = ctx.createDelay(2.0);
+            delayA.delayTime.setValueAtTime(0.41, ctx.currentTime);
+            const delayB = ctx.createDelay(2.0);
+            delayB.delayTime.setValueAtTime(0.67, ctx.currentTime);
+            const echoDamp = ctx.createBiquadFilter();
+            echoDamp.type = 'lowpass';
+            echoDamp.frequency.setValueAtTime(780, ctx.currentTime);
+            const fbGain = ctx.createGain();
+            fbGain.gain.setValueAtTime(0.32, ctx.currentTime);
 
-            // Warm nocturnal harmonic drone (A2, E3, B3, F#4)
-            const freqs = [110, 164.81, 246.94, 369.99];
-            freqs.forEach((f, idx) => {
+            delaySend.connect(delayA);
+            delayA.connect(delayB);
+            delayB.connect(echoDamp);
+            echoDamp.connect(fbGain);
+            fbGain.connect(delayA);
+            echoDamp.connect(lowPass);
+
+            // Feather-soft silk night breeze bed (high-mid filtered, zero rumble)
+            const airSrc = ctx.createBufferSource();
+            airSrc.buffer = createSoftAirBuffer(ctx);
+            airSrc.loop = true;
+            const airBand = ctx.createBiquadFilter();
+            airBand.type = 'bandpass';
+            airBand.frequency.setValueAtTime(860, ctx.currentTime);
+            airBand.Q.setValueAtTime(0.6, ctx.currentTime);
+            const airGain = ctx.createGain();
+            airGain.gain.setValueAtTime(0.035, ctx.currentTime);
+            airSrc.connect(airBand);
+            airBand.connect(airGain);
+            airGain.connect(lowPass);
+            airSrc.start();
+            nodes.push(airSrc);
+
+            // Pure sine warm Gmaj9 halo pad (no triangle/saw waves, no fast beating or LFO vibration)
+            const padVoices = [
+                { freq: 196.0, gain: 0.065 },  // G3 warm root cushion
+                { freq: 293.66, gain: 0.055 }, // D4 fifth
+                { freq: 392.0, gain: 0.045 },  // G4 octave
+                { freq: 440.0, gain: 0.032 },  // A4 peaceful 9th
+                { freq: 493.88, gain: 0.028 }, // B4 major 3rd glow
+            ];
+            padVoices.forEach(({ freq, gain }) => {
                 const osc = ctx.createOscillator();
-                osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
-                osc.frequency.setValueAtTime(f, ctx.currentTime);
-                osc.detune.setValueAtTime((idx - 1.5) * 4.5, ctx.currentTime);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
 
                 const voiceGain = ctx.createGain();
-                voiceGain.gain.setValueAtTime(idx === 0 ? 0.16 : 0.075, ctx.currentTime);
-
-                const lfo = ctx.createOscillator();
-                lfo.frequency.setValueAtTime(0.08 + idx * 0.035, ctx.currentTime);
-                const lfoGain = ctx.createGain();
-                lfoGain.gain.setValueAtTime(0.025, ctx.currentTime);
-                lfo.connect(lfoGain);
-                lfoGain.connect(voiceGain.gain);
+                voiceGain.gain.setValueAtTime(gain, ctx.currentTime);
 
                 osc.connect(voiceGain);
                 voiceGain.connect(lowPass);
                 osc.start();
-                lfo.start();
-                nodes.push(osc, lfo);
+                nodes.push(osc);
             });
 
+            scheduleNextChime();
             isInitialized = true;
             return true;
         } catch {
@@ -142,6 +207,7 @@ export function createValleyAudioStore() {
             if (!ctx) return;
             if (ctx.state === 'running' && !explicitlyMuted) {
                 syncGainState();
+                playSoftChime(783.99, 0.04, 4.2);
             } else {
                 attachAutoUnlock();
             }
@@ -155,7 +221,12 @@ export function createValleyAudioStore() {
             isMuted = explicitlyMuted;
             if (!ctx || !masterGain) return isMuted;
             if (!explicitlyMuted && ctx.state === 'suspended') {
-                ctx.resume().then(syncGainState).catch(() => {});
+                ctx.resume()
+                    .then(() => {
+                        syncGainState();
+                        playSoftChime(880.0, 0.038, 3.8);
+                    })
+                    .catch(() => {});
             } else {
                 syncGainState();
             }
@@ -164,9 +235,9 @@ export function createValleyAudioStore() {
         setHoverMuffle(active) {
             isMuffled = Boolean(active);
             if (!ctx || !lowPass) return;
-            const targetFreq = isMuffled ? 240 : 2200;
+            const targetFreq = isMuffled ? 420 : 1250;
             lowPass.frequency.cancelScheduledValues(ctx.currentTime);
-            lowPass.frequency.setTargetAtTime(targetFreq, ctx.currentTime, 0.22);
+            lowPass.frequency.setTargetAtTime(targetFreq, ctx.currentTime, 0.3);
         },
         playWarpSweep() {
             if (explicitlyMuted) return;
@@ -176,30 +247,21 @@ export function createValleyAudioStore() {
                 ctx.resume().catch(() => {});
             }
             const now = ctx.currentTime;
-            // Sub-bass gravitational dive sweep + lowpass vortex pull
+            // Gentle crystalline shimmer swell during the black-hole glide (zero bass thump)
             lowPass.frequency.cancelScheduledValues(now);
-            lowPass.frequency.setTargetAtTime(4200, now, 0.2);
-            lowPass.frequency.setTargetAtTime(220, now + 0.85, 0.3);
-            lowPass.frequency.setTargetAtTime(2200, now + 1.5, 0.35);
+            lowPass.frequency.setTargetAtTime(1850, now, 0.28);
+            lowPass.frequency.setTargetAtTime(480, now + 0.9, 0.35);
+            lowPass.frequency.setTargetAtTime(1250, now + 1.5, 0.45);
 
-            try {
-                const sub = ctx.createOscillator();
-                const subGain = ctx.createGain();
-                sub.type = 'sine';
-                sub.frequency.setValueAtTime(125, now);
-                sub.frequency.exponentialRampToValueAtTime(34, now + 1.15);
-                subGain.gain.setValueAtTime(0.001, now);
-                subGain.gain.linearRampToValueAtTime(0.22, now + 0.25);
-                subGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.35);
-                sub.connect(subGain);
-                subGain.connect(masterGain);
-                sub.start(now);
-                sub.stop(now + 1.4);
-            } catch {
-                // Ignore if context cannot schedule transient sub
-            }
+            [587.33, 880.0, 1174.66].forEach((freq, i) => {
+                setTimeout(() => {
+                    playSoftChime(freq, 0.045, 3.2);
+                }, i * 160);
+            });
         },
         dispose() {
+            clearTimeout(chimeTimer);
+            chimeTimer = null;
             detachAutoUnlock();
             nodes.forEach((n) => {
                 try {
@@ -216,6 +278,7 @@ export function createValleyAudioStore() {
             }
             masterGain = null;
             lowPass = null;
+            delaySend = null;
             isInitialized = false;
         },
     };

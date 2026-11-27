@@ -12,8 +12,12 @@ import {
 } from '../utils/projectSphere';
 
 const HEADLINE_WORDS = ['I', 'Build', 'Systems', 'That', 'Scale'];
-const MIN_SPLASH_MS = 480;
+const INTRO_FILM_URL =
+    'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260922_195107_ed3f055a-3a13-4a71-b743-e10310454246.mp4';
+const MIN_SPLASH_MS = 1050;
 const SPLASH_BACKSTOP_MS = 8500;
+const INTRO_FILM_BACKSTOP_MS = 14000;
+const AUTOPLAY_STALL_MS = 2600;
 const IDLE_SCROLL_SNAP_LIMIT_PX = 20;
 
 function preloadImage(src) {
@@ -43,6 +47,9 @@ const Projects = () => {
     const washRefs = useRef([]);
     const splashRef = useRef(null);
     const splashBarRef = useRef(null);
+    const introRef = useRef(null);
+    const filmRef = useRef(null);
+    const revealIntroRef = useRef(null);
     const litOverlayRef = useRef(null);
     const plateRef = useRef(null);
     const dotRef = useRef(null);
@@ -51,6 +58,10 @@ const Projects = () => {
 
     const [imagesReady, setImagesReady] = useState(false);
     const [splashMounted, setSplashMounted] = useState(() => {
+        if (typeof window === 'undefined') return false;
+        return !window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    });
+    const [introMounted, setIntroMounted] = useState(() => {
         if (typeof window === 'undefined') return false;
         return !window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
     });
@@ -150,7 +161,7 @@ const Projects = () => {
         if (prefersReduced) {
             body.classList.add('revealed');
         } else {
-            body.classList.add('locked', 'projects-splash');
+            body.classList.add('locked', 'projects-splash', 'projects-intro');
             html.style.overflow = 'hidden';
         }
 
@@ -187,7 +198,8 @@ const Projects = () => {
                 'deep',
                 'gridview',
                 'lit',
-                'projects-splash'
+                'projects-splash',
+                'projects-intro'
             );
             body.style.removeProperty('--persp');
             body.style.removeProperty('--cw');
@@ -195,14 +207,14 @@ const Projects = () => {
         };
     }, [applySphereLayout]);
 
-    // Preload & async-decode 21 project images + avatar once with splash progress bar
+    // Preload 21 project images + avatar with splash bar, then play #intro film at 2x -> veil reveal -> sphere
     useEffect(() => {
         let cancelled = false;
         const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
         const birthTime = performance.now();
 
         let doneCount = 0;
-        const total = PROJECTS_SPHERE_ITEMS.length + 1;
+        const total = PROJECTS_SPHERE_ITEMS.length + 2; // 21 cards + avatar + intro film ready
         const updateBar = () => {
             doneCount += 1;
             if (splashBarRef.current) {
@@ -210,59 +222,239 @@ const Projects = () => {
             }
         };
 
-        let finishTimeout = null;
+        let splashFinishTimer = null;
         let removeSplashTimer = null;
-        let finished = false;
+        let revealScheduleTimer = null;
+        let veilDoneTimer = null;
+        let removeIntroTimer = null;
+        let filmBackstopTimer = null;
+        let autoplayStallTimer = null;
+        let splashClosed = false;
+        let introRevealed = false;
+        let unlockBound = false;
 
-        const revealArchive = () => {
-            if (finished || cancelled) return;
-            finished = true;
-            setImagesReady(true);
-            if (splashBarRef.current) splashBarRef.current.style.transform = 'scaleX(1)';
+        const video = filmRef.current;
+
+        const unbindUnlockGestures = () => {
+            if (!unlockBound) return;
+            unlockBound = false;
+            window.removeEventListener('pointerdown', retryVideoPlay);
+            window.removeEventListener('keydown', retryVideoPlay);
+            window.removeEventListener('touchstart', retryVideoPlay);
+        };
+
+        const revealFromIntro = () => {
+            if (introRevealed || cancelled) return;
+            introRevealed = true;
+            clearTimeout(revealScheduleTimer);
+            clearTimeout(filmBackstopTimer);
+            clearTimeout(autoplayStallTimer);
+            unbindUnlockGestures();
 
             const body = document.body;
             const html = document.documentElement;
-            body.classList.remove('locked', 'projects-splash');
+            if (introRef.current) {
+                introRef.current.classList.add('closing');
+            }
+            body.classList.remove('locked');
             html.style.overflow = '';
 
+            // Measure sphere twice inside the black veil before revealing
             applySphereLayout(true);
             requestAnimationFrame(() => {
+                if (!cancelled) applySphereLayout(true);
+            });
+
+            veilDoneTimer = setTimeout(() => {
                 if (cancelled) return;
                 applySphereLayout(true);
+                body.classList.remove('projects-splash', 'projects-intro');
                 body.classList.add('revealed');
-                if (splashRef.current) {
-                    splashRef.current.classList.add('out');
+                if (introRef.current) {
+                    introRef.current.classList.add('gone');
                 }
-                removeSplashTimer = setTimeout(() => {
+                removeIntroTimer = setTimeout(() => {
                     if (!cancelled) {
-                        setSplashMounted(false);
+                        setIntroMounted(false);
                         applySphereLayout(true);
                     }
                 }, 700);
-            });
+            }, 1000);
         };
 
-        const backstopTimer = setTimeout(revealArchive, SPLASH_BACKSTOP_MS);
+        revealIntroRef.current = revealFromIntro;
+
+        function retryVideoPlay() {
+            if (!video || introRevealed || cancelled) return;
+            video.muted = true;
+            video.defaultMuted = true;
+            video.playbackRate = 2;
+            video.play().catch(() => {});
+        }
+
+        const bindUnlockGestures = () => {
+            if (unlockBound) return;
+            unlockBound = true;
+            window.addEventListener('pointerdown', retryVideoPlay, { passive: true, once: true });
+            window.addEventListener('keydown', retryVideoPlay, { passive: true, once: true });
+            window.addEventListener('touchstart', retryVideoPlay, { passive: true, once: true });
+        };
+
+        const scheduleRevealFromVideo = () => {
+            if (!video || introRevealed || cancelled) return;
+            if (Number.isFinite(video.duration) && video.duration > 0) {
+                const remainingMs = ((video.duration - video.currentTime - 0.45) / 2) * 1000;
+                const delay = Math.max(300, remainingMs);
+                clearTimeout(revealScheduleTimer);
+                revealScheduleTimer = setTimeout(revealFromIntro, delay);
+            }
+        };
+
+        const onVideoPlay = () => {
+            if (video) video.playbackRate = 2;
+        };
+
+        const onVideoPlaying = () => {
+            clearTimeout(autoplayStallTimer);
+            unbindUnlockGestures();
+            if (video) video.playbackRate = 2;
+            scheduleRevealFromVideo();
+        };
+
+        const onVideoEnded = () => {
+            revealFromIntro();
+        };
+
+        const onVideoError = () => {
+            if (introRef.current) {
+                introRef.current.classList.add('novideo');
+            }
+            if (splashClosed) {
+                clearTimeout(revealScheduleTimer);
+                revealScheduleTimer = setTimeout(revealFromIntro, 1300);
+            }
+        };
+
+        if (video) {
+            video.addEventListener('play', onVideoPlay);
+            video.addEventListener('playing', onVideoPlaying);
+            video.addEventListener('ended', onVideoEnded);
+            video.addEventListener('error', onVideoError);
+        }
+
+        const startIntroFilm = () => {
+            if (splashClosed || cancelled) return;
+            splashClosed = true;
+            setImagesReady(true);
+            if (splashBarRef.current) splashBarRef.current.style.transform = 'scaleX(1)';
+
+            document.body.classList.remove('projects-splash');
+            if (splashRef.current) {
+                splashRef.current.classList.add('out');
+            }
+            removeSplashTimer = setTimeout(() => {
+                if (!cancelled) setSplashMounted(false);
+            }, 700);
+
+            if (prefersReduced || !video) {
+                revealFromIntro();
+                return;
+            }
+
+            if (introRef.current?.classList.contains('novideo') || video.error) {
+                introRef.current?.classList.add('novideo');
+                revealScheduleTimer = setTimeout(revealFromIntro, 1300);
+                return;
+            }
+
+            video.muted = true;
+            video.defaultMuted = true;
+            video.playsInline = true;
+            video.setAttribute('webkit-playsinline', 'true');
+            if (video.currentTime > 0.05) {
+                try {
+                    video.currentTime = 0;
+                } catch {
+                    // Ignore seek errors before metadata is ready
+                }
+            }
+            video.playbackRate = 2;
+
+            filmBackstopTimer = setTimeout(revealFromIntro, INTRO_FILM_BACKSTOP_MS);
+            autoplayStallTimer = setTimeout(() => {
+                if (!cancelled && !introRevealed && video.paused) {
+                    revealFromIntro();
+                }
+            }, AUTOPLAY_STALL_MS);
+
+            const playPromise = video.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(() => {
+                    bindUnlockGestures();
+                });
+            }
+            bindUnlockGestures();
+        };
+
+        const backstopTimer = setTimeout(startIntroFilm, SPLASH_BACKSTOP_MS);
+
+        const waitForFilmReady = new Promise((resolve) => {
+            let settled = false;
+            const settle = () => {
+                if (settled) return;
+                settled = true;
+                updateBar();
+                resolve();
+            };
+            if (!video || prefersReduced || video.readyState >= 2) {
+                settle();
+                return;
+            }
+            const onReady = () => {
+                video.removeEventListener('canplaythrough', onReady);
+                video.removeEventListener('loadeddata', onReady);
+                video.removeEventListener('error', onReady);
+                settle();
+            };
+            video.addEventListener('canplaythrough', onReady, { once: true });
+            video.addEventListener('loadeddata', onReady, { once: true });
+            video.addEventListener('error', onReady, { once: true });
+            setTimeout(onReady, 2500);
+        });
 
         const preloadAndTrack = (src) => preloadImage(src).then(updateBar);
 
         Promise.all([
             preloadAndTrack(portraitImg),
             ...PROJECTS_SPHERE_ITEMS.map((item) => preloadAndTrack(item.src)),
+            waitForFilmReady,
         ]).then(() => {
             if (cancelled) return;
             clearTimeout(backstopTimer);
             setImagesReady(true);
             const elapsed = performance.now() - birthTime;
             const wait = prefersReduced ? 0 : Math.max(0, MIN_SPLASH_MS - elapsed);
-            finishTimeout = setTimeout(revealArchive, wait);
+            splashFinishTimer = setTimeout(startIntroFilm, wait);
         });
 
         return () => {
             cancelled = true;
+            revealIntroRef.current = null;
             clearTimeout(backstopTimer);
-            if (finishTimeout) clearTimeout(finishTimeout);
-            if (removeSplashTimer) clearTimeout(removeSplashTimer);
+            clearTimeout(splashFinishTimer);
+            clearTimeout(removeSplashTimer);
+            clearTimeout(revealScheduleTimer);
+            clearTimeout(veilDoneTimer);
+            clearTimeout(removeIntroTimer);
+            clearTimeout(filmBackstopTimer);
+            clearTimeout(autoplayStallTimer);
+            unbindUnlockGestures();
+            if (video) {
+                video.removeEventListener('play', onVideoPlay);
+                video.removeEventListener('playing', onVideoPlaying);
+                video.removeEventListener('ended', onVideoEnded);
+                video.removeEventListener('error', onVideoError);
+            }
         };
     }, [applySphereLayout]);
 
@@ -1016,6 +1208,32 @@ const Projects = () => {
                     </div>
                 )}
             </div>
+
+            {/* Intro Film Layer (#projects-intro) */}
+            {introMounted && (
+                <div ref={introRef} id="projects-intro">
+                    <video
+                        ref={filmRef}
+                        id="film"
+                        src={INTRO_FILM_URL}
+                        muted
+                        playsInline
+                        autoPlay
+                        preload="auto"
+                        disablePictureInPicture
+                    />
+                    <div className="fallback" aria-hidden="true" />
+                    <div className="veil" aria-hidden="true" />
+                    <button
+                        type="button"
+                        id="skip"
+                        className="skip"
+                        onClick={() => revealIntroRef.current?.()}
+                    >
+                        Skip
+                    </button>
+                </div>
+            )}
 
             {/* Minimal Preload Splash */}
             {splashMounted && (
