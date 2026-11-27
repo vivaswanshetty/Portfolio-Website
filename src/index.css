@@ -4210,6 +4210,7 @@ input:focus-visible {
 html.projects-html {
   background: #000 !important;
   scrollbar-gutter: stable;
+  scroll-behavior: auto !important;
 }
 
 body.projects-archive {
@@ -4227,7 +4228,7 @@ body.projects-archive {
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
   --tap: 44px;
-  --serif: 'Playfair Display', 'Times New Roman', serif;
+  --serif: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
 
   background-color: #000 !important;
@@ -4265,12 +4266,19 @@ body.projects-archive.lit .navbar-main {
   background: #000;
   color: var(--ink);
   font-family: var(--sans);
-  font-weight: 300;
+  font-weight: 400;
   -webkit-tap-highlight-color: transparent;
 }
 
+.projects-sphere-shell h1,
+.projects-sphere-shell h2,
+.projects-sphere-shell p {
+  font-family: inherit;
+  margin: 0;
+}
+
 #scrolltrack {
-  height: 116vh;
+  height: 136vh;
   pointer-events: none;
 }
 
@@ -4282,7 +4290,7 @@ body.projects-archive.lit .navbar-main {
   perspective-origin: 50% 50%;
   overflow: hidden;
   touch-action: none;
-  transition: opacity 0.6s ease, filter 0.6s ease;
+  transition: opacity 0.5s ease, transform 0.5s var(--ease);
 }
 
 @media (pointer: coarse) {
@@ -4293,7 +4301,7 @@ body.projects-archive.lit .navbar-main {
 
 body.projects-archive.gridview #stage {
   opacity: 0;
-  filter: blur(14px);
+  transform: scale(0.985);
   pointer-events: none;
 }
 
@@ -4326,11 +4334,12 @@ body.projects-archive.gridview #stage {
   width: var(--hw);
   margin-left: calc(var(--hw) / -2);
   text-align: center;
+  text-wrap: balance;
   font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(25px, 3.7vw, 55px);
-  line-height: 1.06;
-  letter-spacing: -0.005em;
+  font-weight: 700;
+  font-size: clamp(26px, 3.6vw, 54px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
   color: #fff;
   text-shadow: 0 2px 34px rgba(0, 0, 0, 0.55);
   pointer-events: none;
@@ -4351,18 +4360,15 @@ body.projects-archive.gridview #stage {
 #headline .inner .headline-word {
   display: inline-block;
   opacity: 0;
-  transform: translateY(0.42em);
-  filter: blur(7px);
+  transform: translateY(0.38em);
 }
 
 body.projects-archive.revealed #headline .inner .headline-word {
   opacity: 1;
   transform: none;
-  filter: blur(0);
   transition:
-    opacity 1.05s var(--ease) calc(0.18s + var(--i) * 0.085s),
-    transform 1.15s var(--ease) calc(0.18s + var(--i) * 0.085s),
-    filter 1.05s var(--ease) calc(0.18s + var(--i) * 0.085s);
+    opacity 0.9s var(--ease) calc(0.14s + var(--i) * 0.075s),
+    transform 1s var(--ease) calc(0.14s + var(--i) * 0.075s);
 }
 
 .sphere-card {
@@ -4374,6 +4380,8 @@ body.projects-archive.revealed #headline .inner .headline-word {
   margin-left: calc(var(--cw) / -2);
   margin-top: calc(var(--cw) / -3);
   cursor: pointer;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   will-change: transform, opacity;
   touch-action: manipulation;
 }
@@ -4402,19 +4410,29 @@ body.projects-archive.revealed #headline .inner .headline-word {
   transform: scale(1.045);
 }
 
+.sphere-card figure .sphere-wash {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  will-change: opacity;
+}
+
 .sphere-card figure::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, var(--d, 0));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   border-radius: 3px;
   pointer-events: none;
+  z-index: 3;
   transition: box-shadow 0.35s ease;
 }
 
 .sphere-card:hover figure::after {
-  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.6);
 }
 
 .sphere-card img {
@@ -4495,9 +4513,9 @@ body.projects-archive.revealed .projects-sphere-shell .chrome {
 
 .projects-sphere-shell .bio .who b {
   font-family: var(--serif);
-  font-weight: 400;
-  font-size: 19px;
-  letter-spacing: 0.01em;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.015em;
   color: var(--ink);
 }
 
@@ -4579,13 +4597,14 @@ body.projects-archive.lit .projects-sphere-shell .colophon {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: 4px;
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
+  opacity: 0.72;
+  transform: none;
+  pointer-events: auto;
   cursor: pointer;
-  transition: opacity 0.45s ease, transform 0.45s var(--ease);
+  transition: opacity 0.35s ease, transform 0.35s var(--ease);
 }
 
+.gridbtn:hover,
 body.projects-archive.deep .gridbtn,
 body.projects-archive.gridview .gridbtn {
   opacity: 1;
@@ -4668,11 +4687,12 @@ body.projects-archive.lit .projects-sphere-shell .cue {
   inset: 0;
   z-index: 20;
   overflow-y: auto;
+  overscroll-behavior: contain;
   background: #000;
   opacity: 0;
   pointer-events: none;
   padding: calc(var(--nav-height) + var(--nav-top-offset) + 22px + var(--safe-top)) calc(var(--pad) + var(--safe-right)) calc(var(--pad) * 4 + var(--safe-bottom)) calc(var(--pad) + var(--safe-left));
-  transition: opacity 0.6s ease;
+  transition: opacity 0.5s ease;
   box-sizing: border-box;
 }
 
@@ -4796,24 +4816,27 @@ body.projects-archive.gridview #projects-grid {
   right: 0;
   bottom: 0;
   font-family: var(--serif);
-  font-size: 15px;
+  font-weight: 600;
+  font-size: 14.5px;
+  letter-spacing: -0.01em;
   color: #f4f2ef;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.86), transparent);
-  padding: 26px 14px 12px;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.45) 62%, transparent 100%);
+  padding: 28px 14px 12px;
+  opacity: 0.9;
+  transform: none;
+  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
   pointer-events: none;
 }
 
 #projects-grid figcaption small {
   display: block;
   font-family: var(--sans);
+  font-weight: 500;
   font-size: 10.5px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(244, 242, 239, 0.65);
-  margin-top: 3px;
+  color: rgba(244, 242, 239, 0.72);
+  margin-top: 4px;
 }
 
 #projects-grid figure:hover figcaption {
@@ -4828,6 +4851,7 @@ body.projects-archive.gridview #projects-grid {
   z-index: 1100;
   display: grid;
   place-items: center;
+  overscroll-behavior: contain;
   padding: clamp(56px, 8vh, 84px) var(--pad);
   opacity: 0;
   pointer-events: none;
@@ -4913,10 +4937,10 @@ body.projects-archive.lit #lit {
 
 #lit h2 {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: 700;
   font-size: clamp(22px, 2.15vw, 32px);
   line-height: 1.08;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   margin: 0 0 6px;
   color: var(--ink);
 }
@@ -5003,9 +5027,9 @@ body.projects-archive.lit #lit {
 
 #projects-splash .mark {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: 700;
   font-size: clamp(28px, 4.4vw, 52px);
-  letter-spacing: 0.005em;
+  letter-spacing: -0.025em;
   color: var(--ink);
   opacity: 0;
   animation: projRiseIn 0.85s ease 0.08s forwards;
@@ -5055,36 +5079,36 @@ body.projects-archive.lit #lit {
   }
 }
 
-/* Difference Cursor #dot on fine pointers */
+/* Lightweight Glass Reticle Cursor #projects-dot on fine pointers */
 #projects-dot {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1300;
-  width: 19px;
-  height: 19px;
-  margin: -9.5px 0 0 -9.5px;
+  width: 15px;
+  height: 15px;
+  margin: -7.5px 0 0 -7.5px;
   border-radius: 50%;
-  background: rgba(214, 212, 209, 0.9);
-  mix-blend-mode: difference;
-  border: 1px solid transparent;
+  background: rgba(244, 242, 239, 0.88);
+  border: 1px solid rgba(10, 10, 14, 0.35);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
   pointer-events: none;
   transition:
-    width 0.35s ease,
-    height 0.35s ease,
-    margin 0.35s ease,
-    background 0.35s ease,
-    border-color 0.35s ease,
+    width 0.3s ease,
+    height 0.3s ease,
+    margin 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
     opacity 0.25s ease;
   will-change: transform;
 }
 
 #projects-dot.wide {
-  width: 52px;
-  height: 52px;
-  margin: -26px 0 0 -26px;
-  background: rgba(244, 242, 239, 0.14);
-  border-color: rgba(244, 242, 239, 0.75);
+  width: 48px;
+  height: 48px;
+  margin: -24px 0 0 -24px;
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.85);
 }
 
 @media (hover: none), (pointer: coarse) {

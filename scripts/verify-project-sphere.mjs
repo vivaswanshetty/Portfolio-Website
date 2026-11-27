@@ -75,8 +75,8 @@ const litFocused = computeCardDepthStyle({
 });
 assert.equal(litFocused.opacity, 0, 'focused card fades out when replaced by lightbox plate');
 
-// 4. Scroll dolly zoom clamp along 16vh track
-const midScroll = computeScrollDolly(72, 900, 400);
+// 4. Scroll dolly zoom clamp along 36vh track
+const midScroll = computeScrollDolly(162, 900, 400);
 assert.ok(Math.abs(midScroll.p - 0.5) < 0.01);
 const overScroll = computeScrollDolly(500, 900, 400);
 assert.equal(overScroll.p, 1);

@@ -11,53 +11,25 @@ import {
 } from '../utils/projectSphere';
 
 const HEADLINE_WORDS = ['I', 'Build', 'Systems', 'That', 'Scale'];
-const MIN_SPLASH_MS = 1050;
+const MIN_SPLASH_MS = 480;
 const SPLASH_BACKSTOP_MS = 8500;
 const IDLE_SCROLL_SNAP_LIMIT_PX = 20;
 
-function decodeAndDownscale(src, maxWidth) {
+function preloadImage(src) {
     return new Promise((resolve) => {
         const img = new Image();
-        img.crossOrigin = 'anonymous';
         img.decoding = 'async';
+        const done = () => resolve(src);
         img.onload = () => {
-            try {
-                const natW = img.naturalWidth || 0;
-                const natH = img.naturalHeight || 0;
-                if (!natW || !natH || natW <= maxWidth) {
-                    resolve({ url: src, blobUrl: null });
-                    return;
-                }
-                const ratio = maxWidth / natW;
-                const targetW = Math.round(maxWidth);
-                const targetH = Math.max(1, Math.round(natH * ratio));
-                const canvas = document.createElement('canvas');
-                canvas.width = targetW;
-                canvas.height = targetH;
-                const ctx = canvas.getContext('2d');
-                if (!ctx) {
-                    resolve({ url: src, blobUrl: null });
-                    return;
-                }
-                ctx.drawImage(img, 0, 0, targetW, targetH);
-                canvas.toBlob(
-                    (blob) => {
-                        if (!blob) {
-                            resolve({ url: src, blobUrl: null });
-                            return;
-                        }
-                        const blobUrl = URL.createObjectURL(blob);
-                        resolve({ url: blobUrl, blobUrl });
-                    },
-                    'image/webp',
-                    0.88
-                );
-            } catch {
-                resolve({ url: src, blobUrl: null });
+            if (typeof img.decode === 'function') {
+                img.decode().then(done).catch(done);
+            } else {
+                done();
             }
         };
-        img.onerror = () => resolve({ url: src, blobUrl: null });
+        img.onerror = done;
         img.src = src;
+        if (img.complete) done();
     });
 }
 
@@ -66,6 +38,7 @@ const Projects = () => {
     const worldRef = useRef(null);
     const headlineRef = useRef(null);
     const cardRefs = useRef([]);
+    const washRefs = useRef([]);
     const gridFigRefs = useRef({});
     const splashRef = useRef(null);
     const splashBarRef = useRef(null);
@@ -75,15 +48,7 @@ const Projects = () => {
 
     const spherePoints = useMemo(() => buildSpherePoints(PROJECTS_SPHERE_ITEMS.length), []);
 
-    const [thumbMap, setThumbMap] = useState(() => {
-        const initial = {};
-        PROJECTS_SPHERE_ITEMS.forEach((item) => {
-            initial[item.id] = item.src;
-        });
-        return initial;
-    });
-    const [avatarUrl, setAvatarUrl] = useState(portraitImg);
-    const [loadedIds, setLoadedIds] = useState({});
+    const [imagesReady, setImagesReady] = useState(false);
     const [splashMounted, setSplashMounted] = useState(() => {
         if (typeof window === 'undefined') return false;
         return !window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
@@ -201,7 +166,6 @@ const Projects = () => {
         window.addEventListener('resize', onResize, { passive: true });
         window.addEventListener('orientationchange', onOrientation);
         window.visualViewport?.addEventListener('resize', onVvResize);
-        window.visualViewport?.addEventListener('scroll', onVvResize);
 
         const closeTimerRef = camRef.current;
 
@@ -212,7 +176,6 @@ const Projects = () => {
             window.removeEventListener('resize', onResize);
             window.removeEventListener('orientationchange', onOrientation);
             window.visualViewport?.removeEventListener('resize', onVvResize);
-            window.visualViewport?.removeEventListener('scroll', onVvResize);
 
             html.classList.remove('projects-html');
             html.style.overflow = '';
@@ -231,13 +194,11 @@ const Projects = () => {
         };
     }, [applySphereLayout]);
 
-    // Decode & Canvas-downscale 21 project images + avatar with splash progress bar
+    // Preload & async-decode 21 project images + avatar once with splash progress bar
     useEffect(() => {
         let cancelled = false;
-        const createdBlobs = [];
         const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
         const birthTime = performance.now();
-        const { cardDecodeMax } = computeSphereLayout(window.innerWidth, window.innerHeight);
 
         let doneCount = 0;
         const total = PROJECTS_SPHERE_ITEMS.length + 1;
@@ -255,6 +216,7 @@ const Projects = () => {
         const revealArchive = () => {
             if (finished || cancelled) return;
             finished = true;
+            setImagesReady(true);
             if (splashBarRef.current) splashBarRef.current.style.transform = 'scaleX(1)';
 
             const body = document.body;
@@ -281,31 +243,15 @@ const Projects = () => {
 
         const backstopTimer = setTimeout(revealArchive, SPLASH_BACKSTOP_MS);
 
-        const avatarTask = downscaleAndTrack(portraitImg, 160, (res) => {
-            if (res.blobUrl) createdBlobs.push(res.blobUrl);
-            if (!cancelled) setAvatarUrl(res.url);
-        });
+        const preloadAndTrack = (src) => preloadImage(src).then(updateBar);
 
-        const itemTasks = PROJECTS_SPHERE_ITEMS.map((item) =>
-            downscaleAndTrack(item.src, cardDecodeMax, (res) => {
-                if (res.blobUrl) createdBlobs.push(res.blobUrl);
-                if (!cancelled) {
-                    setThumbMap((prev) => ({ ...prev, [item.id]: res.url }));
-                    setLoadedIds((prev) => ({ ...prev, [item.id]: true }));
-                }
-            })
-        );
-
-        function downscaleAndTrack(src, cap, onDone) {
-            return decodeAndDownscale(src, cap).then((res) => {
-                updateBar();
-                onDone(res);
-            });
-        }
-
-        Promise.all([avatarTask, ...itemTasks]).then(() => {
+        Promise.all([
+            preloadAndTrack(portraitImg),
+            ...PROJECTS_SPHERE_ITEMS.map((item) => preloadAndTrack(item.src)),
+        ]).then(() => {
             if (cancelled) return;
             clearTimeout(backstopTimer);
+            setImagesReady(true);
             const elapsed = performance.now() - birthTime;
             const wait = prefersReduced ? 0 : Math.max(0, MIN_SPLASH_MS - elapsed);
             finishTimeout = setTimeout(revealArchive, wait);
@@ -316,7 +262,6 @@ const Projects = () => {
             clearTimeout(backstopTimer);
             if (finishTimeout) clearTimeout(finishTimeout);
             if (removeSplashTimer) clearTimeout(removeSplashTimer);
-            createdBlobs.forEach((b) => URL.revokeObjectURL(b));
         };
     }, [applySphereLayout]);
 
@@ -331,8 +276,8 @@ const Projects = () => {
             const rawScroll = window.scrollY;
 
             const { p, maxScroll, camZTarget } = computeScrollDolly(rawScroll, vh, R);
-            if (rawScroll > maxScroll && !cam.gridOpen && !cam.hasLit) {
-                window.scrollTo(0, maxScroll);
+            if (rawScroll > maxScroll + 1 && !cam.gridOpen && !cam.hasLit) {
+                window.scrollTo({ top: maxScroll, behavior: 'instant' });
             }
 
             // Toggle .deep class smoothly as visitor zooms into the archive
@@ -392,7 +337,10 @@ const Projects = () => {
                         cardEl.style.pointerEvents = opacity < 0.08 ? 'none' : 'auto';
                     }
                     if (!prev || prev.dim !== dim) {
-                        cardEl.style.setProperty('--d', dim);
+                        const washEl = washRefs.current[i];
+                        if (washEl) {
+                            washEl.style.opacity = dim;
+                        }
                     }
                     cam.lastCardStyles[i] = { dim, opacity };
                 }
@@ -409,60 +357,47 @@ const Projects = () => {
     }, [spherePoints]);
 
     // Open Lightbox with FLIP transition from the clicked card or grid figure
-    const openLightbox = useCallback(
-        (idx, sourceEl, sourceType = 'sphere') => {
-            const item = PROJECTS_SPHERE_ITEMS[idx];
-            if (!item) return;
+    const openLightbox = useCallback((idx, sourceEl, sourceType = 'sphere') => {
+        const item = PROJECTS_SPHERE_ITEMS[idx];
+        if (!item) return;
 
-            const cam = camRef.current;
-            const token = cam.litToken + 1;
-            cam.litToken = token;
-            cam.focused = idx;
-            cam.hasLit = true;
-            cam.litSourceType = sourceType;
+        const cam = camRef.current;
+        const token = cam.litToken + 1;
+        cam.litToken = token;
+        cam.focused = idx;
+        cam.hasLit = true;
+        cam.litSourceType = sourceType;
 
-            document.body.classList.add('lit');
-            document.documentElement.style.overflow = 'hidden';
+        document.body.classList.add('lit');
+        document.documentElement.style.overflow = 'hidden';
 
-            const rect = sourceEl?.getBoundingClientRect();
-            setLitState({ idx, item, previewSrc: thumbMap[item.id] || item.src });
+        const rect = sourceEl?.getBoundingClientRect();
+        setLitState({ idx, item, previewSrc: item.src });
 
-            // Upgrade silently to full resolution original asset after onload
-            const fullImg = new Image();
-            fullImg.onload = () => {
-                if (camRef.current.litToken !== token) return;
-                if (litImgRef.current) {
-                    litImgRef.current.src = item.src;
-                }
-            };
-            fullImg.src = item.src;
+        // Execute FLIP from source rect -> centered plate
+        requestAnimationFrame(() => {
+            const plate = plateRef.current;
+            if (!plate || !rect || rect.width === 0) return;
 
-            // Execute FLIP from source rect -> centered plate
-            requestAnimationFrame(() => {
-                const plate = plateRef.current;
-                if (!plate || !rect || rect.width === 0) return;
+            const destRect = plate.getBoundingClientRect();
+            if (destRect.width === 0) return;
 
-                const destRect = plate.getBoundingClientRect();
-                if (destRect.width === 0) return;
+            const dx = rect.left + rect.width / 2 - (destRect.left + destRect.width / 2);
+            const dy = rect.top + rect.height / 2 - (destRect.top + destRect.height / 2);
+            const s = Math.max(0.04, rect.width / destRect.width);
 
-                const dx = rect.left + rect.width / 2 - (destRect.left + destRect.width / 2);
-                const dy = rect.top + rect.height / 2 - (destRect.top + destRect.height / 2);
-                const s = Math.max(0.04, rect.width / destRect.width);
+            plate.style.transition = 'none';
+            plate.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${s.toFixed(4)})`;
+            plate.style.opacity = '0';
 
-                plate.style.transition = 'none';
-                plate.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0) scale(${s.toFixed(4)})`;
-                plate.style.opacity = '0';
+            // Force style reflow before releasing to CSS transition
+            void plate.offsetWidth;
 
-                // Force style reflow before releasing to CSS transition
-                void plate.offsetWidth;
-
-                plate.style.transition = '';
-                plate.style.transform = '';
-                plate.style.opacity = '';
-            });
-        },
-        [thumbMap]
-    );
+            plate.style.transition = '';
+            plate.style.transform = '';
+            plate.style.opacity = '';
+        });
+    }, []);
 
     const closeLightbox = useCallback(() => {
         const cam = camRef.current;
@@ -735,10 +670,18 @@ const Projects = () => {
                             >
                                 <figure>
                                     <img
-                                        src={thumbMap[item.id] || item.src}
+                                        src={item.src}
                                         alt={item.title}
-                                        className={loadedIds[item.id] ? 'in' : ''}
+                                        className={imagesReady ? 'in' : ''}
+                                        decoding="async"
                                         draggable={false}
+                                    />
+                                    <span
+                                        ref={(el) => {
+                                            washRefs.current[i] = el;
+                                        }}
+                                        className="sphere-wash"
+                                        aria-hidden="true"
                                     />
                                 </figure>
                             </div>
@@ -767,7 +710,7 @@ const Projects = () => {
             {/* Bottom-Left Engineer Bio */}
             <div className="bio chrome">
                 <div className="who">
-                    <img id="avatar" src={avatarUrl} alt="Vivaswan Shetty" />
+                    <img id="avatar" src={portraitImg} alt="Vivaswan Shetty" />
                     <div>
                         <b>Vivaswan Shetty</b>
                         <small>Systems Architect · BMSCE</small>
@@ -855,7 +798,7 @@ const Projects = () => {
                             onClick={() => openLightbox(idx, gridFigRefs.current[idx], 'grid')}
                         >
                             <img
-                                src={thumbMap[item.id] || item.src}
+                                src={item.src}
                                 alt={item.title}
                                 loading="lazy"
                             />

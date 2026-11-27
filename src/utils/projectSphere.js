@@ -113,7 +113,7 @@ export function computeCardDepthStyle({
  * Computes scroll progress [0..1] along the 16vh zoom track and target dolly camZ.
  */
 export function computeScrollDolly(scrollY, vh, R) {
-    const maxScroll = Math.max(1, vh * 0.16);
+    const maxScroll = Math.max(1, vh * 0.36);
     const p = Math.max(0, Math.min(1, scrollY / maxScroll));
     const camZTarget = p * Math.min(64, R * 0.12);
     return { p, maxScroll, camZTarget };
