@@ -12,98 +12,90 @@ import {
     createValleyPathPoints,
 } from './nightValleyMath';
 
-function drawPetalBlossom(ctx, cx, cy, outerR, petals, palette, variant = 0) {
+/**
+ * Draws a neutral white/gold-centered botanical blossom so vertex attribute vColor
+ * drives saturated orange, purple, magenta, cream, and meadow colors cleanly without muddy RGB multiplication.
+ */
+function drawCrispWildflower(ctx, cx, cy, outerR, petals, variant = 0) {
     ctx.save();
     ctx.translate(cx, cy);
 
-    // Soft luminous nocturnal halo safely well inside cell bounds
-    const halo = ctx.createRadialGradient(0, 0, outerR * 0.06, 0, 0, outerR * 0.94);
-    halo.addColorStop(0, palette.haloInner);
-    halo.addColorStop(0.52, palette.haloMid);
-    halo.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = halo;
-    ctx.beginPath();
-    ctx.arc(0, 0, outerR * 0.94, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Crisp layered botanical petals
     for (let i = 0; i < petals; i++) {
-        const angle = (i / petals) * Math.PI * 2 + variant * 0.22;
+        const angle = (i / petals) * Math.PI * 2 + variant * 0.25;
         ctx.save();
         ctx.rotate(angle);
 
-        const grad = ctx.createRadialGradient(0, -outerR * 0.42, 2, 0, -outerR * 0.42, outerR * 0.56);
-        grad.addColorStop(0, palette.tip);
-        grad.addColorStop(0.55, palette.mid);
-        grad.addColorStop(1, palette.base);
+        const grad = ctx.createRadialGradient(0, -outerR * 0.45, outerR * 0.04, 0, -outerR * 0.45, outerR * 0.56);
+        grad.addColorStop(0, 'rgba(255, 255, 255, 0.98)');
+        grad.addColorStop(0.68, 'rgba(245, 240, 232, 0.92)');
+        grad.addColorStop(1, 'rgba(220, 212, 200, 0.12)');
 
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.moveTo(0, -outerR * 0.08);
+        ctx.moveTo(0, -outerR * 0.06);
         ctx.bezierCurveTo(
-            outerR * (variant === 1 ? 0.2 : 0.32),
-            -outerR * 0.3,
-            outerR * (variant === 1 ? 0.16 : 0.36),
+            outerR * (variant === 1 ? 0.18 : 0.3),
+            -outerR * 0.28,
+            outerR * (variant === 1 ? 0.15 : 0.34),
             -outerR * 0.82,
             0,
             -outerR * 0.9
         );
         ctx.bezierCurveTo(
-            -outerR * (variant === 1 ? 0.16 : 0.36),
+            -outerR * (variant === 1 ? 0.15 : 0.34),
             -outerR * 0.82,
-            -outerR * (variant === 1 ? 0.2 : 0.32),
-            -outerR * 0.3,
+            -outerR * (variant === 1 ? 0.18 : 0.3),
+            -outerR * 0.28,
             0,
-            -outerR * 0.08
+            -outerR * 0.06
         );
         ctx.closePath();
         ctx.fill();
         ctx.restore();
     }
 
-    // Glowing stamen core
-    const core = ctx.createRadialGradient(0, 0, 0, 0, 0, outerR * 0.22);
-    core.addColorStop(0, '#ffffff');
-    core.addColorStop(0.45, palette.core);
-    core.addColorStop(1, 'rgba(255,255,255,0)');
+    // Soft bright glowing pollen center
+    const core = ctx.createRadialGradient(0, 0, 0, 0, 0, outerR * 0.23);
+    core.addColorStop(0, 'rgba(255, 252, 230, 1)');
+    core.addColorStop(0.55, 'rgba(255, 240, 170, 0.9)');
+    core.addColorStop(1, 'rgba(255, 255, 255, 0)');
     ctx.fillStyle = core;
     ctx.beginPath();
-    ctx.arc(0, 0, outerR * 0.22, 0, Math.PI * 2);
+    ctx.arc(0, 0, outerR * 0.23, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
 }
 
-function drawNightLeaf(ctx, cx, cy, radius) {
+function drawCrispLeaf(ctx, cx, cy, radius) {
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.rotate(-0.35);
+    ctx.rotate(-0.4);
 
-    const grad = ctx.createLinearGradient(0, -radius * 0.86, 0, radius * 0.86);
-    grad.addColorStop(0, 'rgba(148, 163, 184, 0.92)');
-    grad.addColorStop(0.55, 'rgba(71, 85, 105, 0.78)');
-    grad.addColorStop(1, 'rgba(15, 23, 42, 0.38)');
+    const grad = ctx.createLinearGradient(0, -radius * 0.84, 0, radius * 0.84);
+    grad.addColorStop(0, 'rgba(235, 248, 235, 0.94)');
+    grad.addColorStop(0.6, 'rgba(195, 220, 198, 0.82)');
+    grad.addColorStop(1, 'rgba(130, 160, 138, 0.25)');
 
     ctx.fillStyle = grad;
     ctx.beginPath();
     ctx.moveTo(0, -radius * 0.84);
-    ctx.bezierCurveTo(radius * 0.42, -radius * 0.28, radius * 0.38, radius * 0.42, 0, radius * 0.82);
-    ctx.bezierCurveTo(-radius * 0.38, radius * 0.42, -radius * 0.42, -radius * 0.28, 0, -radius * 0.84);
+    ctx.bezierCurveTo(radius * 0.38, -radius * 0.26, radius * 0.34, radius * 0.42, 0, radius * 0.82);
+    ctx.bezierCurveTo(-radius * 0.34, radius * 0.42, -radius * 0.38, -radius * 0.26, 0, -radius * 0.84);
     ctx.closePath();
     ctx.fill();
 
-    ctx.strokeStyle = 'rgba(226, 232, 240, 0.48)';
-    ctx.lineWidth = 3.5;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+    ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(0, radius * 0.74);
-    ctx.lineTo(0, -radius * 0.74);
+    ctx.moveTo(0, radius * 0.72);
+    ctx.lineTo(0, -radius * 0.72);
     ctx.stroke();
 
     ctx.restore();
 }
 
 function createBotanicalAtlasTexture() {
-    // High-res 1024x1024 atlas with generous transparent margin in each 512px cell (prevents square seam clamping)
     const size = 1024;
     const cell = 512;
     const canvas = document.createElement('canvas');
@@ -114,38 +106,14 @@ function createBotanicalAtlasTexture() {
 
     ctx.clearRect(0, 0, size, size);
 
-    // Quadrant 0: 5-petal Crimson-Porcelain Night Cosmos
-    drawPetalBlossom(ctx, cell * 0.5, cell * 0.5, 196, 5, {
-        haloInner: 'rgba(239, 68, 68, 0.24)',
-        haloMid: 'rgba(159, 18, 57, 0.08)',
-        tip: 'rgba(248, 250, 252, 0.96)',
-        mid: 'rgba(244, 63, 94, 0.88)',
-        base: 'rgba(136, 19, 55, 0.42)',
-        core: 'rgba(254, 226, 226, 0.96)',
-    }, 0);
-
-    // Quadrant 1: 6-petal Moonlit Star Lily
-    drawPetalBlossom(ctx, cell * 1.5, cell * 0.5, 200, 6, {
-        haloInner: 'rgba(244, 63, 94, 0.24)',
-        haloMid: 'rgba(190, 18, 60, 0.08)',
-        tip: 'rgba(255, 241, 242, 0.96)',
-        mid: 'rgba(239, 68, 68, 0.85)',
-        base: 'rgba(76, 5, 25, 0.35)',
-        core: 'rgba(253, 230, 138, 0.94)',
-    }, 1);
-
-    // Quadrant 2: 8-petal Ember Aster
-    drawPetalBlossom(ctx, cell * 0.5, cell * 1.5, 192, 8, {
-        haloInner: 'rgba(225, 29, 72, 0.26)',
-        haloMid: 'rgba(136, 19, 55, 0.09)',
-        tip: 'rgba(254, 215, 170, 0.95)',
-        mid: 'rgba(239, 68, 68, 0.85)',
-        base: 'rgba(69, 10, 10, 0.38)',
-        core: 'rgba(255, 255, 255, 0.98)',
-    }, 2);
-
-    // Quadrant 3: Midnight Slate Leaf
-    drawNightLeaf(ctx, cell * 1.5, cell * 1.5, 190);
+    // Quadrant 0: 5-petal Alpine Poppy / Wildflower
+    drawCrispWildflower(ctx, cell * 0.5, cell * 0.5, 196, 5, 0);
+    // Quadrant 1: 6-petal Star Bellflower / Lily
+    drawCrispWildflower(ctx, cell * 1.5, cell * 0.5, 200, 6, 1);
+    // Quadrant 2: 8-petal Meadow Daisy / Cosmos
+    drawCrispWildflower(ctx, cell * 0.5, cell * 1.5, 194, 8, 2);
+    // Quadrant 3: Organic Night Leaf
+    drawCrispLeaf(ctx, cell * 1.5, cell * 1.5, 196);
 
     const tex = new THREE.CanvasTexture(canvas);
     tex.colorSpace = THREE.SRGBColorSpace;
@@ -164,9 +132,9 @@ function createLightRayTexture() {
     if (!ctx) return null;
 
     const grad = ctx.createLinearGradient(0, 0, 0, 512);
-    grad.addColorStop(0, 'rgba(248, 250, 252, 0.0)');
-    grad.addColorStop(0.2, 'rgba(248, 250, 252, 0.14)');
-    grad.addColorStop(0.55, 'rgba(239, 68, 68, 0.08)');
+    grad.addColorStop(0, 'rgba(245, 239, 226, 0.0)');
+    grad.addColorStop(0.24, 'rgba(245, 239, 226, 0.12)');
+    grad.addColorStop(0.58, 'rgba(216, 180, 254, 0.06)');
     grad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
 
     ctx.fillStyle = grad;
@@ -222,58 +190,60 @@ void main() {
     float relZ = mod(position.z - uCameraZ + halfLoop, uLoopLen) - halfLoop;
     vec3 worldPos = vec3(position.x, position.y, uCameraZ + relZ);
 
-    // Gentle living breeze across stems + petals
-    float breeze = sin(uTime * 1.15 + aPhase + worldPos.x * 0.25) * 0.16;
+    // Gentle living meadow breeze across stems and petals
+    float breeze = sin(uTime * 1.15 + aPhase + worldPos.x * 0.25) * 0.14;
     worldPos.x += breeze * (1.0 - aIsLeaf * 0.45);
-    worldPos.y += cos(uTime * 0.9 + aPhase) * 0.07;
+    worldPos.y += cos(uTime * 0.9 + aPhase) * 0.06;
 
-    // Hover dispersal lifts flora outward into glowing floating particles
-    worldPos += aDisperseDir * (uDisperse * (4.2 + 2.8 * sin(aPhase + uTime * 0.6)));
-    worldPos.y += uDisperse * (1.1 + sin(aPhase * 2.0 + uTime) * 0.65);
+    // Hover transition (on #go hover): flowers scatter upward & outward into floating glowing bokeh orbs
+    worldPos += aDisperseDir * (uDisperse * (7.5 + 3.2 * sin(aPhase + uTime * 0.65)));
+    worldPos.y += uDisperse * (1.8 + sin(aPhase * 1.7 + uTime * 0.9) * 1.25);
 
-    // Black-hole dive spiral: swirl & pull petals into the gravitational vortex
+    // Black-hole dive spiral on #go click
     float swirlAngle = uWarp * (2.4 + aPhase * 0.25);
     float sc = cos(swirlAngle);
     float ss = sin(swirlAngle);
-    vec2 spunXY = mat2(sc, -ss, ss, sc) * (worldPos.xy - vec2(0.0, 2.2));
-    worldPos.xy = mix(worldPos.xy, spunXY * max(0.08, 1.0 - uWarp * 0.72) + vec2(0.0, 2.2), uWarp);
+    vec2 spunXY = mat2(sc, -ss, ss, sc) * (worldPos.xy - vec2(0.0, 2.0));
+    worldPos.xy = mix(worldPos.xy, spunXY * max(0.08, 1.0 - uWarp * 0.72) + vec2(0.0, 2.0), uWarp);
     worldPos.z += uWarp * 24.0;
 
     vec4 mvPosition = modelViewMatrix * vec4(worldPos, 1.0);
     float dist = max(0.5, -mvPosition.z);
 
-    // Distance growth staging: flowers bloom close-up; leaves populate deeper slopes
-    float flowerGrow = smoothstep(78.0, 14.0, dist) * (1.0 - smoothstep(4.2, 1.2, dist));
-    float leafGrow = smoothstep(95.0, 28.0, dist) * (1.0 - smoothstep(7.5, 2.2, dist));
+    // Flowers bloom from small buds into full blossoms as they approach the camera; leaves populate slopes deeper back
+    float flowerGrow = smoothstep(58.0, 12.0, dist) * (1.0 - smoothstep(3.2, 0.9, dist));
+    float leafGrow = smoothstep(78.0, 22.0, dist) * (1.0 - smoothstep(4.5, 1.4, dist));
     float stageScale = mix(flowerGrow, leafGrow, aIsLeaf);
 
     vec4 clipPos = projectionMatrix * mvPosition;
     float absW = max(0.001, clipPos.w);
     vec2 ndc = clipPos.xy / absW;
 
-    // Screen-space radial cursor repulsion + proximity luminescence
+    // Screen-space radial cursor push + close-proximity warm glow
     vec2 diff = ndc - uMouseNDC;
     diff.x *= uAspect;
     float mouseDist = length(diff);
-    float radius = 0.36;
+    float radius = 0.34;
     float pushStrength = pow(max(0.0, 1.0 - smoothstep(0.0, radius, mouseDist)), 2.0) * uMouseActive * (1.0 - uWarp);
     vec2 pushDir = mouseDist > 0.0005 ? normalize(diff) : vec2(0.0, 1.0);
     pushDir.x /= max(0.35, uAspect);
-    clipPos.xy += pushDir * (pushStrength * 0.28 * absW);
-    clipPos.y += pushStrength * 0.05 * absW;
+    clipPos.xy += pushDir * (pushStrength * 0.26 * absW);
+    clipPos.y += pushStrength * 0.045 * absW;
 
     vMouseGlow = pushStrength;
 
-    float baseSize = aScale * (aIsLeaf > 0.5 ? 24.0 : 28.0) * (0.28 + 0.95 * stageScale);
-    baseSize *= (1.0 + pushStrength * 0.42 - uDisperse * 0.25) * (1.0 + uWarp * 0.35);
+    // Delicate wildflower point scale (matches reference density without blurry huge blobs)
+    float baseSize = aScale * (aIsLeaf > 0.5 ? 11.5 : 13.5) * (0.24 + 0.85 * stageScale);
+    baseSize *= (1.0 + pushStrength * 0.52 - uDisperse * 0.15) * (1.0 + uWarp * 0.35);
 
     gl_Position = clipPos;
-    gl_PointSize = clamp((baseSize * uPixelRatio * 96.0) / dist, 1.5, 132.0);
+    gl_PointSize = clamp((baseSize * uPixelRatio * 42.0) / dist, 1.8, 56.0);
 
-    float farFade = 1.0 - smoothstep(55.0, 108.0, dist);
-    float nearFade = smoothstep(1.3, 4.4, dist);
-    float baseAlpha = mix(0.95, 0.62, aIsLeaf);
-    vAlpha = farFade * nearFade * stageScale * baseAlpha * (1.0 - smoothstep(0.68, 1.0, uWarp));
+    float farFade = 1.0 - smoothstep(48.0, 96.0, dist);
+    float nearFade = smoothstep(1.0, 3.4, dist);
+    float baseAlpha = mix(0.96, 0.72, aIsLeaf);
+    float orbBoost = mix(1.0, 0.92, uDisperse * aIsLeaf);
+    vAlpha = farFade * nearFade * mix(stageScale, 0.85, uDisperse * 0.7) * baseAlpha * orbBoost * (1.0 - smoothstep(0.68, 1.0, uWarp));
 }
 `;
 
@@ -295,7 +265,6 @@ void main() {
     vec2 centered = gl_PointCoord - 0.5;
     float r = length(centered) * 2.0;
 
-    // Rotate sprite UVs cleanly and discard outside tile bounds (prevents square clamped border seams)
     float c = cos(vAngle);
     float s = sin(vAngle);
     vec2 rotated = mat2(c, -s, s, c) * centered + 0.5;
@@ -306,20 +275,22 @@ void main() {
     vec2 atlasUV = (rotated + vec2(col, 1.0 - row)) * 0.5;
 
     vec4 tex = texture2D(uAtlas, atlasUV);
-    float orb = exp(-r * r * 3.4);
+    float orb = exp(-r * r * 3.8);
 
-    // Morph crisp blossoms into glowing luminous pollen orbs on hover / warp
-    float morph = max(vDisperse * 0.85, vWarp * 0.92);
+    // Morph petals into soft luminous firefly bokeh orbs during #go hover or vortex dive
+    float morph = max(vDisperse * 0.94, vWarp * 0.95);
     float shapeAlpha = mix(tex.a, orb, morph);
-    vec3 tint = mix(tex.rgb * vColor, vColor * 1.45, morph * 0.82);
+    vec3 petalTint = tex.rgb * vColor;
+    vec3 orbTint = vColor * 1.65;
+    vec3 tint = mix(petalTint, orbTint, morph * 0.85);
 
-    // Cursor hover luminescence surge (#ef4444 -> warm porcelain incandescent peak)
-    vec3 hoverCol = vec3(1.0, 0.94, 0.95);
-    tint = mix(tint, hoverCol, vMouseGlow * 0.72);
-    tint *= (1.0 + vMouseGlow * 0.95);
+    // Cursor hover incandescent peach-gold surge around mouse wake
+    vec3 hoverGlowCol = vec3(1.0, 0.94, 0.82);
+    tint = mix(tint, hoverGlowCol, vMouseGlow * 0.76);
+    tint *= (1.0 + vMouseGlow * 1.15);
 
-    float dimFactor = mix(1.0, 0.55, uScrollDim);
-    float finalAlpha = shapeAlpha * vAlpha * mix(1.0, 0.72, uScrollDim);
+    float dimFactor = mix(1.0, 0.42, uScrollDim);
+    float finalAlpha = shapeAlpha * vAlpha * mix(1.0, 0.65, uScrollDim);
     if (finalAlpha < 0.015) discard;
 
     gl_FragColor = vec4(tint * dimFactor, finalAlpha);
@@ -350,17 +321,17 @@ void main() {
     float swirl = uWarp * (3.2 + aPhase);
     float sc = cos(swirl);
     float ss = sin(swirl);
-    vec2 spun = mat2(sc, -ss, ss, sc) * (pos.xy - vec2(0.0, 2.2));
-    pos.xy = mix(pos.xy, spun * (1.0 - uWarp * 0.7) + vec2(0.0, 2.2), uWarp);
+    vec2 spun = mat2(sc, -ss, ss, sc) * (pos.xy - vec2(0.0, 2.0));
+    pos.xy = mix(pos.xy, spun * (1.0 - uWarp * 0.7) + vec2(0.0, 2.0), uWarp);
     pos.z += uWarp * 36.0;
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     float dist = max(1.0, -mv.z);
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = clamp((aScale * uPixelRatio * 48.0 * (1.0 + uWarp * 1.5)) / dist, 1.5, 18.0);
+    gl_PointSize = clamp((aScale * uPixelRatio * 42.0 * (1.0 + uWarp * 1.4)) / dist, 1.4, 16.0);
 
     float fade = (1.0 - smoothstep(32.0, 75.0, dist)) * smoothstep(1.8, 6.0, dist);
-    vAlpha = fade * (0.35 + 0.35 * sin(uTime * 1.7 + aPhase)) * (1.0 + uDisperse * 0.75 + uWarp);
+    vAlpha = fade * (0.35 + 0.35 * sin(uTime * 1.7 + aPhase)) * (1.0 + uDisperse * 0.9 + uWarp);
 }
 `;
 
@@ -372,9 +343,9 @@ void main() {
     vec2 d = gl_PointCoord - 0.5;
     float r = dot(d, d) * 4.0;
     if (r > 1.0) discard;
-    float glow = exp(-r * 3.2);
-    vec3 col = mix(vec3(0.94, 0.27, 0.27), vec3(0.98, 0.97, 0.98), glow);
-    gl_FragColor = vec4(col * mix(1.0, 0.5, uScrollDim), glow * vAlpha);
+    float glow = exp(-r * 3.4);
+    vec3 col = mix(vec3(0.98, 0.74, 0.45), vec3(0.98, 0.96, 0.92), glow);
+    gl_FragColor = vec4(col * mix(1.0, 0.45, uScrollDim), glow * vAlpha);
 }
 `;
 
@@ -411,7 +382,6 @@ const VALLEY_POST_SHADER = {
             vec2 centered = vUv - 0.5;
             float radial = length(centered);
 
-            // Black-hole gravitational swirl & inward pinch when diving through the #go button
             vec2 sampleVec = centered;
             if (uWarp > 0.001) {
                 float theta = atan(sampleVec.y, sampleVec.x);
@@ -421,8 +391,8 @@ const VALLEY_POST_SHADER = {
             }
             vec2 sampleUv = clamp(0.5 + sampleVec, 0.002, 0.998);
 
-            // Split-RGB chromatic displacement strongest toward corners, velocity & warp
-            float chromaOffset = (0.0014 + clamp(uSpeed * 0.0038, 0.0, 0.005) + uWarp * 0.018) * (radial * radial + uWarp * 0.25);
+            // Split-RGB noise & velocity aberration
+            float chromaOffset = (0.0012 + clamp(uSpeed * 0.0038, 0.0, 0.005) + uWarp * 0.018) * (radial * radial + uWarp * 0.25);
             vec2 dir = radial > 0.0001 ? centered / radial : vec2(0.0);
 
             float r = texture2D(tDiffuse, clamp(sampleUv + dir * chromaOffset, 0.001, 0.999)).r;
@@ -430,12 +400,11 @@ const VALLEY_POST_SHADER = {
             float b = texture2D(tDiffuse, clamp(sampleUv - dir * chromaOffset, 0.001, 0.999)).b;
             vec3 col = vec3(r, g, b);
 
-            // Luminous accretion ring + obsidian event horizon core during the black-hole dive
             if (uWarp > 0.001) {
                 float horizonR = mix(0.01, 0.56, pow(uWarp, 1.35));
                 float ringMask = exp(-pow((radial - horizonR * 1.15) * 14.0, 2.0)) * sin(clamp(uWarp, 0.0, 1.0) * 3.14159);
-                col += vec3(0.96, 0.26, 0.30) * (ringMask * 0.9);
-                col += vec3(0.45, 0.85, 0.98) * (ringMask * 0.32);
+                col += vec3(0.98, 0.52, 0.32) * (ringMask * 0.85);
+                col += vec3(0.75, 0.58, 0.98) * (ringMask * 0.38);
 
                 float swallow = smoothstep(horizonR + 0.08, max(0.0, horizonR - 0.14), radial);
                 col *= (1.0 - swallow * min(1.0, uWarp * 1.18));
@@ -443,16 +412,16 @@ const VALLEY_POST_SHADER = {
             }
 
             // Dynamic vignette tightening with movement velocity
-            float vigRadius = mix(0.84, 0.62, clamp(uSpeed * 1.1, 0.0, 1.0));
+            float vigRadius = mix(0.86, 0.62, clamp(uSpeed * 1.1, 0.0, 1.0));
             float vig = 1.0 - smoothstep(vigRadius - 0.36, vigRadius + 0.16, radial * 1.28);
-            col *= mix(0.28, 1.0, vig);
+            col *= mix(0.24, 1.0, vig);
 
-            // Subtle organic nocturnal film noise
-            float n = (hash12(gl_FragCoord.xy + fract(uTime * 17.3) * 100.0) - 0.5) * 0.022;
+            // Subtle nocturnal grain
+            float n = (hash12(gl_FragCoord.xy + fract(uTime * 17.3) * 100.0) - 0.5) * 0.02;
             col += n * (1.0 - uScrollDim * 0.5);
 
-            // Deepen into obsidian tint when viewing editorial story chapters
-            col = mix(col, vec3(0.024, 0.027, 0.035), uScrollDim * 0.44);
+            // Deepen slightly when scrolled into Liquid Glass story chapters
+            col = mix(col, vec3(0.024, 0.027, 0.035), uScrollDim * 0.48);
 
             gl_FragColor = vec4(max(col, 0.0), 1.0);
         }
@@ -511,22 +480,17 @@ export class NightValleyEngine {
         renderer.setPixelRatio(pixelRatio);
         renderer.setSize(width, height, false);
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.05;
-        renderer.setClearColor(0x060709, 1);
+        renderer.toneMappingExposure = 1.08;
+        renderer.setClearColor(0x000000, 1);
         this.container.appendChild(renderer.domElement);
 
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x060709);
-        scene.fog = new THREE.FogExp2(0x060709, 0.02);
+        scene.background = new THREE.Color(0x000000);
+        scene.fog = new THREE.FogExp2(0x000000, 0.022);
         this.scene = scene;
 
-        const camera = new THREE.PerspectiveCamera(54, width / height, 0.4, 150);
+        const camera = new THREE.PerspectiveCamera(56, width / height, 0.35, 140);
         this.camera = camera;
-
-        const hemi = new THREE.HemisphereLight(0xf8fafc, 0x060709, 0.16);
-        const rim = new THREE.DirectionalLight(0xef4444, 0.28);
-        rim.position.set(12, 18, -30);
-        scene.add(hemi, rim);
 
         const pathPoints = createValleyPathPoints(VALLEY_LOOP_LENGTH, 18).map(
             (p) => new THREE.Vector3(p.x, p.y, p.z)
@@ -541,9 +505,9 @@ export class NightValleyEngine {
         const renderPass = new RenderPass(scene, camera);
         const bloomPass = new UnrealBloomPass(
             new THREE.Vector2(width, height),
-            0.52,
-            0.42,
-            0.46
+            0.54,
+            0.46,
+            0.42
         );
         const postPass = new ShaderPass(VALLEY_POST_SHADER);
         const outputPass = new OutputPass();
@@ -574,8 +538,9 @@ export class NightValleyEngine {
         this.atlasTex = createBotanicalAtlasTexture();
         const rand = mulberry32(2026);
 
-        const flowerCount = 3400;
-        const leafCount = 1500;
+        // Dense alpine night-flower meadow carpet: 9,500 clustered blossoms + 4,000 moss/forest leaves
+        const flowerCount = 9500;
+        const leafCount = 4000;
         const total = flowerCount + leafCount;
 
         const positions = new Float32Array(total * 3);
@@ -587,17 +552,35 @@ export class NightValleyEngine {
         const colors = new Float32Array(total * 3);
         const disperseDirs = new Float32Array(total * 3);
 
-        const flowerPalette = [
-            new THREE.Color('#ef4444'), // Obsidian Ember Crimson
-            new THREE.Color('#f43f5e'), // Luminous Rose
-            new THREE.Color('#be123c'), // Deep Burgundy
-            new THREE.Color('#fda4af'), // Pale Rose-Gold Highlight
-            new THREE.Color('#f8fafc'), // Moonlit Porcelain
+        // Multi-species wildflower colony palettes matching the reference video (amber, violet, magenta, cream)
+        const orangeAmber = [
+            new THREE.Color('#ff6b2b'),
+            new THREE.Color('#f59e0b'),
+            new THREE.Color('#ea580c'),
+            new THREE.Color('#fbbf24'),
         ];
-        const leafPalette = [
-            new THREE.Color('#64748b'),
-            new THREE.Color('#475569'),
-            new THREE.Color('#334155'),
+        const violetIris = [
+            new THREE.Color('#a855f7'),
+            new THREE.Color('#c084fc'),
+            new THREE.Color('#e9d5ff'),
+            new THREE.Color('#9333ea'),
+        ];
+        const roseMagenta = [
+            new THREE.Color('#ec4899'),
+            new THREE.Color('#fb7185'),
+            new THREE.Color('#f472b6'),
+            new THREE.Color('#fda4af'),
+        ];
+        const creamMoon = [
+            new THREE.Color('#f5efe2'),
+            new THREE.Color('#fde68a'),
+            new THREE.Color('#e9d5ff'),
+        ];
+        const forestLeafPalette = [
+            new THREE.Color('#1f4027'),
+            new THREE.Color('#2d5a36'),
+            new THREE.Color('#142919'),
+            new THREE.Color('#3b6e44'),
         ];
 
         for (let i = 0; i < total; i++) {
@@ -605,33 +588,51 @@ export class NightValleyEngine {
             const z = -rand() * VALLEY_LOOP_LENGTH;
             const centerX = getValleyCenterX(z);
 
+            // Fill full valley bowl (including undulating meadow floor right up onto both canyon slopes!)
             const side = rand() > 0.5 ? 1 : -1;
-            const lateralPower = Math.pow(rand(), 0.72);
-            const lateral = (isLeaf ? 3.2 : 1.75) + lateralPower * (isLeaf ? 28.0 : 24.0);
+            const lateralPower = Math.pow(rand(), 0.78);
+            const lateral = lateralPower * (isLeaf ? 28.0 : 25.0);
             const x = centerX + side * lateral;
-            const y = getValleyTerrainY(x, z) + (isLeaf ? 0.35 + rand() * 0.9 : 0.45 + rand() * 1.15);
+            const y = getValleyTerrainY(x, z) + (isLeaf ? 0.15 + rand() * 0.65 : 0.3 + rand() * 0.85);
 
             positions[i * 3] = x;
             positions[i * 3 + 1] = y;
             positions[i * 3 + 2] = z;
 
-            scales[i] = isLeaf ? 0.75 + rand() * 1.25 : 0.65 + rand() * 1.35;
+            scales[i] = isLeaf ? 0.7 + rand() * 1.1 : 0.55 + rand() * 1.15;
             phases[i] = rand() * Math.PI * 2;
             variants[i] = isLeaf ? 3 : Math.floor(rand() * 3);
             angles[i] = rand() * Math.PI * 2;
             isLeafAttr[i] = isLeaf ? 1 : 0;
 
-            const pal = isLeaf
-                ? leafPalette[Math.floor(rand() * leafPalette.length)]
-                : flowerPalette[Math.floor(Math.pow(rand(), 1.35) * flowerPalette.length)];
-            colors[i * 3] = pal.r;
-            colors[i * 3 + 1] = pal.g;
-            colors[i * 3 + 2] = pal.b;
+            let col;
+            if (isLeaf) {
+                col = forestLeafPalette[Math.floor(rand() * forestLeafPalette.length)];
+            } else {
+                // Spatial botanical colony clustering (creates rich orange/violet/pink floral carpets per hillside)
+                const speciesNoise =
+                    Math.sin(x * 0.24 + z * 0.16) +
+                    0.65 * Math.cos(x * 0.39 - z * 0.29) +
+                    (rand() - 0.5) * 0.45;
+                if (speciesNoise < -0.35) {
+                    col = orangeAmber[Math.floor(rand() * orangeAmber.length)];
+                } else if (speciesNoise < 0.25) {
+                    col = violetIris[Math.floor(rand() * violetIris.length)];
+                } else if (speciesNoise < 0.85) {
+                    col = roseMagenta[Math.floor(rand() * roseMagenta.length)];
+                } else {
+                    col = creamMoon[Math.floor(rand() * creamMoon.length)];
+                }
+            }
+
+            colors[i * 3] = col.r;
+            colors[i * 3 + 1] = col.g;
+            colors[i * 3 + 2] = col.b;
 
             const dAng = rand() * Math.PI * 2;
-            disperseDirs[i * 3] = Math.cos(dAng) * (0.6 + rand() * 0.9);
-            disperseDirs[i * 3 + 1] = 0.4 + rand() * 1.1;
-            disperseDirs[i * 3 + 2] = Math.sin(dAng) * (0.5 + rand() * 0.9);
+            disperseDirs[i * 3] = Math.cos(dAng) * (0.7 + rand() * 1.2);
+            disperseDirs[i * 3 + 1] = 0.2 + rand() * 1.3;
+            disperseDirs[i * 3 + 2] = Math.sin(dAng) * (0.6 + rand() * 1.1);
         }
 
         const geo = new THREE.BufferGeometry();
@@ -723,7 +724,7 @@ export class NightValleyEngine {
         this.rayMat = new THREE.MeshBasicMaterial({
             map: this.rayTex,
             transparent: true,
-            opacity: 0.24,
+            opacity: 0.18,
             depthWrite: false,
             blending: THREE.AdditiveBlending,
             side: THREE.DoubleSide,
@@ -827,7 +828,7 @@ export class NightValleyEngine {
         this.warpActive = false;
         this.warpProgress = 0;
         if (this.camera) {
-            this.camera.fov = 54;
+            this.camera.fov = 56;
             this.camera.updateProjectionMatrix();
         }
     }
@@ -842,7 +843,6 @@ export class NightValleyEngine {
             this.onIntroDone?.();
         }
 
-        // Advance Black-Hole Warp Dive (0 -> 1 over ~1.35s)
         if (this.warpActive) {
             const rawWarp = Math.min(1, (elapsed - this.warpStart) / 1.35);
             this.warpProgress = rawWarp;
@@ -862,7 +862,7 @@ export class NightValleyEngine {
         this.scrollDimValue += (this.scrollDimTarget - this.scrollDimValue) * Math.min(1, dt * 5.0);
         this.mouseActiveValue += (this.mouseActiveTarget - this.mouseActiveValue) * Math.min(1, dt * 5.0);
 
-        const flightActive = 1 - this.disperseValue * 0.92;
+        const flightActive = 1 - this.disperseValue;
         const idleDrift = 2.6 * flightActive + wCurve * 34.0;
         this.scrollVelocity *= Math.pow(0.06, dt);
         const speed = idleDrift + this.scrollVelocity * flightActive;
@@ -872,13 +872,14 @@ export class NightValleyEngine {
         const targetX = getValleyCenterX(camZ);
         const floorY = getValleyTerrainY(targetX, camZ);
         const introDrop = (1 - Math.pow(introT, 2)) * 4.5;
-        const camY = floorY + 2.85 + Math.sin(elapsed * 0.45) * 0.14 + introDrop;
+        const camY = floorY + 2.55 + Math.sin(elapsed * 0.45) * 0.14 + introDrop;
 
+        // Slight downward meadow gaze so lower foreground blooms densely while upper canyon stays open velvet night sky
         const lookZ = camZ - 14;
         const lookX = getValleyCenterX(lookZ) + this.mouseTilt.x * 1.85;
-        const lookY = getValleyTerrainY(lookX, lookZ) + 2.15 + this.mouseTilt.y * 1.15;
+        const lookY = getValleyTerrainY(lookX, lookZ) + 1.1 + this.mouseTilt.y * 1.15;
 
-        const targetFov = 54 + wCurve * 38;
+        const targetFov = 56 + wCurve * 36;
         if (Math.abs(this.camera.fov - targetFov) > 0.08) {
             this.camera.fov = targetFov;
             this.camera.updateProjectionMatrix();
@@ -916,14 +917,14 @@ export class NightValleyEngine {
             ray.position.set(wx, wy, wz);
             ray.lookAt(this.camera.position.x, wy, this.camera.position.z);
         });
-        this.rayMat.opacity = 0.22 * (1 - this.scrollDimValue * 0.65) * (1 - wCurve * 0.8);
+        this.rayMat.opacity = 0.16 * (1 - this.scrollDimValue * 0.65) * (1 - wCurve * 0.8);
 
         const normSpeed = Math.min(1, Math.abs(this.scrollVelocity) * 0.085);
         this.postPass.uniforms.uTime.value = elapsed;
         this.postPass.uniforms.uSpeed.value = normSpeed;
         this.postPass.uniforms.uScrollDim.value = this.scrollDimValue;
         this.postPass.uniforms.uWarp.value = this.warpProgress;
-        this.bloomPass.strength = 0.52 * (1 - this.scrollDimValue * 0.45) + this.disperseValue * 0.18 + wCurve * 0.25;
+        this.bloomPass.strength = 0.54 * (1 - this.scrollDimValue * 0.45) + this.disperseValue * 0.28 + wCurve * 0.25;
     }
 
     _loop() {

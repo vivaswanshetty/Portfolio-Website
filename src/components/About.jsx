@@ -217,21 +217,21 @@ const About = () => {
 
     return (
         <div className="about-valley-page">
-            {/* Fixed Interactive 3D Crystal Canyon Stage */}
+            {/* Fixed Interactive 3D Night Flower Valley Stage */}
             <div id="valley" className="valley-canvas-host" aria-hidden="true">
                 <div ref={valleyContainerRef} className="js-canvas-container" />
                 <div
                     className="valley-depth-scrim"
-                    style={{ opacity: isDiving ? 0.04 : Math.min(1, 0.08 + heroScrolledRatio * 0.84) }}
+                    style={{ opacity: isDiving ? 0.04 : heroScrolledRatio * 0.9 }}
                 />
             </div>
 
-            {/* Loader Curtain with Single Pulsing 9u Dot */}
+            {/* Loader Curtain with Single Pulsing 9u Cream Dot */}
             <div className={`valley-loader${loaded ? ' gone' : ''}`} aria-hidden={loaded}>
                 <span />
             </div>
 
-            {/* Section 1: 100vh Entry Hero overlaid on Faceted Crystal Canyon */}
+            {/* Section 1: 100vh Entry Hero overlaid cleanly on Night Flower Meadow (matches reference Antonio + #f5efe2 composition) */}
             <section className="valley-entry" aria-label="About entry">
                 <div
                     className={`valley-ui${introDone ? ' on' : ''}${isDiving ? ' diving' : ''}`}
@@ -244,10 +244,7 @@ const About = () => {
                     }}
                 >
                     <div className="valley-hero">
-                        <span className="valley-eyebrow">ZERO HANDOUTS · BUILT FROM SCRATCH</span>
-                        <h1>
-                            No teacher. Self-built<span className="valley-accent-dot">.</span>
-                        </h1>
+                        <h1>No teacher. Self-built.</h1>
                         <p className="valley-cap">
                             No one ever showed me the way.
                             <br />

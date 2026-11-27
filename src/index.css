@@ -5907,8 +5907,8 @@ body.projects-archive.lit #lit {
    ========================================================================== */
 body.about-valley-route {
   --u: min(calc(100vw / 1600), calc(100vh / 900));
-  --cream: #f8fafc;
-  background-color: #060709 !important;
+  --cream: #f5efe2;
+  background-color: #000000 !important;
 }
 
 body.valley-loading .navbar-main {
@@ -5933,7 +5933,7 @@ body.about-valley-route footer {
   position: fixed;
   inset: 0;
   z-index: 1;
-  background: #060709;
+  background: #000000;
   pointer-events: none;
 }
 
@@ -5968,7 +5968,7 @@ body.about-valley-route footer {
   z-index: 1150;
   display: grid;
   place-items: center;
-  background: #060709;
+  background: #000000;
   transition: opacity 1s ease;
   pointer-events: none;
 }
@@ -6010,7 +6010,7 @@ body.about-valley-route footer {
   width: 100%;
   height: 100%;
   opacity: 0;
-  transition: opacity 0.85s ease, transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 1.6s ease, transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .valley-ui.on {
@@ -6058,15 +6058,15 @@ body.about-valley-route footer {
 }
 
 .valley-hero h1 {
-  font-family: var(--font-heading) !important;
-  font-weight: 900 !important;
-  font-size: calc(112 * var(--u)) !important;
-  line-height: 0.94 !important;
-  letter-spacing: -0.032em;
+  font-family: 'Antonio', 'Arial Narrow', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: calc(136 * var(--u)) !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.012em;
   color: var(--cream);
   white-space: nowrap;
   margin: 0 !important;
-  text-shadow: 0 8px 44px rgba(0, 0, 0, 0.72), 0 0 60px rgba(239, 68, 68, 0.16);
+  text-shadow: 0 4px 36px rgba(0, 0, 0, 0.55);
 }
 
 .valley-accent-dot {
@@ -6106,11 +6106,11 @@ body.about-valley-route footer {
 }
 
 .valley-cap {
-  margin: calc(40 * var(--u)) 0 0 !important;
-  font-family: var(--font-body);
+  margin: calc(48 * var(--u)) 0 0 !important;
+  font-family: 'Manrope', var(--font-body), sans-serif;
   font-size: max(15px, calc(20 * var(--u))) !important;
-  line-height: 1.38;
-  color: rgba(248, 250, 252, 0.88);
+  line-height: 1.3;
+  color: var(--cream);
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75);
 }
 
@@ -6122,21 +6122,16 @@ body.about-valley-route footer {
   height: calc(58 * var(--u));
   min-width: 48px;
   min-height: 48px;
-  border: 1.5px solid rgba(248, 250, 252, 0.85);
+  border: 1.5px solid var(--cream);
   border-radius: 50%;
-  background: rgba(10, 12, 18, 0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: transparent;
   color: var(--cream);
-  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .valley-go:hover {
   background: var(--cream);
-  border-color: var(--cream);
-  color: #060709;
-  transform: scale(1.06);
-  box-shadow: 0 0 34px rgba(239, 68, 68, 0.45);
+  color: #151510;
 }
 
 .valley-go svg {
@@ -6159,19 +6154,19 @@ body.about-valley-route footer {
   display: flex;
   align-items: center;
   gap: calc(18 * var(--u));
-  font-family: var(--font-heading);
+  font-family: 'Manrope', var(--font-body), sans-serif;
   font-size: max(11px, calc(12.5 * var(--u)));
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(248, 250, 252, 0.86);
+  color: var(--cream);
 }
 
 .valley-corner i {
   width: 1px;
   height: calc(26 * var(--u));
   min-height: 20px;
-  background: rgba(248, 250, 252, 0.38);
+  background: rgba(245, 239, 226, 0.45);
 }
 
 .valley-sound {
@@ -6683,7 +6678,7 @@ body.about-valley-route footer {
   }
 
   .valley-hero h1 {
-    font-size: clamp(36px, 10.5vw, 64px) !important;
+    font-size: clamp(52px, 16vw, 84px) !important;
     white-space: normal;
   }
 
