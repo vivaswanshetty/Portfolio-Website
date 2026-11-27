@@ -22,72 +22,50 @@ const QUICK_ROUTES = [
 ];
 
 /**
- * Generates an iridescent veined translucent cyber-wing CanvasTexture oriented
- * with the wing root at left edge (u=0) pointing right (u=1).
+ * Generates a radial motion-blur rotor disc CanvasTexture for high-RPM ducted VTOL fans.
  */
-function createCyberWingTexture() {
-    const w = 1024;
-    const h = 576;
+function createRotorBlurTexture() {
+    const size = 512;
+    const half = size / 2;
     const canvas = document.createElement('canvas');
-    canvas.width = w;
-    canvas.height = h;
+    canvas.width = size;
+    canvas.height = size;
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
 
-    ctx.clearRect(0, 0, w, h);
-
-    // Subtle teardrop translucent membrane shape from left root to rounded right tip
+    ctx.clearRect(0, 0, size, size);
     ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(14, h * 0.44);
-    ctx.bezierCurveTo(w * 0.32, h * 0.08, w * 0.86, h * 0.06, w * 0.97, h * 0.36);
-    ctx.bezierCurveTo(w * 0.99, h * 0.58, w * 0.72, h * 0.88, w * 0.28, h * 0.78);
-    ctx.bezierCurveTo(w * 0.12, h * 0.72, 26, h * 0.58, 14, h * 0.44);
-    ctx.closePath();
+    ctx.translate(half, half);
 
-    const grad = ctx.createLinearGradient(0, h * 0.2, w, h * 0.75);
-    grad.addColorStop(0, 'rgba(239, 68, 68, 0.34)');
-    grad.addColorStop(0.28, 'rgba(196, 181, 253, 0.24)');
-    grad.addColorStop(0.7, 'rgba(226, 232, 255, 0.16)');
-    grad.addColorStop(1, 'rgba(248, 250, 252, 0.09)');
-    ctx.fillStyle = grad;
+    // Outer swept rim shimmer (cyan-silver stealth ring)
+    const ring = ctx.createRadialGradient(0, 0, half * 0.22, 0, 0, half * 0.96);
+    ring.addColorStop(0, 'rgba(56, 189, 248, 0.02)');
+    ring.addColorStop(0.65, 'rgba(148, 163, 184, 0.14)');
+    ring.addColorStop(0.88, 'rgba(56, 189, 248, 0.36)');
+    ring.addColorStop(0.96, 'rgba(239, 68, 68, 0.25)');
+    ring.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = ring;
+    ctx.beginPath();
+    ctx.arc(0, 0, half * 0.96, 0, Math.PI * 2);
     ctx.fill();
 
-    // Iridescent specular rim outline
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = 'rgba(244, 240, 255, 0.65)';
-    ctx.stroke();
-
-    // Leading primary carbon spar + crimson root trace
-    const sparGrad = ctx.createLinearGradient(0, h * 0.44, w * 0.94, h * 0.3);
-    sparGrad.addColorStop(0, 'rgba(239, 68, 68, 0.95)');
-    sparGrad.addColorStop(0.35, 'rgba(244, 242, 255, 0.85)');
-    sparGrad.addColorStop(1, 'rgba(216, 210, 255, 0.45)');
-    ctx.lineWidth = 7;
-    ctx.strokeStyle = sparGrad;
-    ctx.beginPath();
-    ctx.moveTo(14, h * 0.44);
-    ctx.bezierCurveTo(w * 0.35, h * 0.13, w * 0.74, h * 0.12, w * 0.95, h * 0.34);
-    ctx.stroke();
-
-    // Fine biomechanical venation ribs branching outward
-    ctx.lineWidth = 2.2;
-    const veins = [
-        [w * 0.18, h * 0.34, w * 0.56, h * 0.42, w * 0.86, h * 0.49],
-        [w * 0.26, h * 0.42, w * 0.54, h * 0.58, w * 0.78, h * 0.64],
-        [w * 0.38, h * 0.25, w * 0.64, h * 0.29, w * 0.90, h * 0.39],
-        [w * 0.14, h * 0.48, w * 0.36, h * 0.68, w * 0.58, h * 0.75],
-    ];
-    veins.forEach(([cx, cy, mx, my, ex, ey], idx) => {
-        ctx.strokeStyle =
-            idx === 0
-                ? 'rgba(239, 68, 68, 0.55)'
-                : 'rgba(220, 214, 255, 0.42)';
+    // Swept motion-blur rotor blade arcs
+    for (let i = 0; i < 4; i++) {
+        ctx.save();
+        ctx.rotate((i * Math.PI) / 2);
+        const bladeGrad = ctx.createLinearGradient(0, -18, half * 0.88, 18);
+        bladeGrad.addColorStop(0, 'rgba(226, 232, 240, 0.45)');
+        bladeGrad.addColorStop(0.6, 'rgba(148, 163, 184, 0.24)');
+        bladeGrad.addColorStop(1, 'rgba(56, 189, 248, 0.05)');
+        ctx.fillStyle = bladeGrad;
         ctx.beginPath();
-        ctx.moveTo(18, h * 0.45);
-        ctx.bezierCurveTo(cx, cy, mx, my, ex, ey);
-        ctx.stroke();
-    });
+        ctx.moveTo(half * 0.16, -6);
+        ctx.arc(0, 0, half * 0.9, -0.18, 0.22);
+        ctx.lineTo(half * 0.16, 6);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
     ctx.restore();
 
     const texture = new THREE.CanvasTexture(canvas);
@@ -97,10 +75,10 @@ function createCyberWingTexture() {
 }
 
 /**
- * Builds the procedural Cybernetic Night-Drone aligned with:
- * +X = head forward, +Y = up, +Z = right side.
+ * Builds a procedural Stealth VTOL Cyber-Drone inspired by crimson/carbon ducted-rotor
+ * interceptors and glossy obsidian canopies (+X = forward, +Y = up, +Z = right wing).
  */
-function buildCyberDroneRig(wingTexture) {
+function buildCyberDroneRig(rotorBlurTexture) {
     const flight = new THREE.Group();
     const droneRoot = new THREE.Group();
     flight.add(droneRoot);
@@ -116,194 +94,340 @@ function buildCyberDroneRig(wingTexture) {
         return m;
     };
 
-    const obsidianMat = trackMat(
+    const carbonArmorMat = trackMat(
         new THREE.MeshPhysicalMaterial({
-            color: 0x0b0d14,
+            color: 0x13161f,
             metalness: 0.78,
+            roughness: 0.34,
+            clearcoat: 0.38,
+            clearcoatRoughness: 0.28,
+            envMapIntensity: 1.05,
+        })
+    );
+
+    const crimsonArmorMat = trackMat(
+        new THREE.MeshPhysicalMaterial({
+            color: 0xd92638,
+            metalness: 0.72,
             roughness: 0.24,
-            clearcoat: 0.7,
-            clearcoatRoughness: 0.18,
-            envMapIntensity: 0.95,
+            clearcoat: 0.85,
+            clearcoatRoughness: 0.16,
+            envMapIntensity: 1.15,
         })
     );
 
     const titaniumMat = trackMat(
         new THREE.MeshStandardMaterial({
-            color: 0x262b3d,
-            metalness: 0.9,
+            color: 0x333b4d,
+            metalness: 0.92,
             roughness: 0.22,
-            envMapIntensity: 1.0,
+            envMapIntensity: 1.1,
+        })
+    );
+
+    const canopyGlassMat = trackMat(
+        new THREE.MeshPhysicalMaterial({
+            color: 0x05070d,
+            metalness: 0.94,
+            roughness: 0.08,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.04,
+            envMapIntensity: 1.4,
+        })
+    );
+
+    const cyanOpticMat = trackMat(
+        new THREE.MeshStandardMaterial({
+            color: 0x38bdf8,
+            emissive: 0x22d3ee,
+            emissiveIntensity: 2.5,
+            roughness: 0.15,
+            metalness: 0.15,
         })
     );
 
     const crimsonCoreMat = trackMat(
         new THREE.MeshStandardMaterial({
-            color: 0xff2a3c,
+            color: 0xff3b30,
             emissive: 0xef4444,
-            emissiveIntensity: 2.1,
-            roughness: 0.2,
+            emissiveIntensity: 2.4,
+            roughness: 0.18,
             metalness: 0.2,
         })
     );
 
-    // 1. Armored thorax + forward head pod (+X)
+    const plasmaPlumeMat = trackMat(
+        new THREE.MeshBasicMaterial({
+            color: 0xa855f7,
+            transparent: true,
+            opacity: 0.55,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            side: THREE.DoubleSide,
+        })
+    );
+
+    const plasmaCoreMat = trackMat(
+        new THREE.MeshBasicMaterial({
+            color: 0x67e8f9,
+            transparent: true,
+            opacity: 0.78,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            side: THREE.DoubleSide,
+        })
+    );
+
+    const rotorBlurMat = trackMat(
+        new THREE.MeshBasicMaterial({
+            map: rotorBlurTexture || null,
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.85,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+        })
+    );
+
     const chassisGroup = new THREE.Group();
     droneRoot.add(chassisGroup);
 
-    const thoraxGeo = trackGeo(new THREE.SphereGeometry(0.16, 28, 22));
-    thoraxGeo.scale(1.25, 0.88, 0.94);
-    const thorax = new THREE.Mesh(thoraxGeo, obsidianMat);
-    thorax.position.set(0.08, 0.02, 0);
-    chassisGroup.add(thorax);
+    // 1. Stealth Faceted Fuselage Core + Tapered Delta Nose (+X)
+    const hullGeo = trackGeo(new THREE.CylinderGeometry(0.11, 0.19, 0.46, 6));
+    hullGeo.rotateZ(-Math.PI / 2);
+    hullGeo.scale(1.0, 0.56, 1.08);
+    const hull = new THREE.Mesh(hullGeo, carbonArmorMat);
+    hull.position.set(0.02, 0.01, 0);
+    chassisGroup.add(hull);
 
-    const headGeo = trackGeo(new THREE.SphereGeometry(0.105, 24, 18));
-    headGeo.scale(1.18, 0.86, 0.96);
-    const head = new THREE.Mesh(headGeo, obsidianMat);
-    head.position.set(0.28, 0.0, 0);
-    chassisGroup.add(head);
+    // Sharp armored wedge prow extending toward +X
+    const prowGeo = trackGeo(new THREE.ConeGeometry(0.125, 0.34, 4));
+    prowGeo.rotateX(Math.PI / 4);
+    prowGeo.rotateZ(-Math.PI / 2);
+    prowGeo.scale(1.0, 0.48, 1.05);
+    const prow = new THREE.Mesh(prowGeo, carbonArmorMat);
+    prow.position.set(0.32, -0.012, 0);
+    chassisGroup.add(prow);
 
-    // Glowing Crimson Neural Visor across front head nose (+X)
-    const visorGeo = trackGeo(
-        new THREE.TorusGeometry(0.088, 0.015, 12, 28, Math.PI * 0.95)
-    );
-    const visor = new THREE.Mesh(visorGeo, crimsonCoreMat);
-    visor.position.set(0.305, 0.005, 0);
-    visor.rotation.y = Math.PI / 2;
-    visor.rotation.z = -Math.PI * 0.475;
-    chassisGroup.add(visor);
-
-    // Dual titanium collar cowlings + waist reactor ring
-    const reactorRingGeo = trackGeo(new THREE.TorusGeometry(0.11, 0.012, 12, 32));
-    const reactorRing = new THREE.Mesh(reactorRingGeo, crimsonCoreMat);
-    reactorRing.rotation.y = Math.PI / 2;
-    reactorRing.position.set(-0.06, -0.005, 0);
-    chassisGroup.add(reactorRing);
-
-    const dorsalPlateGeo = trackGeo(new THREE.BoxGeometry(0.22, 0.055, 0.14));
-    const dorsalPlate = new THREE.Mesh(dorsalPlateGeo, titaniumMat);
-    dorsalPlate.position.set(0.08, 0.12, 0);
-    dorsalPlate.rotation.z = -0.14;
-    chassisGroup.add(dorsalPlate);
-
-    // Tapering segmented abdomen tail trailing along -X with glowing red ribs
-    const tailSegments = [
-        { x: -0.14, y: -0.025, rx: 0.13, ry: 0.115, rz: 0.12 },
-        { x: -0.24, y: -0.065, rx: 0.115, ry: 0.095, rz: 0.1 },
-        { x: -0.34, y: -0.11, rx: 0.09, ry: 0.075, rz: 0.08 },
-        { x: -0.43, y: -0.155, rx: 0.065, ry: 0.048, rz: 0.05 },
-    ];
-    tailSegments.forEach((seg, idx) => {
-        const g = trackGeo(new THREE.SphereGeometry(1, 22, 16));
-        g.scale(seg.rx, seg.ry, seg.rz);
-        const mesh = new THREE.Mesh(g, obsidianMat);
-        mesh.position.set(seg.x, seg.y, 0);
-        mesh.rotation.z = 0.25 + idx * 0.08;
-        chassisGroup.add(mesh);
-
-        if (idx < 3) {
-            const bandG = trackGeo(
-                new THREE.TorusGeometry(seg.ry * 0.92, 0.009, 10, 24)
-            );
-            const band = new THREE.Mesh(bandG, idx === 1 ? crimsonCoreMat : titaniumMat);
-            band.rotation.y = Math.PI / 2;
-            band.rotation.x = 0.22;
-            band.position.set(seg.x - 0.045, seg.y - 0.015, 0);
-            chassisGroup.add(band);
-        }
-    });
-
-    // Forward stabilizer antennae
+    // Metallic Crimson Front Cheek Fairings (Image 1 signature armor panels)
     [-1, 1].forEach((side) => {
-        const antGeo = trackGeo(new THREE.CylinderGeometry(0.005, 0.009, 0.14, 8));
-        const ant = new THREE.Mesh(antGeo, titaniumMat);
-        ant.position.set(0.37, 0.07, side * 0.045);
-        ant.rotation.z = -0.95;
-        ant.rotation.x = side * 0.28;
-        chassisGroup.add(ant);
+        const cheekGeo = trackGeo(new THREE.BoxGeometry(0.24, 0.068, 0.095));
+        const cheek = new THREE.Mesh(cheekGeo, crimsonArmorMat);
+        cheek.position.set(0.19, 0.02, side * 0.085);
+        cheek.rotation.y = side * -0.26;
+        cheek.rotation.z = -0.18;
+        chassisGroup.add(cheek);
 
-        const tipGeo = trackGeo(new THREE.SphereGeometry(0.013, 10, 10));
-        const tip = new THREE.Mesh(tipGeo, crimsonCoreMat);
-        tip.position.set(0.425, 0.11, side * 0.062);
-        chassisGroup.add(tip);
+        // Twin angled Electric-Cyan Optic Visor Slits below crimson brows
+        const slitGeo = trackGeo(new THREE.BoxGeometry(0.075, 0.014, 0.022));
+        const slit = new THREE.Mesh(slitGeo, cyanOpticMat);
+        slit.position.set(0.285, 0.016, side * 0.062);
+        slit.rotation.y = side * -0.35;
+        slit.rotation.z = -0.22;
+        chassisGroup.add(slit);
     });
 
-    // 2. Twin Beating Translucent Cyber-Wings (Right +Z side & mirrored -Z left side)
-    const makeWingGeo = (span) => {
-        const g = trackGeo(new THREE.PlaneGeometry(span, (span * 9) / 16));
-        g.translate(span / 2 - span * 0.03, 0, 0);
-        g.rotateX(-Math.PI / 2);
-        g.rotateY(-Math.PI / 2);
-        return g;
-    };
+    // Recessed Circular Cyan AI Optic Lens at nose apex (Image 2 signature)
+    const opticRingGeo = trackGeo(new THREE.TorusGeometry(0.024, 0.0055, 10, 24));
+    const opticRing = new THREE.Mesh(opticRingGeo, cyanOpticMat);
+    opticRing.rotation.y = Math.PI / 2;
+    opticRing.position.set(0.39, -0.005, 0);
+    chassisGroup.add(opticRing);
 
-    const wingDefs = [
-        { span: 0.72, sweep: -0.4, phase: 0, lift: 0.024 },
-        { span: 0.5, sweep: -0.92, phase: -0.5, lift: -0.01 },
-    ];
-    const blurCopies = [
-        { offset: 0, opacity: 0.94 },
-        { offset: 0.55, opacity: 0.26 },
-        { offset: -0.55, opacity: 0.26 },
-    ];
+    // Glossy Smoked Obsidian Canopy + Cyan Spine HUD Seam (Image 3 signature)
+    const canopyGeo = trackGeo(new THREE.SphereGeometry(0.12, 24, 18));
+    canopyGeo.scale(1.75, 0.54, 0.76);
+    const canopy = new THREE.Mesh(canopyGeo, canopyGlassMat);
+    canopy.position.set(0.06, 0.078, 0);
+    chassisGroup.add(canopy);
 
-    const flapGroups = [];
+    const seamGeo = trackGeo(new THREE.BoxGeometry(0.28, 0.008, 0.01));
+    const seam = new THREE.Mesh(seamGeo, cyanOpticMat);
+    seam.position.set(0.08, 0.132, 0);
+    seam.rotation.z = -0.08;
+    chassisGroup.add(seam);
 
-    const buildWingSide = (mirrored) => {
-        const anchor = new THREE.Group();
-        anchor.position.set(0.11, 0.12, 0.065);
-        if (mirrored) {
-            anchor.scale.z = -1;
-            anchor.position.z = -0.065;
+    // Stepped Dorsal Carbon Spine Louvers trailing rearward
+    [0, 1, 2].forEach((idx) => {
+        const louverGeo = trackGeo(new THREE.BoxGeometry(0.085 - idx * 0.01, 0.028, 0.16 - idx * 0.018));
+        const louver = new THREE.Mesh(louverGeo, idx === 0 ? titaniumMat : carbonArmorMat);
+        louver.position.set(-0.08 - idx * 0.08, 0.095 - idx * 0.012, 0);
+        louver.rotation.z = 0.14;
+        chassisGroup.add(louver);
+    });
+
+    // Ventral Underslung Gimbal Mechanical Assembly + Micro Targeting Nodes
+    const bellyGeo = trackGeo(new THREE.CylinderGeometry(0.085, 0.052, 0.11, 8));
+    const belly = new THREE.Mesh(bellyGeo, titaniumMat);
+    belly.position.set(0.02, -0.085, 0);
+    chassisGroup.add(belly);
+
+    const bellyLedGeo = trackGeo(new THREE.BoxGeometry(0.025, 0.012, 0.04));
+    const bellyLed = new THREE.Mesh(bellyLedGeo, crimsonCoreMat);
+    bellyLed.position.set(0.07, -0.118, 0);
+    chassisGroup.add(bellyLed);
+
+    // 2. Twin Rear Vectored Thruster Pods & Additive Plasma Plumes (-X tail)
+    const thrusterCones = [];
+    [-1, 1].forEach((side) => {
+        const nozGeo = trackGeo(new THREE.CylinderGeometry(0.042, 0.056, 0.13, 14));
+        nozGeo.rotateZ(Math.PI / 2);
+        const noz = new THREE.Mesh(nozGeo, titaniumMat);
+        noz.position.set(-0.24, 0.005, side * 0.082);
+        noz.rotation.y = side * 0.06;
+        chassisGroup.add(noz);
+
+        const throatGeo = trackGeo(new THREE.TorusGeometry(0.036, 0.007, 10, 20));
+        const throat = new THREE.Mesh(throatGeo, crimsonCoreMat);
+        throat.rotation.y = Math.PI / 2;
+        throat.position.set(-0.305, 0.005, side * 0.085);
+        chassisGroup.add(throat);
+
+        // Inner cyan/white plasma core cone (base at nozzle exit extending -X)
+        const plumeGroup = new THREE.Group();
+        plumeGroup.position.set(-0.31, 0.005, side * 0.086);
+        plumeGroup.rotation.z = Math.PI / 2;
+        chassisGroup.add(plumeGroup);
+
+        const coreConeGeo = trackGeo(new THREE.ConeGeometry(0.026, 0.24, 12, 1, true));
+        coreConeGeo.translate(0, 0.12, 0);
+        const coreCone = new THREE.Mesh(coreConeGeo, plasmaCoreMat);
+        plumeGroup.add(coreCone);
+
+        const outerConeGeo = trackGeo(new THREE.ConeGeometry(0.042, 0.36, 12, 1, true));
+        outerConeGeo.translate(0, 0.18, 0);
+        const outerCone = new THREE.Mesh(outerConeGeo, plasmaPlumeMat);
+        plumeGroup.add(outerCone);
+
+        thrusterCones.push(plumeGroup);
+    });
+
+    // 3. Swept Delta Wing Pylons + Dual Tilt-Rotor Ducted VTOL Pods + Vertical Ember Nacelles (±Z)
+    const rotorGroups = [];
+    const tiltPodGroups = [];
+
+    const buildVTOLSide = (sideSign) => {
+        // Swept stealth wing strut connecting hull to shoulder turbine
+        const pylonGeo = trackGeo(new THREE.BoxGeometry(0.24, 0.036, 0.22));
+        const pylon = new THREE.Mesh(pylonGeo, carbonArmorMat);
+        pylon.position.set(0.04, 0.052, sideSign * 0.18);
+        pylon.rotation.x = sideSign * -0.14;
+        pylon.rotation.y = sideSign * 0.24;
+        droneRoot.add(pylon);
+
+        // Articulated VTOL Turbine Pod Group (tilts forward during acceleration)
+        const podGroup = new THREE.Group();
+        podGroup.position.set(0.04, 0.095, sideSign * 0.31);
+        droneRoot.add(podGroup);
+        tiltPodGroups.push(podGroup);
+
+        // Crimson Outer Armored Duct Shroud + Gunmetal Intake Barrel
+        const shroudGeo = trackGeo(new THREE.TorusGeometry(0.115, 0.028, 14, 32));
+        shroudGeo.rotateX(Math.PI / 2);
+        const shroud = new THREE.Mesh(shroudGeo, crimsonArmorMat);
+        podGroup.add(shroud);
+
+        const ductWallGeo = trackGeo(new THREE.CylinderGeometry(0.105, 0.095, 0.068, 24, 1, true));
+        const ductWall = new THREE.Mesh(ductWallGeo, titaniumMat);
+        podGroup.add(ductWall);
+
+        // Shoulder Armor Cowl wrapping outside edge of duct (Image 1!)
+        const cowlGeo = trackGeo(new THREE.BoxGeometry(0.16, 0.048, 0.09));
+        const cowl = new THREE.Mesh(cowlGeo, crimsonArmorMat);
+        cowl.position.set(-0.02, 0.034, sideSign * 0.075);
+        cowl.rotation.x = sideSign * 0.25;
+        podGroup.add(cowl);
+
+        // Glowing internal cyan stator ring
+        const innerRingGeo = trackGeo(new THREE.TorusGeometry(0.095, 0.005, 8, 24));
+        innerRingGeo.rotateX(Math.PI / 2);
+        const innerRing = new THREE.Mesh(innerRingGeo, cyanOpticMat);
+        innerRing.position.y = -0.015;
+        podGroup.add(innerRing);
+
+        // Spinning 4-Blade Hub + Motion-Blur Rotor Disc
+        const rotorSpinGroup = new THREE.Group();
+        podGroup.add(rotorSpinGroup);
+
+        const hubGeo = trackGeo(new THREE.CylinderGeometry(0.024, 0.028, 0.045, 12));
+        const hub = new THREE.Mesh(hubGeo, titaniumMat);
+        rotorSpinGroup.add(hub);
+
+        const bladeGeo = trackGeo(new THREE.BoxGeometry(0.175, 0.006, 0.022));
+        for (let b = 0; b < 2; b++) {
+            const blade = new THREE.Mesh(bladeGeo, carbonArmorMat);
+            blade.rotation.y = (b * Math.PI) / 2;
+            blade.rotation.x = 0.22;
+            rotorSpinGroup.add(blade);
         }
-        droneRoot.add(anchor);
 
-        wingDefs.forEach((def) => {
-            const sweepGroup = new THREE.Group();
-            sweepGroup.rotation.y = def.sweep;
-            sweepGroup.position.y = def.lift;
-            anchor.add(sweepGroup);
+        const blurDiscGeo = trackGeo(new THREE.CircleGeometry(0.1, 24));
+        blurDiscGeo.rotateX(-Math.PI / 2);
+        const blurDisc = new THREE.Mesh(blurDiscGeo, rotorBlurMat);
+        blurDisc.position.y = 0.008;
+        rotorSpinGroup.add(blurDisc);
 
-            const wingGeo = makeWingGeo(def.span);
+        rotorGroups.push({ group: rotorSpinGroup, dir: sideSign });
 
-            blurCopies.forEach((copy) => {
-                const flapGroup = new THREE.Group();
-                const mat = trackMat(
-                    new THREE.MeshBasicMaterial({
-                        map: wingTexture || null,
-                        color: 0xffffff,
-                        transparent: true,
-                        opacity: copy.opacity,
-                        side: THREE.DoubleSide,
-                        depthWrite: false,
-                        blending: THREE.NormalBlending,
-                    })
-                );
-                const mesh = new THREE.Mesh(wingGeo, mat);
-                mesh.frustumCulled = false;
-                flapGroup.add(mesh);
-                sweepGroup.add(flapGroup);
-                flapGroups.push({
-                    group: flapGroup,
-                    phase: def.phase + copy.offset,
-                });
-            });
-        });
+        // Vertical Hanging Armored Fin / Side Nacelle with Ember LED Array (Image 1 & 2!)
+        const finGroup = new THREE.Group();
+        finGroup.position.set(0.01, -0.14, sideSign * 0.34);
+        finGroup.rotation.x = sideSign * -0.12;
+        droneRoot.add(finGroup);
+
+        const finGeo = trackGeo(new THREE.BoxGeometry(0.145, 0.24, 0.058));
+        const fin = new THREE.Mesh(finGeo, carbonArmorMat);
+        fin.rotation.z = -0.12;
+        finGroup.add(fin);
+
+        const finCapGeo = trackGeo(new THREE.BoxGeometry(0.11, 0.065, 0.065));
+        const finCap = new THREE.Mesh(finCapGeo, crimsonArmorMat);
+        finCap.position.set(0.02, 0.075, sideSign * 0.006);
+        finCap.rotation.z = -0.12;
+        finGroup.add(finCap);
+
+        // Vertical stack of 4 glowing ember-crimson LED telemetry bars (Image 1!)
+        for (let ledIdx = 0; ledIdx < 4; ledIdx++) {
+            const ledGeo = trackGeo(new THREE.BoxGeometry(0.018, 0.012, 0.014));
+            const led = new THREE.Mesh(ledGeo, crimsonCoreMat);
+            led.position.set(0.068 - ledIdx * 0.004, 0.01 - ledIdx * 0.028, sideSign * 0.028);
+            finGroup.add(led);
+        }
+
+        // Cyan micro tip strobe at bottom edge of fin
+        const tipLedGeo = trackGeo(new THREE.BoxGeometry(0.02, 0.02, 0.02));
+        const tipLed = new THREE.Mesh(tipLedGeo, cyanOpticMat);
+        tipLed.position.set(0.038, -0.098, sideSign * 0.015);
+        finGroup.add(tipLed);
     };
 
-    buildWingSide(false);
-    buildWingSide(true);
+    buildVTOLSide(1);
+    buildVTOLSide(-1);
 
-    // Subtle local crimson bioluminescence illuminating wing roots
-    const coreLight = new THREE.PointLight(0xef4444, 1.1, 2.5);
-    coreLight.position.set(0.16, 0.08, 0);
-    droneRoot.add(coreLight);
+    // Local dual accent lights catching brushed metal edges & crimson cowlings
+    const crimsonLight = new THREE.PointLight(0xef4444, 1.35, 2.8);
+    crimsonLight.position.set(0.15, 0.14, 0);
+    const cyanLight = new THREE.PointLight(0x22d3ee, 0.9, 2.4);
+    cyanLight.position.set(0.35, -0.02, 0);
+    droneRoot.add(crimsonLight, cyanLight);
 
     const dispose = () => {
         geometries.forEach((g) => g.dispose());
         materials.forEach((m) => m.dispose());
     };
 
-    return { flight, droneRoot, flapGroups, crimsonCoreMat, dispose };
+    return {
+        flight,
+        droneRoot,
+        rotorGroups,
+        tiltPodGroups,
+        thrusterCones,
+        crimsonCoreMat,
+        cyanOpticMat,
+        plasmaPlumeMat,
+        plasmaCoreMat,
+        dispose,
+    };
 }
 
 const CyberDrone = () => {
@@ -436,8 +560,8 @@ const CyberDrone = () => {
         violetRim.position.set(-3, 4, -5);
         scene.add(hemi, keyLight, crimsonRim, violetRim);
 
-        const wingTex = createCyberWingTexture();
-        const drone = buildCyberDroneRig(wingTex);
+        const rotorBlurTex = createRotorBlurTexture();
+        const drone = buildCyberDroneRig(rotorBlurTex);
         scene.add(drone.flight);
 
         const initMobile = window.innerWidth < 760;
@@ -558,23 +682,30 @@ const CyberDrone = () => {
                 'YZX'
             );
 
-            // Pulse crimson neural visor softly on hover/flight
+            // Pulse cyan optics, crimson ember arrays, and afterburner plasma jets dynamically
             drone.crimsonCoreMat.emissiveIntensity = hoveredRef.current
                 ? 3.2
                 : 1.9 + moving * 1.1 + Math.sin(t * 3.5) * 0.25;
+            drone.cyanOpticMat.emissiveIntensity = hoveredRef.current
+                ? 3.4
+                : 2.3 + moving * 0.8 + Math.sin(t * 4.2 + 0.8) * 0.2;
 
-            // Wing beat physics matching Melli Section 5g (paused cleanly under reduced motion)
-            if (reduced) {
-                for (let i = 0; i < drone.flapGroups.length; i++) {
-                    drone.flapGroups[i].group.rotation.set(-0.18, 0.08, 0);
-                }
-            } else {
-                const freq = Math.PI * 2 * (16 + moving * 6);
-                for (let i = 0; i < drone.flapGroups.length; i++) {
-                    const f = drone.flapGroups[i];
-                    const a = Math.sin(t * freq + f.phase);
-                    f.group.rotation.x = -0.22 + a * 0.92;
-                    f.group.rotation.y = a * 0.16;
+            const jetStretch = 0.72 + moving * 0.78 + (reduced ? 0 : Math.sin(t * 28) * 0.06);
+            drone.plasmaCoreMat.opacity = 0.55 + moving * 0.35;
+            drone.plasmaPlumeMat.opacity = 0.36 + moving * 0.34;
+            for (let i = 0; i < drone.thrusterCones.length; i++) {
+                drone.thrusterCones[i].scale.set(1, jetStretch, 1);
+            }
+
+            // Counter-rotating ducted VTOL rotor turbines + forward nacelle gimbal tilt
+            for (let i = 0; i < drone.tiltPodGroups.length; i++) {
+                drone.tiltPodGroups[i].rotation.z = reduced ? -0.06 : -0.08 - moving * 0.22;
+            }
+            if (!reduced) {
+                const spinRate = 24 + moving * 26;
+                for (let i = 0; i < drone.rotorGroups.length; i++) {
+                    const r = drone.rotorGroups[i];
+                    r.group.rotation.y += dt * spinRate * r.dir;
                 }
             }
 
@@ -608,7 +739,7 @@ const CyberDrone = () => {
             window.removeEventListener('pointermove', onPointerMove);
             window.removeEventListener('resize', onResize);
             drone.dispose();
-            wingTex?.dispose();
+            rotorBlurTex?.dispose();
             envRT.dispose();
             renderer.dispose();
         };
