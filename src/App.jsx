@@ -162,7 +162,7 @@ const AppLayout = () => {
                 <Suspense fallback={null}>
                     <CyberDrone />
                 </Suspense>
-                <main id="main-content" tabIndex="-1" style={{ flex: 1, display: 'flex', flexDirection: 'column', outline: 'none' }}>
+                <main id="main-content" tabIndex="-1" style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', outline: 'none' }}>
                     <ErrorBoundary>
                         <AnimatedRoutes />
                     </ErrorBoundary>

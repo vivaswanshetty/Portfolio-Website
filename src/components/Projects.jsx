@@ -196,6 +196,7 @@ const Projects = () => {
                 'locked',
                 'revealed',
                 'deep',
+                'bio-out',
                 'gridview',
                 'lit',
                 'projects-splash',
@@ -468,13 +469,14 @@ const Projects = () => {
             const vh = window.innerHeight || 900;
             const rawScroll = window.scrollY;
 
-            const { p, maxScroll, camZTarget } = computeScrollDolly(rawScroll, vh, R);
-            if (rawScroll > maxScroll + 1 && !cam.gridOpen && !cam.hasLit) {
-                window.scrollTo({ top: maxScroll, behavior: 'instant' });
-            }
+            const { p, camZTarget } = computeScrollDolly(rawScroll, vh, R);
 
-            // Toggle .deep class smoothly as visitor zooms into the archive
-            const shouldBeDeep = p > 0.25;
+            // Fade .bio early (p > 0.08) before revealing bottom-left .gridbtn (p > 0.28) so they never overlap
+            const shouldFadeBio = p > 0.08;
+            if (shouldFadeBio !== document.body.classList.contains('bio-out')) {
+                document.body.classList.toggle('bio-out', shouldFadeBio);
+            }
+            const shouldBeDeep = p > 0.28;
             if (shouldBeDeep !== document.body.classList.contains('deep')) {
                 document.body.classList.toggle('deep', shouldBeDeep);
             }
@@ -500,10 +502,11 @@ const Projects = () => {
                 worldRef.current.style.transform = `translateZ(${cam.camZ.toFixed(2)}px) rotateY(${sy.toFixed(3)}deg) rotateX(${sx.toFixed(3)}deg)`;
             }
 
-            // Counter-rotate headline forward of front sphere meridian so letters never slice through cards
+            // Counter-rotate headline forward of front meridian and gently zoom back relative to camera dive
             if (headlineRef.current) {
-                headlineRef.current.style.transform = `rotateX(${(-sx).toFixed(3)}deg) rotateY(${(-sy).toFixed(3)}deg) translateZ(${(R * 0.96).toFixed(2)}px)`;
-                headlineRef.current.style.opacity = Math.max(0, 1 - p * 0.55).toFixed(3);
+                const headZ = R * 0.96 - cam.camZ * 0.42;
+                headlineRef.current.style.transform = `rotateX(${(-sx).toFixed(3)}deg) rotateY(${(-sy).toFixed(3)}deg) translateZ(${headZ.toFixed(2)}px)`;
+                headlineRef.current.style.opacity = Math.max(0, 1 - p * 0.72).toFixed(3);
             }
 
             // Evaluate per-card atmospheric dark wash & near-plane fade only when values change

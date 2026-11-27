@@ -75,12 +75,12 @@ const litFocused = computeCardDepthStyle({
 });
 assert.equal(litFocused.opacity, 0, 'focused card fades out when replaced by lightbox plate');
 
-// 4. Scroll dolly zoom clamp along 36vh track
-const midScroll = computeScrollDolly(162, 900, 400);
+// 4. Scroll dolly zoom clamp along 110vh track (1.1 * vh = 990px at 900vh)
+const midScroll = computeScrollDolly(495, 900, 400);
 assert.ok(Math.abs(midScroll.p - 0.5) < 0.01);
-const overScroll = computeScrollDolly(500, 900, 400);
+const overScroll = computeScrollDolly(1200, 900, 400);
 assert.equal(overScroll.p, 1);
-assert.equal(overScroll.camZTarget, 48);
+assert.equal(overScroll.camZTarget, 340);
 
 // 5. Initial landing portal clearance (spin=255, tilt=22) keeps front cards clear of headline band
 {

@@ -110,11 +110,12 @@ export function computeCardDepthStyle({
 }
 
 /**
- * Computes scroll progress [0..1] along the 16vh zoom track and target dolly camZ.
+ * Computes scroll progress [0..1] along the zoom runway (1.1x viewport height)
+ * and smooth deep camera dolly target camZ for noticeable 3D perspective zoom.
  */
 export function computeScrollDolly(scrollY, vh, R) {
-    const maxScroll = Math.max(1, vh * 0.36);
+    const maxScroll = Math.max(1, vh * 1.1);
     const p = Math.max(0, Math.min(1, scrollY / maxScroll));
-    const camZTarget = p * Math.min(64, R * 0.12);
+    const camZTarget = p * Math.min(360, R * 0.85);
     return { p, maxScroll, camZTarget };
 }

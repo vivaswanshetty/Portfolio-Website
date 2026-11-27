@@ -4234,18 +4234,39 @@ input:focus-visible {
   }
 }
 
+.starfield-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(ellipse at 50% 0%, #102a43 0%, #050a14 55%, #020408 100%);
+  pointer-events: none;
+}
+
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+  background-size: 100px 100px;
+  mask-image: radial-gradient(ellipse at 50% 40%, black 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, black 0%, transparent 75%);
+  pointer-events: none;
+}
+
 /* ==========================================================================
    3D FIBONACCI SPHERE PROJECTS ARCHIVE ("I BUILD SYSTEMS THAT SCALE")
    Scoped cleanly under body.projects-archive so other routes are unaffected.
    ========================================================================== */
 html.projects-html {
-  background: #000 !important;
+  background: #040812 !important;
   scrollbar-gutter: stable;
   scroll-behavior: auto !important;
 }
 
 body.projects-archive {
-  --bg: #000;
+  --bg: transparent;
   --ink: #f8fafc;
   --dim: #94a3b8;
   --line: rgba(248, 250, 252, 0.24);
@@ -4262,7 +4283,7 @@ body.projects-archive {
   --serif: var(--font-heading), 'Outfit', sans-serif;
   --sans: var(--font-body), 'Inter', sans-serif;
 
-  background-color: #000 !important;
+  background-color: transparent !important;
   color: var(--ink);
   overflow-x: hidden;
   min-height: 100vh;
@@ -4271,7 +4292,8 @@ body.projects-archive {
 }
 
 body.projects-archive .starfield-bg {
-  background: #000 !important;
+  z-index: 0 !important;
+  opacity: 1 !important;
 }
 
 body.projects-archive .grid-overlay {
@@ -4295,7 +4317,7 @@ body.projects-archive.lit .navbar-main {
 .projects-sphere-shell {
   position: relative;
   width: 100%;
-  background: #000;
+  background: transparent;
   color: var(--ink);
   font-family: var(--sans);
   font-weight: 400;
@@ -4310,7 +4332,7 @@ body.projects-archive.lit .navbar-main {
 }
 
 #scrolltrack {
-  height: 136vh;
+  height: 210vh;
   pointer-events: none;
 }
 
@@ -4524,6 +4546,7 @@ body.projects-archive.revealed .projects-sphere-shell .chrome {
   z-index: 55;
   max-width: min(320px, 46vw);
   pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.26s var(--ease);
 }
 
 .projects-sphere-shell .bio .who {
@@ -4571,12 +4594,14 @@ body.projects-archive.revealed .projects-sphere-shell .chrome {
   margin: 0;
 }
 
+body.projects-archive.bio-out .projects-sphere-shell .bio,
 body.projects-archive.deep .projects-sphere-shell .bio,
 body.projects-archive.gridview .projects-sphere-shell .bio,
 body.projects-archive.lit .projects-sphere-shell .bio {
   opacity: 0 !important;
   transform: translateY(10px);
   pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.24s var(--ease) !important;
 }
 
 .projects-sphere-shell .colophon {
@@ -4747,7 +4772,9 @@ body.projects-archive.lit .projects-sphere-shell .cue {
   z-index: 20;
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: #000;
+  background: rgba(4, 8, 18, 0.86);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   opacity: 0;
   pointer-events: none;
   padding: calc(var(--nav-height) + var(--nav-top-offset) + 22px + var(--safe-top)) calc(var(--pad) + var(--safe-right)) calc(var(--pad) * 4 + var(--safe-bottom)) calc(var(--pad) + var(--safe-left));
