@@ -12,126 +12,6 @@ import {
     createValleyPathPoints,
 } from './nightValleyMath';
 
-function drawCrispWildflower(ctx, cx, cy, outerR, petals, variant = 0) {
-    ctx.save();
-    ctx.translate(cx, cy);
-
-    // Subtle soft ambient glow halo strictly within petal circle (keeps dark background punchy)
-    const halo = ctx.createRadialGradient(0, 0, outerR * 0.08, 0, 0, outerR * 0.96);
-    halo.addColorStop(0, 'rgba(255, 255, 255, 0.24)');
-    halo.addColorStop(0.55, 'rgba(255, 255, 255, 0.08)');
-    halo.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    ctx.fillStyle = halo;
-    ctx.beginPath();
-    ctx.arc(0, 0, outerR * 0.96, 0, Math.PI * 2);
-    ctx.fill();
-
-    for (let i = 0; i < petals; i++) {
-        const angle = (i / petals) * Math.PI * 2 + variant * 0.28;
-        ctx.save();
-        ctx.rotate(angle);
-
-        const grad = ctx.createRadialGradient(0, -outerR * 0.44, outerR * 0.04, 0, -outerR * 0.44, outerR * 0.52);
-        grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-        grad.addColorStop(0.7, 'rgba(248, 244, 238, 0.92)');
-        grad.addColorStop(1, 'rgba(226, 220, 212, 0.14)');
-
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.moveTo(0, -outerR * 0.06);
-        ctx.bezierCurveTo(
-            outerR * (variant === 1 ? 0.18 : 0.3),
-            -outerR * 0.28,
-            outerR * (variant === 1 ? 0.15 : 0.34),
-            -outerR * 0.82,
-            0,
-            -outerR * 0.9
-        );
-        ctx.bezierCurveTo(
-            -outerR * (variant === 1 ? 0.15 : 0.34),
-            -outerR * 0.82,
-            -outerR * (variant === 1 ? 0.18 : 0.3),
-            -outerR * 0.28,
-            0,
-            -outerR * 0.06
-        );
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-    }
-
-    // Bright incandescent pollen center
-    const core = ctx.createRadialGradient(0, 0, 0, 0, 0, outerR * 0.22);
-    core.addColorStop(0, 'rgba(255, 253, 236, 1)');
-    core.addColorStop(0.55, 'rgba(255, 235, 160, 0.92)');
-    core.addColorStop(1, 'rgba(255, 255, 255, 0)');
-    ctx.fillStyle = core;
-    ctx.beginPath();
-    ctx.arc(0, 0, outerR * 0.22, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.restore();
-}
-
-function drawCrispLeaf(ctx, cx, cy, radius) {
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(-0.4);
-
-    const grad = ctx.createLinearGradient(0, -radius * 0.84, 0, radius * 0.84);
-    grad.addColorStop(0, 'rgba(235, 248, 235, 0.94)');
-    grad.addColorStop(0.6, 'rgba(195, 220, 198, 0.82)');
-    grad.addColorStop(1, 'rgba(130, 160, 138, 0.25)');
-
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.moveTo(0, -radius * 0.84);
-    ctx.bezierCurveTo(radius * 0.38, -radius * 0.26, radius * 0.34, radius * 0.42, 0, radius * 0.82);
-    ctx.bezierCurveTo(-radius * 0.34, radius * 0.42, -radius * 0.38, -radius * 0.26, 0, -radius * 0.84);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(0, radius * 0.72);
-    ctx.lineTo(0, -radius * 0.72);
-    ctx.stroke();
-
-    ctx.restore();
-}
-
-function createBotanicalAtlasTexture() {
-    const size = 1024;
-    const cell = 512;
-    const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return null;
-
-    ctx.clearRect(0, 0, size, size);
-
-    // Quadrant top-left (UV x:0..0.5, y:0.5..1.0): 5-petal Alpine Poppy
-    drawCrispWildflower(ctx, cell * 0.5, cell * 0.5, 192, 5, 0);
-    // Quadrant top-right (UV x:0.5..1.0, y:0.5..1.0): 6-petal Star Flower
-    drawCrispWildflower(ctx, cell * 1.5, cell * 0.5, 196, 6, 1);
-    // Quadrant bottom-left (UV x:0..0.5, y:0..0.5): 8-petal Daisy / Cosmos
-    drawCrispWildflower(ctx, cell * 0.5, cell * 1.5, 190, 8, 2);
-    // Quadrant bottom-right (UV x:0.5..1.0, y:0..0.5): Night Leaf
-    drawCrispLeaf(ctx, cell * 1.5, cell * 1.5, 188);
-
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    tex.minFilter = THREE.LinearFilter;
-    tex.magFilter = THREE.LinearFilter;
-    tex.wrapS = THREE.ClampToEdgeWrapping;
-    tex.wrapT = THREE.ClampToEdgeWrapping;
-    tex.generateMipmaps = false;
-    tex.needsUpdate = true;
-    return tex;
-}
-
 function createLightRayTexture() {
     const canvas = document.createElement('canvas');
     canvas.width = 256;
@@ -173,14 +53,15 @@ uniform float uScrollSurge;
 
 attribute float aScale;
 attribute float aPhase;
-attribute vec2 aTile;
+attribute float aPetals;
 attribute float aAngle;
 attribute float aIsLeaf;
 attribute vec3 aColor;
 attribute vec3 aDisperseDir;
 
-varying vec2 vTile;
+varying float vPetals;
 varying float vAngle;
+varying float vIsLeaf;
 varying float vAlpha;
 varying float vMouseGlow;
 varying float vDisperse;
@@ -188,7 +69,8 @@ varying float vWarp;
 varying vec3 vColor;
 
 void main() {
-    vTile = aTile;
+    vPetals = aPetals;
+    vIsLeaf = aIsLeaf;
     vAngle = aAngle + sin(uTime * 0.45 + aPhase) * 0.12 + uWarp * (2.6 + aPhase);
     vColor = aColor;
     vDisperse = uDisperse;
@@ -220,8 +102,8 @@ void main() {
     float dist = max(0.5, -mvPosition.z);
 
     // Flowers bloom from buds into full blossoms as they approach camera; leaves populate slopes further back
-    float flowerGrow = smoothstep(56.0, 10.0, dist) * (1.0 - smoothstep(2.4, 0.7, dist));
-    float leafGrow = smoothstep(76.0, 20.0, dist) * (1.0 - smoothstep(3.6, 1.0, dist));
+    float flowerGrow = smoothstep(56.0, 10.0, dist) * (1.0 - smoothstep(2.2, 0.6, dist));
+    float leafGrow = smoothstep(76.0, 20.0, dist) * (1.0 - smoothstep(3.4, 0.9, dist));
     float stageScale = mix(flowerGrow, leafGrow, aIsLeaf);
 
     vec4 clipPos = projectionMatrix * mvPosition;
@@ -241,26 +123,27 @@ void main() {
 
     vMouseGlow = pushStrength;
 
-    float baseSize = aScale * (aIsLeaf > 0.5 ? 12.0 : 14.5) * (0.28 + 0.88 * stageScale);
-    baseSize *= (1.0 + pushStrength * 0.45 - uDisperse * 0.15 + uScrollSurge * 0.24) * (1.0 + uWarp * 0.35);
+    float baseSize = aScale * (aIsLeaf > 0.5 ? 11.5 : 14.5) * (0.30 + 0.86 * stageScale);
+    baseSize *= (1.0 + pushStrength * 0.48 - uDisperse * 0.14 + uScrollSurge * 0.24) * (1.0 + uWarp * 0.35);
 
     gl_Position = clipPos;
-    gl_PointSize = clamp((baseSize * uPixelRatio * 48.0) / dist, 2.0, 62.0);
+    gl_PointSize = clamp((baseSize * uPixelRatio * 46.0) / dist, 2.2, 58.0);
 
     float farFade = 1.0 - smoothstep(46.0, 92.0, dist);
-    float nearFade = smoothstep(0.7, 2.4, dist);
-    float baseAlpha = mix(0.96, 0.74, aIsLeaf);
+    float nearFade = smoothstep(0.6, 2.2, dist);
+    float baseAlpha = mix(0.96, 0.72, aIsLeaf);
     float orbBoost = mix(1.0, 0.92, uDisperse * aIsLeaf);
     vAlpha = farFade * nearFade * mix(stageScale, 0.86, uDisperse * 0.7) * baseAlpha * orbBoost * (1.0 - smoothstep(0.68, 1.0, uWarp));
 }
 `;
 
+// Analytic 360-degree symmetrical petals & incandescent flower centers (zero atlas UV seam clipping!)
 const FLORA_FRAGMENT_SHADER = `
-uniform sampler2D uAtlas;
 uniform float uScrollDim;
 
-varying vec2 vTile;
+varying float vPetals;
 varying float vAngle;
+varying float vIsLeaf;
 varying float vAlpha;
 varying float vMouseGlow;
 varying float vDisperse;
@@ -270,26 +153,39 @@ varying vec3 vColor;
 void main() {
     if (vAlpha <= 0.01) discard;
 
-    // Strict circular radial boundary around sprite center (never clips flat square/triangular corners!)
     vec2 centered = gl_PointCoord - 0.5;
     float r = length(centered) * 2.0;
-    if (r > 0.98) discard;
+    if (r > 1.0) discard;
 
     float c = cos(vAngle);
     float s = sin(vAngle);
-    vec2 rotated = mat2(c, -s, s, c) * centered + 0.5;
+    vec2 rp = mat2(c, -s, s, c) * centered;
 
-    // Exact quadrant coordinates precomputed in JS vertex attribute vTile (zero mod/floor wrapping seam bugs!)
-    vec2 localUv = clamp(rotated, 0.04, 0.96) * 0.5;
-    vec2 atlasUV = vTile + localUv;
+    float shapeAlpha = 0.0;
+    float stamenGlow = 0.0;
+    float petalShade = 1.0;
 
-    vec4 tex = texture2D(uAtlas, atlasUV);
+    if (vIsLeaf > 0.5) {
+        float lx = abs(rp.x) * 2.0;
+        float ly = rp.y * 2.0;
+        float leafWidth = max(0.0, 0.38 * (1.0 - ly * ly));
+        shapeAlpha = smoothstep(leafWidth + 0.08, leafWidth - 0.05, lx) * smoothstep(0.96, 0.80, abs(ly));
+        petalShade = 0.82 + 0.18 * (1.0 - lx / max(0.08, leafWidth));
+    } else {
+        float theta = atan(rp.y, rp.x);
+        float lobes = abs(cos(theta * (floor(vPetals + 0.5) * 0.5)));
+        float outerEdge = mix(0.36, 0.94, pow(lobes, 0.65));
+        shapeAlpha = smoothstep(outerEdge + 0.06, outerEdge - 0.08, r);
+        petalShade = 0.76 + 0.24 * pow(lobes, 0.55) * smoothstep(0.15, 0.75, r);
+        stamenGlow = exp(-r * r * 14.0);
+    }
+
     float orb = exp(-r * r * 3.8);
-
-    // Morph sharp crisp blossoms into glowing bokeh firefly orbs during #go hover or vortex dive
     float morph = max(vDisperse * 0.94, vWarp * 0.95);
-    float shapeAlpha = mix(tex.a, orb, morph);
-    vec3 petalTint = tex.rgb * vColor;
+    shapeAlpha = mix(shapeAlpha, orb, morph);
+
+    vec3 centerGold = vec3(1.0, 0.95, 0.76);
+    vec3 petalTint = mix(vColor * petalShade, centerGold, stamenGlow * 0.72);
     vec3 orbTint = vColor * 1.65;
     vec3 tint = mix(petalTint, orbTint, morph * 0.85);
 
@@ -432,13 +328,7 @@ const VALLEY_POST_SHADER = {
     `,
 };
 
-// Discrete atlas offsets matching WebGL flipY=true UVs: [top-left, top-right, bottom-left, bottom-right]
-const ATLAS_TILE_OFFSETS = [
-    [0.0, 0.5],
-    [0.5, 0.5],
-    [0.0, 0.0],
-    [0.5, 0.0],
-];
+const PETAL_COUNTS = [5.0, 6.0, 8.0];
 
 export class NightValleyEngine {
     constructor(container, { onLoaded, onIntroDone } = {}) {
@@ -548,7 +438,6 @@ export class NightValleyEngine {
     }
 
     _buildFloraAndLeaves(pixelRatio) {
-        this.atlasTex = createBotanicalAtlasTexture();
         const rand = mulberry32(2026);
 
         const flowerCount = 10500;
@@ -558,7 +447,7 @@ export class NightValleyEngine {
         const positions = new Float32Array(total * 3);
         const scales = new Float32Array(total);
         const phases = new Float32Array(total);
-        const tiles = new Float32Array(total * 2);
+        const petals = new Float32Array(total);
         const angles = new Float32Array(total);
         const isLeafAttr = new Float32Array(total);
         const colors = new Float32Array(total * 3);
@@ -611,10 +500,7 @@ export class NightValleyEngine {
 
             scales[i] = isLeaf ? 0.7 + rand() * 1.1 : 0.62 + rand() * 1.18;
             phases[i] = rand() * Math.PI * 2;
-            const tileIdx = isLeaf ? 3 : Math.floor(rand() * 3);
-            const [tu, tv] = ATLAS_TILE_OFFSETS[tileIdx];
-            tiles[i * 2] = tu;
-            tiles[i * 2 + 1] = tv;
+            petals[i] = isLeaf ? 0.0 : PETAL_COUNTS[Math.floor(rand() * PETAL_COUNTS.length)];
             angles[i] = rand() * Math.PI * 2;
             isLeafAttr[i] = isLeaf ? 1 : 0;
 
@@ -651,7 +537,7 @@ export class NightValleyEngine {
         geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         geo.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
         geo.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
-        geo.setAttribute('aTile', new THREE.BufferAttribute(tiles, 2));
+        geo.setAttribute('aPetals', new THREE.BufferAttribute(petals, 1));
         geo.setAttribute('aAngle', new THREE.BufferAttribute(angles, 1));
         geo.setAttribute('aIsLeaf', new THREE.BufferAttribute(isLeafAttr, 1));
         geo.setAttribute('aColor', new THREE.BufferAttribute(colors, 3));
@@ -676,6 +562,7 @@ export class NightValleyEngine {
             vertexShader: FLORA_VERTEX_SHADER,
             fragmentShader: FLORA_FRAGMENT_SHADER,
             transparent: true,
+            depthTest: false,
             depthWrite: false,
             blending: THREE.NormalBlending,
         });
@@ -715,7 +602,6 @@ export class NightValleyEngine {
             uDisperse: { value: 0 },
             uScrollDim: { value: 0 },
             uWarp: { value: 0 },
-            uScrollSurge: { value: 0 },
         };
 
         const mat = new THREE.ShaderMaterial({
@@ -723,6 +609,7 @@ export class NightValleyEngine {
             vertexShader: DUST_VERTEX_SHADER,
             fragmentShader: DUST_FRAGMENT_SHADER,
             transparent: true,
+            depthTest: false,
             depthWrite: false,
             blending: THREE.AdditiveBlending,
         });
@@ -897,7 +784,6 @@ export class NightValleyEngine {
         const surgeDrop = this.scrollSurge * 0.72;
         const camY = floorY + 3.25 - surgeDrop + Math.sin(elapsed * 0.45) * 0.14 + introDrop;
 
-        // Gaze downward into the lush meadow floor while immersing deeper into flowers when scrolling
         const lookZ = camZ - 16;
         const lookX = getValleyCenterX(lookZ) + this.mouseTilt.x * 1.85;
         const lookY = getValleyTerrainY(lookX, lookZ) + 0.18 - surgeDrop * 0.35 + this.mouseTilt.y * 1.15;
@@ -986,7 +872,6 @@ export class NightValleyEngine {
         }
         this.rays?.forEach((r) => r.geometry.dispose());
         this.rayMat?.dispose();
-        this.atlasTex?.dispose();
         this.rayTex?.dispose();
         this.composer?.dispose();
         if (this.renderer) {

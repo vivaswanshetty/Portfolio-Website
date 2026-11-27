@@ -291,8 +291,6 @@ const About = () => {
                         </div>
 
                         <div className="valley-corner">
-                            <span>Scroll to wander</span>
-                            <i aria-hidden="true" />
                             <button
                                 type="button"
                                 id="sound"

@@ -48,17 +48,7 @@ export const GlobalAudioProvider = ({ children }) => {
         audio.addEventListener('volumechange', syncPlaybackUI);
 
         let unlockAttached = false;
-        const UNLOCK_EVENTS = [
-            'pointerdown',
-            'mousedown',
-            'touchstart',
-            'click',
-            'mouseup',
-            'pointerup',
-            'touchend',
-            'keydown',
-            'wheel',
-        ];
+        const UNLOCK_EVENTS = ['mousedown', 'mouseup', 'pointerup', 'touchend', 'click', 'keydown'];
 
         const detachUnlock = () => {
             if (!unlockAttached) return;
@@ -66,6 +56,7 @@ export const GlobalAudioProvider = ({ children }) => {
             UNLOCK_EVENTS.forEach((evt) => {
                 window.removeEventListener(evt, handleFirstInteraction, true);
             });
+            window.removeEventListener('focus', attemptAutoplay);
         };
 
         function handleFirstInteraction(e) {
@@ -93,15 +84,7 @@ export const GlobalAudioProvider = ({ children }) => {
             }
         }
 
-        const attachUnlock = () => {
-            if (unlockAttached) return;
-            unlockAttached = true;
-            UNLOCK_EVENTS.forEach((evt) => {
-                window.addEventListener(evt, handleFirstInteraction, { capture: true, passive: true });
-            });
-        };
-
-        const attemptAutoplay = () => {
+        function attemptAutoplay() {
             if (!audioRef.current || userMutedRef.current) return;
             audio.muted = false;
             audio.volume = duckRef.current ? DUCKED_VOLUME : BASE_VOLUME;
@@ -113,12 +96,21 @@ export const GlobalAudioProvider = ({ children }) => {
                         detachUnlock();
                     })
                     .catch(() => {
-                        // Browser blocked unmuted autoplay on cold load: attach global activation hooks
+                        // Browser blocked unmuted autoplay on cold load: wait cleanly for first activation
                         syncPlaybackUI();
                         attachUnlock();
                     });
             }
-        };
+        }
+
+        function attachUnlock() {
+            if (unlockAttached) return;
+            unlockAttached = true;
+            UNLOCK_EVENTS.forEach((evt) => {
+                window.addEventListener(evt, handleFirstInteraction, { capture: true, passive: true });
+            });
+            window.addEventListener('focus', attemptAutoplay, { passive: true });
+        }
 
         // Attach unlock immediately AND attempt immediate autoplay on load + when buffer finishes decoding
         attachUnlock();
