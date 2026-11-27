@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Home, User, FolderGit2, FileText, Mail, Menu, X, Code } from 'lucide-react';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
+import { Home, User, FolderGit2, FileText, Mail, Menu, X, Code, Volume2, VolumeX } from 'lucide-react';
 import { useIntro } from '../context/useIntro';
+import { useGlobalAudio } from '../context/useGlobalAudio';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const { navVisible } = useIntro();
+    const { isMuted, toggleMute } = useGlobalAudio();
     const isHome = location.pathname === '/';
     const toggleBtnRef = useRef(null);
     const firstNavLinkRef = useRef(null);
@@ -89,7 +91,7 @@ const Navbar = () => {
 
     return (
         <>
-            <motion.nav
+            <Motion.nav
                 initial={isHome ? false : { y: -80, opacity: 0 }}
                 animate={
                     isHome
@@ -130,7 +132,7 @@ const Navbar = () => {
                                 <>
                                     <span style={{ position: 'relative', zIndex: 2 }}>{link.name}</span>
                                     {isActive && (
-                                        <motion.div
+                                        <Motion.div
                                             layoutId="activeNavIndicator"
                                             className="navbar-active-pill"
                                             transition={{ type: 'spring', stiffness: 380, damping: 30 }}
@@ -142,8 +144,18 @@ const Navbar = () => {
                     ))}
                 </div>
 
-                {/* Right Side Actions: Contact */}
+                {/* Right Side Actions: Ambient Sound Toggle + Contact */}
                 <div className="desktop-only navbar-actions">
+                    <button
+                        type="button"
+                        onClick={toggleMute}
+                        className={`navbar-audio-btn${isMuted ? ' muted' : ' active'}`}
+                        aria-pressed={!isMuted}
+                        aria-label={isMuted ? 'Unmute background audio' : 'Mute background audio'}
+                        title={isMuted ? 'Unmute background audio' : 'Mute background audio'}
+                    >
+                        {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+                    </button>
                     <NavLink to="/contact" className="navbar-contact-btn">
                         <span>Contact</span>
                     </NavLink>
@@ -151,7 +163,16 @@ const Navbar = () => {
 
                 {/* Mobile Right Controls */}
                 <div className="mobile-actions">
-                    <motion.button
+                    <button
+                        type="button"
+                        onClick={toggleMute}
+                        className={`navbar-audio-btn${isMuted ? ' muted' : ' active'}`}
+                        aria-pressed={!isMuted}
+                        aria-label={isMuted ? 'Unmute background audio' : 'Mute background audio'}
+                    >
+                        {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+                    </button>
+                    <Motion.button
                         ref={toggleBtnRef}
                         onClick={() => setIsOpen(!isOpen)}
                         className="mobile-toggle"
@@ -162,23 +183,23 @@ const Navbar = () => {
                     >
                         <AnimatePresence mode="wait">
                             {isOpen ? (
-                                <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}>
+                                <Motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}>
                                     <X size={22} />
-                                </motion.div>
+                                </Motion.div>
                             ) : (
-                                <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}>
+                                <Motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}>
                                     <Menu size={22} />
-                                </motion.div>
+                                </Motion.div>
                             )}
                         </AnimatePresence>
-                    </motion.button>
+                    </Motion.button>
                 </div>
-            </motion.nav>
+            </Motion.nav>
 
             {/* Mobile Drawer Menu */}
             <AnimatePresence>
                 {isOpen && (
-                    <motion.div
+                    <Motion.div
                         ref={menuContainerRef}
                         id="mobile-navigation-menu"
                         role="dialog"
@@ -192,7 +213,7 @@ const Navbar = () => {
                     >
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', maxWidth: '320px' }}>
                             {navLinks.map((link, idx) => (
-                                <motion.div
+                                <Motion.div
                                     key={link.path}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -210,10 +231,10 @@ const Navbar = () => {
                                         </div>
                                         <span>{link.name}</span>
                                     </NavLink>
-                                </motion.div>
+                                </Motion.div>
                             ))}
 
-                            <motion.div
+                            <Motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
@@ -230,9 +251,9 @@ const Navbar = () => {
                                     </div>
                                     <span>Get In Touch</span>
                                 </NavLink>
-                            </motion.div>
+                            </Motion.div>
                         </div>
-                    </motion.div>
+                    </Motion.div>
                 )}
             </AnimatePresence>
         </>

@@ -27,6 +27,7 @@ import CookieBanner from './components/CookieBanner';
 import { ToastProvider } from './context/ToastContext';
 const CyberDrone = lazy(() => import('./components/CyberDrone'));
 import { IntroProvider } from './context/IntroContext';
+import { GlobalAudioProvider } from './context/AudioContext';
 import { useIntro } from './context/useIntro';
 import { ToastContainer } from './components/Toast';
 import { Analytics } from '@vercel/analytics/react';
@@ -174,13 +175,15 @@ const AppLayout = () => {
 
 function App() {
     return (
-        <ToastProvider>
-            <IntroProvider>
-                <Router>
-                    <AppLayout />
-                </Router>
-            </IntroProvider>
-        </ToastProvider>
+        <GlobalAudioProvider>
+            <ToastProvider>
+                <IntroProvider>
+                    <Router>
+                        <AppLayout />
+                    </Router>
+                </IntroProvider>
+            </ToastProvider>
+        </GlobalAudioProvider>
     );
 }
 

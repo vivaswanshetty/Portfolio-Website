@@ -303,8 +303,8 @@ img {
   right: 0;
   margin-left: auto;
   margin-right: auto;
-  width: min(92%, 760px);
-  max-width: 760px;
+  width: min(94%, 810px);
+  max-width: 810px;
   z-index: 1000;
   padding: 0.45rem 0.55rem 0.45rem 1.15rem;
   border-radius: 9999px;
@@ -399,6 +399,37 @@ img {
   display: flex;
   align-items: center;
   justify-self: end;
+  gap: 0.45rem;
+}
+
+.navbar-audio-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(248, 250, 252, 0.86);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.navbar-audio-btn.active {
+  border-color: rgba(239, 68, 68, 0.45);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.18);
+}
+
+.navbar-audio-btn.muted {
+  color: rgba(148, 163, 184, 0.65);
+}
+
+.navbar-audio-btn:hover {
+  border-color: rgba(239, 68, 68, 0.75);
+  background: rgba(239, 68, 68, 0.16);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .navbar-contact-btn {

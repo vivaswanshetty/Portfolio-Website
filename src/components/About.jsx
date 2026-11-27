@@ -5,7 +5,7 @@ import { ArrowRight, ArrowUp, Compass, Cpu, Zap } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import portraitImg from '../assets/vivaswan_portrait.webp';
 import { NightValleyEngine } from '../utils/nightValleyEngine';
-import { createValleyAudioStore } from '../utils/nightValleyAudio';
+import { useGlobalAudio } from '../context/useGlobalAudio';
 
 const OPERATING_PILLARS = [
     {
@@ -95,15 +95,14 @@ const AnimatedCounter = ({ value, duration = 1800 }) => {
 
 const About = () => {
     const { highlights, stats } = portfolioData.about;
+    const { isMuted, toggleMute, setDuck } = useGlobalAudio();
     const valleyContainerRef = useRef(null);
     const valleyEngineRef = useRef(null);
-    const audioStoreRef = useRef(null);
     const storyRef = useRef(null);
     const portraitCardRef = useRef(null);
 
     const [loaded, setLoaded] = useState(false);
     const [introDone, setIntroDone] = useState(false);
-    const [soundActive, setSoundActive] = useState(true);
     const [isDiving, setIsDiving] = useState(false);
     const [heroScrolledRatio, setHeroScrolledRatio] = useState(0);
 
@@ -113,10 +112,6 @@ const About = () => {
         if (!container) return undefined;
 
         document.body.classList.add('about-valley-route', 'valley-loading');
-
-        const audioStore = createValleyAudioStore();
-        audioStore.initAudio();
-        audioStoreRef.current = audioStore;
 
         let shown = false;
         const engine = new NightValleyEngine(container, {
@@ -155,27 +150,23 @@ const About = () => {
             window.removeEventListener('scroll', onScroll);
             document.body.classList.remove('about-valley-route', 'valley-loading');
             engine.dispose();
-            audioStore.dispose();
+            setDuck(false);
             valleyEngineRef.current = null;
-            audioStoreRef.current = null;
         };
-    }, []);
+    }, [setDuck]);
 
     const handleToggleSound = () => {
-        const store = audioStoreRef.current;
-        if (!store || !store.isInitialized) return;
-        const muted = store.toggleMute();
-        setSoundActive(!muted);
+        toggleMute();
     };
 
     const handleEnterPointerEnter = () => {
         valleyEngineRef.current?.startHoverTransition();
-        audioStoreRef.current?.setHoverMuffle(true);
+        setDuck(true);
     };
 
     const handleEnterPointerLeave = () => {
         valleyEngineRef.current?.stopHoverTransition();
-        audioStoreRef.current?.setHoverMuffle(false);
+        setDuck(false);
     };
 
     const handleEnterClick = (e) => {
@@ -183,8 +174,7 @@ const About = () => {
         if (isDiving) return;
 
         setIsDiving(true);
-        audioStoreRef.current?.setHoverMuffle(false);
-        audioStoreRef.current?.playWarpSweep();
+        setDuck(false);
 
         const engine = valleyEngineRef.current;
         if (!engine) {
@@ -285,8 +275,8 @@ const About = () => {
                             type="button"
                             id="sound"
                             className="valley-sound"
-                            aria-pressed={soundActive}
-                            aria-label="Toggle ambient night sound"
+                            aria-pressed={!isMuted}
+                            aria-label="Toggle ambient sound"
                             onClick={handleToggleSound}
                         >
                             <svg viewBox="0 0 24 24" aria-hidden="true">
