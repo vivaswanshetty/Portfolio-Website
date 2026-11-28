@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { motion as Motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowDown, Code, Cpu, Zap, Globe, User, Briefcase, Mail, RotateCcw, FastForward, ExternalLink } from 'lucide-react';
 import archiveBg from '../assets/archive_bg.webp';
 import { portfolioData } from '../data/portfolioData';
 import { projectScreenshots } from '../data/projectScreenshots';
+import VhsArchiveSection from './VhsArchiveSection';
 import { useIntro } from '../context/useIntro';
 import { LiquidGlass } from './ui/LiquidGlass';
 import {
@@ -1092,190 +1093,6 @@ const Hero = () => {
     );
 };
 
-const HOME_MARQUEE_SHOTS = [
-    ...projectScreenshots['rv-tours-and-travels'].map((s, idx) => ({
-        id: `rv-${idx}`,
-        src: s.src,
-        title: s.title,
-        project: 'RV Tours & Travels',
-        slug: 'rv-tours-and-travels',
-    })),
-    ...projectScreenshots['elevatex-web'].slice(0, 6).map((s, idx) => ({
-        id: `ew-${idx}`,
-        src: s.src,
-        title: s.title,
-        project: 'ElevateX Web',
-        slug: 'elevatex-web',
-    })),
-    ...projectScreenshots['medfind'].slice(0, 4).map((s, idx) => ({
-        id: `mf-${idx}`,
-        src: s.src,
-        title: s.title,
-        project: 'MedFind',
-        slug: 'medfind',
-    })),
-    ...projectScreenshots['conquerone'].slice(0, 3).map((s, idx) => ({
-        id: `c1-${idx}`,
-        src: s.src,
-        title: s.title,
-        project: 'CONQUER ONE',
-        slug: 'conquerone',
-    })),
-    ...projectScreenshots['portfolio'].slice(0, 3).map((s, idx) => ({
-        id: `pf-${idx}`,
-        src: s.src,
-        title: s.title,
-        project: 'Portfolio Architecture',
-        slug: 'portfolio',
-    })),
-];
-
-const HOME_ROW_1 = HOME_MARQUEE_SHOTS.slice(0, 10);
-const HOME_ROW_2 = HOME_MARQUEE_SHOTS.slice(10);
-
-function wrapMarqueeOffset(offset, span) {
-    if (!span || span <= 0) return offset;
-    return (((offset % span) + span) % span) - span;
-}
-
-function measureMarqueeSpan(rowEl) {
-    if (!rowEl) return 0;
-    const cs = getComputedStyle(rowEl);
-    const gap = parseFloat(cs.columnGap || cs.gap) || 14;
-    return (rowEl.scrollWidth + gap) / 3;
-}
-
-const PortfolioMarqueeSection = () => {
-    const navigate = useNavigate();
-    const sectionRef = useRef(null);
-    const row1Ref = useRef(null);
-    const row2Ref = useRef(null);
-
-    useEffect(() => {
-        const el = sectionRef.current;
-        const row1 = row1Ref.current;
-        const row2 = row2Ref.current;
-        if (!el || !row1 || !row2) return undefined;
-
-        const reducedMotion = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches);
-        let span1 = measureMarqueeSpan(row1);
-        let span2 = measureMarqueeSpan(row2);
-        let drift1 = 0;
-        let drift2 = 0;
-        let lastScrollY = window.scrollY;
-        let lastTime = 0;
-        let inView = true;
-        let rafId = null;
-
-        const renderRows = () => {
-            const x1 = wrapMarqueeOffset(drift1 - 240, span1);
-            const x2 = wrapMarqueeOffset(drift2 - 180, span2);
-            row1.style.transform = `translate3d(${x1.toFixed(2)}px, 0, 0)`;
-            row2.style.transform = `translate3d(${x2.toFixed(2)}px, 0, 0)`;
-        };
-
-        const ro = typeof ResizeObserver === 'function'
-            ? new ResizeObserver(() => {
-                span1 = measureMarqueeSpan(row1);
-                span2 = measureMarqueeSpan(row2);
-                renderRows();
-            })
-            : null;
-        ro?.observe(row1);
-        ro?.observe(row2);
-
-        const io = typeof IntersectionObserver === 'function'
-            ? new IntersectionObserver(
-                ([entry]) => {
-                    inView = Boolean(entry?.isIntersecting);
-                    if (!inView) lastTime = 0;
-                },
-                { rootMargin: '240px' }
-            )
-            : null;
-        io?.observe(el);
-
-        const onScroll = () => {
-            const sy = window.scrollY;
-            const dy = sy - lastScrollY;
-            lastScrollY = sy;
-            if (!reducedMotion) {
-                drift1 += dy * 0.24;
-                drift2 -= dy * 0.24;
-                if (!inView) renderRows();
-            }
-        };
-
-        const tick = (now) => {
-            const dt = lastTime ? Math.min(0.05, Math.max(0, (now - lastTime) / 1000)) : 0;
-            lastTime = now;
-            if (inView && !document.hidden) {
-                drift1 += dt * 42;
-                drift2 -= dt * 36;
-                renderRows();
-            }
-            rafId = requestAnimationFrame(tick);
-        };
-
-        renderRows();
-        window.addEventListener('scroll', onScroll, { passive: true });
-        if (!reducedMotion) {
-            rafId = requestAnimationFrame(tick);
-        }
-
-        return () => {
-            window.removeEventListener('scroll', onScroll);
-            ro?.disconnect();
-            io?.disconnect();
-            if (rafId) cancelAnimationFrame(rafId);
-        };
-    }, []);
-
-    return (
-        <section ref={sectionRef} className="home-marquee-section" aria-label="Selected production screenshots">
-            <div className="home-marquee-header">
-                <span className="editorial-eyebrow-text">LIVE ARCHIVE STREAM · SCROLL TO GLIDE</span>
-            </div>
-
-            <div className="home-marquee-tracks">
-                <div ref={row1Ref} className="home-marquee-row">
-                    {[...HOME_ROW_1, ...HOME_ROW_1, ...HOME_ROW_1].map((shot, i) => (
-                        <button
-                            key={`r1-${shot.id}-${i}`}
-                            type="button"
-                            className="home-marquee-tile"
-                            onClick={() => navigate(`/projects/${shot.slug}`)}
-                        >
-                            <img src={shot.src} alt={shot.title} loading="lazy" />
-                            <span className="home-marquee-label">
-                                <b>{shot.project}</b>
-                                <small>{shot.title}</small>
-                            </span>
-                        </button>
-                    ))}
-                </div>
-
-                <div ref={row2Ref} className="home-marquee-row">
-                    {[...HOME_ROW_2, ...HOME_ROW_2, ...HOME_ROW_2].map((shot, i) => (
-                        <button
-                            key={`r2-${shot.id}-${i}`}
-                            type="button"
-                            className="home-marquee-tile"
-                            onClick={() => navigate(`/projects/${shot.slug}`)}
-                        >
-                            <img src={shot.src} alt={shot.title} loading="lazy" />
-                            <span className="home-marquee-label">
-                                <b>{shot.project}</b>
-                                <small>{shot.title}</small>
-                            </span>
-                        </button>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
-};
-
 const StatementManifestoSection = () => {
     return (
         <section className="home-manifesto-section" aria-label="Engineering philosophy">
@@ -1623,7 +1440,7 @@ const Home = () => {
         <div className="home-editorial-wrapper">
             <Hero />
             <KineticSeamDivider tone="cyan" label="SCROLL DESCENT · ARCHIVE" />
-            <PortfolioMarqueeSection />
+            <VhsArchiveSection />
             <StatementManifestoSection />
             <CapabilitiesContrastBand />
             <StackingProjectsSection />
