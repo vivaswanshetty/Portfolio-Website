@@ -63,15 +63,19 @@ for (const [w, h] of viewports) {
     assert.equal(settledHero.roomVisible, false);
     assert.equal(settledHero.kc, 1);
 
+    const plateauRoom = evaluateScrollTimeline(0.84, layout, false);
+    assert.equal(plateauRoom.roomVisible, true);
+    assert.ok(plateauRoom.cardProgress.every((p) => p === 1), `All 4 cards must finish sliding in by p=0.84 at ${w}x${h}`);
+
     const settledRoom = evaluateScrollTimeline(1, layout, false);
     assert.equal(settledRoom.roomVisible, true);
     assert.ok(settledRoom.cardProgress.every((p) => p === 1), `All cards must finish slide-in by end at ${w}x${h}`);
 }
 
-// 5. Intro overshoot check (skyline rises past 0 to -0.063*H at I=2.2s and settles at I=3.5s)
-const introMid = evaluateIntroTimeline(2.2, 900, 1, false);
-assert.ok(introMid.skyOffsetH < 0, `Expected upward overshoot at 2.2s, got ${introMid.skyOffsetH}`);
-const introEnd = evaluateIntroTimeline(6.0, 900, 1, false);
+// 5. Intro overshoot check (skyline rises past 0 to -0.04*H at I=1.05s and settles by I=2.8s)
+const introMid = evaluateIntroTimeline(1.05, 900, 1, false);
+assert.ok(introMid.skyOffsetH < 0, `Expected upward overshoot at 1.05s, got ${introMid.skyOffsetH}`);
+const introEnd = evaluateIntroTimeline(2.85, 900, 1, false);
 assert.equal(introEnd.panY, 0);
 assert.equal(introEnd.skyOffsetH, 0);
 assert.equal(introEnd.metaOpacity, 1);

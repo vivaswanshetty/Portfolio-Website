@@ -1,10 +1,12 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion as Motion } from 'framer-motion';
 import {
+    ArrowDown,
     Award,
     Briefcase,
     Calendar,
+    ChevronDown,
     ChevronRight,
     Cpu,
     ExternalLink,
@@ -47,7 +49,7 @@ const RESUME_ROLE_CARDS = [
         slug: 'rv-tours-and-travels',
         title: 'RV Tours & Travels',
         subtitle: 'Full-Stack Architect',
-        year: '2026–Now',
+        year: '2026',
         img: rvToursImg,
         specs: ['Next 16', '100 SEO', 'Vercel'],
     },
@@ -55,17 +57,17 @@ const RESUME_ROLE_CARDS = [
         slug: 'conquerone',
         title: 'CONQUER ONE',
         subtitle: 'Creator & Lead Dev',
-        year: '2026–Now',
+        year: '2026',
         img: conqueroneImg,
-        specs: ['Expo 54', 'Gemini', 'Health API'],
+        specs: ['Expo 54', 'Gemini', 'Health'],
     },
     {
         slug: 'elevatex-web',
         title: 'ElevateX',
         subtitle: 'Founder & Lead Dev',
-        year: '2025–Now',
+        year: '2025+',
         img: elevatexImg,
-        specs: ['MERN', '<50ms WS', 'Bun'],
+        specs: ['MERN', '<50ms', 'Bun'],
     },
 ];
 
@@ -96,6 +98,21 @@ const MeasureHeadlineMetrics = (() => {
     };
 })();
 
+const GUIDE_PHASES = [
+    {
+        id: 1,
+        label: 'SKYLINE VIEW · SCROLL DOWN TO ENTER STUDIO',
+    },
+    {
+        id: 2,
+        label: 'PULLING BACK · KEEP SCROLLING FOR FEATURED ROLES',
+    },
+    {
+        id: 3,
+        label: 'CLICK ANY CARD FOR CASE STUDY · SCROLL DOWN FOR FULL CV',
+    },
+];
+
 const Resume = () => {
     const navigate = useNavigate();
     const { experience, education, achievements, certifications } = portfolioData.resume;
@@ -116,10 +133,12 @@ const Resume = () => {
     const skyRef = useRef(null);
     const buildRef = useRef(null);
     const paraRef = useRef(null);
+    const guideBarRef = useRef(null);
     const cardRefs = useRef([]);
     const dossierRef = useRef(null);
 
     const [videoPlaying, setVideoPlaying] = useState(false);
+    const [guidePhase, setGuidePhase] = useState(1);
     const [reducedMotion, setReducedMotion] = useState(() =>
         typeof window !== 'undefined'
             ? Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches)
@@ -129,10 +148,9 @@ const Resume = () => {
     const engineRef = useRef({
         layout: typeof window !== 'undefined' ? computeStageLayout(window.innerWidth, window.innerHeight) : null,
         introStartMs: null,
-        assetsReady: false,
         roomKeyed: false,
         pCur: 0,
-        typography: null,
+        lastPhase: 1,
     });
 
     // Apply pure-indigo portal root class before first paint
@@ -149,6 +167,7 @@ const Resume = () => {
             document.documentElement.style.removeProperty('--rs-travel');
             document.documentElement.style.removeProperty('--rs-cs');
             document.documentElement.style.removeProperty('--rs-ph');
+            document.documentElement.style.removeProperty('--rs-nav-b');
         };
     }, []);
 
@@ -159,7 +178,8 @@ const Resume = () => {
             const W = window.innerWidth;
             const H = stageEl?.clientHeight || window.innerHeight;
             const navEl = document.querySelector('.navbar-main');
-            const navBottom = navEl ? Math.max(navEl.getBoundingClientRect().bottom, 64) : 76;
+            const navRect = navEl?.getBoundingClientRect();
+            const navBottom = navRect && navRect.height > 0 ? Math.max(navRect.bottom, 64) : 76;
 
             const layout = computeStageLayout(W, H, navBottom);
             engineRef.current.layout = layout;
@@ -168,6 +188,7 @@ const Resume = () => {
             document.documentElement.style.setProperty('--rs-travel', `${layout.travel}px`);
             document.documentElement.style.setProperty('--rs-cs', `${layout.cs}`);
             document.documentElement.style.setProperty('--rs-ph', `${layout.phRatio}`);
+            document.documentElement.style.setProperty('--rs-nav-b', `${navBottom}px`);
 
             // Plate cover placement (heroImg, heroVid rows 208..1360, .sky 1.6*ph, towerImg)
             const { sc, pw, ph, ox, oy, s, phone } = layout;
@@ -215,13 +236,13 @@ const Resume = () => {
                 Object.assign(
                     buildRef.current.style,
                     phone
-                        ? { left: `${20 * s}px`, top: `${navBottom + 20 * s}px` }
+                        ? { left: `${20 * s}px`, top: `${navBottom + 18 * s}px` }
                         : { left: `${(W * 93) / 1418}px`, top: `${Math.max((H * 169) / 1012, navBottom + 24 * s)}px` }
                 );
             }
             const buildBottom = buildRef.current
                 ? buildRef.current.getBoundingClientRect().bottom
-                : navBottom + 110 * s;
+                : navBottom + 104 * s;
 
             if (paraRef.current) {
                 if (phone) {
@@ -230,7 +251,7 @@ const Resume = () => {
                         left: `${20 * s}px`,
                         right: `${20 * s}px`,
                         top: 'auto',
-                        bottom: `${0.045 * H}px`,
+                        bottom: `${Math.max(82, 0.11 * H)}px`,
                         width: 'auto',
                     });
                 } else if (H < 620) {
@@ -318,14 +339,22 @@ const Resume = () => {
                 if (!el) return;
                 el.style.width = `${pos.width}px`;
                 el.style.top = `${pos.y}px`;
-                el.classList.toggle('is-compact', layout.cs < 0.8 && !phone);
+                el.classList.toggle('is-compact', (layout.cs < 0.85 && !phone) || pos.width < 228);
             });
         };
 
         recalc();
+        const ro = typeof ResizeObserver === 'function' ? new ResizeObserver(recalc) : null;
+        if (stageRef.current && ro) ro.observe(stageRef.current);
+        const settleNavTimer = setTimeout(recalc, 750);
+
         window.addEventListener('resize', recalc, { passive: true });
         document.fonts?.ready?.then(recalc);
-        return () => window.removeEventListener('resize', recalc);
+        return () => {
+            clearTimeout(settleNavTimer);
+            ro?.disconnect();
+            window.removeEventListener('resize', recalc);
+        };
     }, []);
 
     // Track prefers-reduced-motion live
@@ -352,33 +381,11 @@ const Resume = () => {
         if (p && typeof p.catch === 'function') p.catch(() => {});
     }, [reducedMotion]);
 
-    // Decode Hero plate + fonts -> start Intro Clock (3.5s failsafe), key #00FF00 green out of Room canvas, and run single RAF loop
+    // Key #00FF00 green out of Room canvas, and run single unified rAF timeline loop
     useEffect(() => {
         const eng = engineRef.current;
+        eng.introStartMs = performance.now();
         let disposed = false;
-
-        const startIntro = () => {
-            if (eng.assetsReady || disposed) return;
-            eng.assetsReady = true;
-            eng.introStartMs = performance.now();
-        };
-
-        const heroImg = heroImgRef.current;
-        const heroReadyPromise = new Promise((resolve) => {
-            if (!heroImg) {
-                resolve();
-                return;
-            }
-            if (heroImg.complete && heroImg.naturalWidth > 0) {
-                heroImg.decode?.().then(resolve).catch(resolve) || resolve();
-            } else {
-                heroImg.addEventListener('load', resolve, { once: true });
-                heroImg.addEventListener('error', resolve, { once: true });
-            }
-        });
-
-        Promise.all([heroReadyPromise, document.fonts?.ready || Promise.resolve()]).then(startIntro);
-        const failsafe = setTimeout(startIntro, 3500);
 
         // Load room plate & run exact per-pixel chroma key into canvas#roomCv
         const roomImg = new Image();
@@ -427,14 +434,19 @@ const Resume = () => {
                 if (reducedMotion) {
                     eng.pCur = pT;
                 } else {
-                    const alpha = 1 - Math.exp(-dt / 0.187);
+                    const alpha = 1 - Math.exp(-dt / 0.14);
                     eng.pCur += (pT - eng.pCur) * alpha;
                     if (Math.abs(pT - eng.pCur) < 1e-4) eng.pCur = pT;
                 }
 
-                const I = eng.assetsReady ? Math.max(0, (now - eng.introStartMs) / 1000) : 0;
+                const I = eng.introStartMs != null ? Math.max(0, (now - eng.introStartMs) / 1000) : 0;
                 const intro = evaluateIntroTimeline(I, H, s, reducedMotion);
                 const scr = evaluateScrollTimeline(eng.pCur, layout, reducedMotion);
+
+                // Keep stage backing #151f3f once entering room so zero #6372c8 sky edges leak outside canvas
+                if (stageRef.current) {
+                    stageRef.current.style.backgroundColor = scr.roomVisible ? '#151f3f' : 'var(--rs-sky)';
+                }
 
                 // View + Tower composite transform (maintains natural parallax into cropped window glass R)
                 const viewTransform =
@@ -481,7 +493,7 @@ const Resume = () => {
                     shadeRef.current.style.opacity = layout.phone ? `${metaOp}` : '0';
                 }
 
-                // Indigo Room pull-back layer
+                // Indigo Room pull-back layer (bounded wall extensions avoid Retina >16k GPU layer drop!)
                 if (roomLayerRef.current) {
                     roomLayerRef.current.style.opacity = scr.roomVisible && eng.roomKeyed ? '1' : '0';
                     const roomTx = g.x - g.x * scr.S + ox * scr.S;
@@ -500,6 +512,16 @@ const Resume = () => {
                     cardEl.style.opacity = progress > 0.01 ? '1' : '0';
                     cardEl.style.pointerEvents = progress > 0.85 ? 'auto' : 'none';
                 });
+
+                // Interactive Scroll Guide progress bar & chapter phase
+                if (guideBarRef.current) {
+                    guideBarRef.current.style.width = `${(eng.pCur * 100).toFixed(2)}%`;
+                }
+                const nextPhase = eng.pCur < 0.2 ? 1 : eng.pCur < 0.65 ? 2 : 3;
+                if (nextPhase !== eng.lastPhase) {
+                    eng.lastPhase = nextPhase;
+                    setGuidePhase(nextPhase);
+                }
             }
 
             rafId = requestAnimationFrame(frame);
@@ -509,16 +531,31 @@ const Resume = () => {
 
         return () => {
             disposed = true;
-            clearTimeout(failsafe);
             cancelAnimationFrame(rafId);
         };
     }, [reducedMotion]);
 
-    const scrollToDossier = () => {
-        dossierRef.current?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' });
-    };
+    const jumpToChapter = useCallback(
+        (chapter) => {
+            const storyEl = storyRef.current;
+            const layout = engineRef.current.layout;
+            if (chapter === 'dossier') {
+                dossierRef.current?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth' });
+                return;
+            }
+            if (!storyEl || !layout) return;
+            const storyTopDoc = window.scrollY + storyEl.getBoundingClientRect().top;
+            const travel = Math.max(1, storyEl.offsetHeight - layout.H);
+            const targetY = chapter === 'skyline' ? storyTopDoc : storyTopDoc + travel * 0.86;
+            window.scrollTo({
+                top: targetY,
+                behavior: reducedMotion ? 'auto' : 'smooth',
+            });
+        },
+        [reducedMotion]
+    );
 
-    const maskedHeroStyle = useMemo(
+    const maskedHeroPlateStyle = useMemo(
         () => ({
             maskImage: 'linear-gradient(to bottom, transparent 61%, #000 65.2%)',
             WebkitMaskImage: 'linear-gradient(to bottom, transparent 61%, #000 65.2%)',
@@ -526,10 +563,21 @@ const Resume = () => {
         []
     );
 
+    // Hero video starts at VIDEO_CROP_Y=208 of 1360 -> 830..887 maps precisely to 54%..58.9%
+    const maskedHeroVideoStyle = useMemo(
+        () => ({
+            maskImage: 'linear-gradient(to bottom, transparent 54%, #000 58.9%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 54%, #000 58.9%)',
+        }),
+        []
+    );
+
+    const activeGuide = GUIDE_PHASES[guidePhase - 1] || GUIDE_PHASES[0];
+
     return (
         <div className="resume-skyline-root">
             {/* Part 1 & 2: Two-Part Sticky Spatial Skyline -> Room Pullback Stage */}
-            <main id="resume-story" ref={storyRef} className="resume-story">
+            <section id="resume-story" ref={storyRef} className="resume-story" aria-label="Interactive engineering skyline journey">
                 <div ref={stageRef} className="resume-stage">
                     {/* 1. Back View Layer: Gradient Sky + Cropped Harbor Plate + Kling Loop Video */}
                     <div ref={viewRef} id="resume-view" className="resume-layer">
@@ -540,7 +588,7 @@ const Resume = () => {
                             src={RESUME_SKYLINE_ASSETS.heroPlateUrl}
                             alt=""
                             crossOrigin="anonymous"
-                            style={maskedHeroStyle}
+                            style={maskedHeroPlateStyle}
                         />
                         <video
                             ref={heroVidRef}
@@ -553,7 +601,7 @@ const Resume = () => {
                             preload="auto"
                             crossOrigin="anonymous"
                             aria-hidden="true"
-                            style={maskedHeroStyle}
+                            style={maskedHeroVideoStyle}
                             onPlaying={() => setVideoPlaying(true)}
                         />
                     </div>
@@ -591,8 +639,10 @@ const Resume = () => {
                     {/* 5. Portrait Bottom Scrim */}
                     <div ref={shadeRef} className="resume-shade" aria-hidden="true" />
 
-                    {/* 6. Indigo Room Window Cutout Canvas + Side Extensions */}
+                    {/* 6. Indigo Room Window Cutout Canvas + Safe Bounded Extensions */}
                     <div ref={roomLayerRef} id="resume-room" className="resume-layer">
+                        <span className="resume-room-ext top" aria-hidden="true" />
+                        <span className="resume-room-ext bottom" aria-hidden="true" />
                         <span className="resume-room-ext left" aria-hidden="true" />
                         <span className="resume-room-ext right" aria-hidden="true" />
                         <canvas ref={roomCanvasRef} id="resume-room-cv" />
@@ -604,7 +654,7 @@ const Resume = () => {
                         id="resume-build"
                         type="button"
                         className="resume-layer resume-build-btn"
-                        onClick={scrollToDossier}
+                        onClick={() => jumpToChapter('dossier')}
                         aria-label="Jump to full Curriculum Vitae details"
                     >
                         <div
@@ -654,21 +704,61 @@ const Resume = () => {
                             <div className="resume-card-specs">
                                 <span>
                                     <Cpu size={13} strokeWidth={1.7} />
-                                    {card.specs[0]}
+                                    <em>{card.specs[0]}</em>
                                 </span>
                                 <span>
                                     <Layers size={13} strokeWidth={1.7} />
-                                    {card.specs[1]}
+                                    <em>{card.specs[1]}</em>
                                 </span>
                                 <span>
                                     <Globe size={13} strokeWidth={1.7} />
-                                    {card.specs[2]}
+                                    <em>{card.specs[2]}</em>
                                 </span>
                             </div>
                         </article>
                     ))}
+
+                    {/* 10. Context-Aware Scroll Guide HUD & Quick Chapter Controls */}
+                    <div
+                        className={`resume-guide-hud${guidePhase >= 2 ? ' is-room' : ''}`}
+                        role="navigation"
+                        aria-label="Resume chapter navigation"
+                    >
+                        <div className="resume-guide-chapters">
+                            <button
+                                type="button"
+                                className={`resume-guide-step${guidePhase === 1 ? ' is-active' : ''}`}
+                                onClick={() => jumpToChapter('skyline')}
+                            >
+                                01 Skyline
+                            </button>
+                            <button
+                                type="button"
+                                className={`resume-guide-step${guidePhase === 2 || guidePhase === 3 ? ' is-active' : ''}`}
+                                onClick={() => jumpToChapter('cards')}
+                            >
+                                02 Roles
+                            </button>
+                            <button
+                                type="button"
+                                className="resume-guide-step is-cv"
+                                onClick={() => jumpToChapter('dossier')}
+                            >
+                                03 Full CV <ChevronDown size={11} />
+                            </button>
+                        </div>
+
+                        <div className="resume-guide-hint-row">
+                            <ArrowDown size={12} className="resume-guide-bounce" aria-hidden="true" />
+                            <span>{activeGuide.label}</span>
+                        </div>
+
+                        <div className="resume-guide-track" aria-hidden="true">
+                            <span ref={guideBarRef} className="resume-guide-fill" />
+                        </div>
+                    </div>
                 </div>
-            </main>
+            </section>
 
             {/* Full Structured Curriculum Vitae Dossier Below Sticky Pull-Back */}
             <section ref={dossierRef} id="resume-dossier" className="resume-dossier-section">

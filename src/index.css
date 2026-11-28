@@ -10900,6 +10900,8 @@ body.resume-skyline-route {
 
 .resume-story {
   position: relative;
+  z-index: 1;
+  isolation: isolate;
   width: 100%;
   height: calc(100vh + var(--rs-travel));
 }
@@ -10911,7 +10913,9 @@ body.resume-skyline-route {
   height: 100vh;
   height: 100svh;
   overflow: hidden;
+  overflow: clip;
   background: var(--rs-sky);
+  transition: background-color 0.25s ease;
 }
 
 .resume-layer {
@@ -11035,47 +11039,47 @@ body.resume-skyline-route {
   opacity: 0;
 }
 
-/* 6. Indigo Room Window Cutout + Edge Extensions */
+/* 6. Indigo Room Window Cutout + Bounded Wall/Floor Extensions (zero >4kpx GPU layer overflow) */
 #resume-room {
   opacity: 0;
   pointer-events: none;
-  background: linear-gradient(to bottom, transparent 75%, #4a3d6a 75%);
-}
-
-#resume-room::before {
-  content: '';
-  position: absolute;
-  left: -4000px;
-  right: -4000px;
-  bottom: 100%;
-  height: 4000px;
-  background: #151f3f;
-}
-
-#resume-room::after {
-  content: '';
-  position: absolute;
-  left: -4000px;
-  right: -4000px;
-  top: 100%;
-  height: 4000px;
-  background: linear-gradient(#4a3d6a, #2e2850 900px, #221d40);
 }
 
 .resume-room-ext {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 4000px;
-  background: linear-gradient(#151f3f, #121b3b 58%, #272548 61%, #4a3d6a);
+  pointer-events: none;
+}
+
+.resume-room-ext.top {
+  left: -100%;
+  right: -100%;
+  bottom: 99.6%;
+  height: 120%;
+  background: #151f3f;
+}
+
+.resume-room-ext.bottom {
+  left: -100%;
+  right: -100%;
+  top: 99.6%;
+  height: 120%;
+  background: linear-gradient(180deg, #272548 0%, #151f3f 45%, #0b1024 100%);
 }
 
 .resume-room-ext.left {
-  right: 100%;
+  top: 0;
+  bottom: 0;
+  right: 99.7%;
+  width: 105%;
+  background: linear-gradient(#151f3f, #121b3b 58%, #272548 64%, #221d40);
 }
 
 .resume-room-ext.right {
-  left: 100%;
+  top: 0;
+  bottom: 0;
+  left: 99.7%;
+  width: 105%;
+  background: linear-gradient(#151f3f, #121b3b 58%, #272548 64%, #221d40);
 }
 
 #resume-room-cv {
@@ -11083,8 +11087,6 @@ body.resume-skyline-route {
   display: block;
   width: 100%;
   height: 100%;
-  mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
 }
 
 /* 7. Build Action Block ("Full-Stack Architect.") */
@@ -11182,24 +11184,26 @@ body.resume-skyline-route {
   position: absolute;
   left: 0;
   width: calc(266 * var(--rs-cs) * 1px);
-  border-radius: calc(24 * var(--rs-cs) * 1px);
+  border-radius: calc(22 * var(--rs-cs) * 1px);
   background: #ffffff;
-  padding: calc(12 * var(--rs-cs) * 1px) calc(12 * var(--rs-cs) * 1px) calc(18 * var(--rs-cs) * 1px);
-  box-shadow: 0 calc(14 * var(--rs-cs) * 1px) calc(40 * var(--rs-cs) * 1px) rgba(8, 10, 40, 0.35);
+  padding: calc(10 * var(--rs-cs) * 1px) calc(10 * var(--rs-cs) * 1px) calc(14 * var(--rs-cs) * 1px);
+  box-shadow: 0 calc(14 * var(--rs-cs) * 1px) calc(40 * var(--rs-cs) * 1px) rgba(8, 10, 40, 0.38);
   transform-origin: 0 0;
+  overflow: hidden;
   cursor: pointer;
   z-index: 10;
   transition: box-shadow 0.25s ease;
 }
 
 .resume-role-card:hover {
-  box-shadow: 0 calc(20 * var(--rs-cs) * 1px) calc(52 * var(--rs-cs) * 1px) rgba(239, 68, 68, 0.26);
+  box-shadow: 0 calc(20 * var(--rs-cs) * 1px) calc(52 * var(--rs-cs) * 1px) rgba(239, 68, 68, 0.28);
 }
 
 .resume-card-photo {
   width: 100%;
-  height: calc(150 * var(--rs-cs) * var(--rs-ph) * 1px);
-  border-radius: calc(18 * var(--rs-cs) * 1px);
+  height: calc(144 * var(--rs-cs) * var(--rs-ph) * 1px);
+  border-radius: calc(15 * var(--rs-cs) * 1px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
   background-color: #0b0e18;
   background-size: cover;
   background-position: center;
@@ -11209,8 +11213,8 @@ body.resume-skyline-route {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: calc(8 * var(--rs-cs) * 1px);
-  padding: calc(9 * var(--rs-cs) * 1px) calc(6 * var(--rs-cs) * 1px) 0;
+  gap: calc(6 * var(--rs-cs) * 1px);
+  padding: calc(8 * var(--rs-cs) * 1px) calc(4 * var(--rs-cs) * 1px) 0;
 }
 
 .resume-card-titles {
@@ -11221,9 +11225,9 @@ body.resume-skyline-route {
 
 .resume-card-titles strong {
   font-family: 'Poppins', var(--font-heading), sans-serif;
-  font-weight: 500;
-  font-size: max(12px, calc(14 * var(--rs-cs) * 1px));
-  color: #24233a;
+  font-weight: 600;
+  font-size: clamp(12px, calc(13.5 * var(--rs-cs) * 1px), 15px);
+  color: #18192a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -11232,8 +11236,8 @@ body.resume-skyline-route {
 .resume-card-titles span {
   font-family: 'Poppins', var(--font-body), sans-serif;
   font-weight: 400;
-  font-size: max(11px, calc(12.5 * var(--rs-cs) * 1px));
-  color: #a3a2b3;
+  font-size: clamp(10.5px, calc(12 * var(--rs-cs) * 1px), 13px);
+  color: #6b6b80;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -11241,12 +11245,12 @@ body.resume-skyline-route {
 
 .resume-card-year {
   font-family: 'Poppins', var(--font-tech), sans-serif;
-  font-weight: 400;
-  font-size: max(12px, calc(15 * var(--rs-cs) * 1px));
-  line-height: 2;
-  color: #8e8da0;
-  padding-left: calc(12 * var(--rs-cs) * 1px);
-  border-left: 1px solid #e6e5ee;
+  font-weight: 500;
+  font-size: clamp(11px, calc(13.5 * var(--rs-cs) * 1px), 15px);
+  line-height: 1.5;
+  color: #5b5c72;
+  padding-left: calc(10 * var(--rs-cs) * 1px);
+  border-left: 1px solid #e2e3ec;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -11260,39 +11264,178 @@ body.resume-skyline-route {
 .resume-role-card.is-compact .resume-card-year {
   padding-left: 0;
   border-left: none;
-  line-height: 1.35;
+  line-height: 1.3;
+  font-size: 10.5px;
 }
 
 .resume-card-specs {
-  padding: calc(10 * var(--rs-cs) * 1px) calc(6 * var(--rs-cs) * 1px) 0;
-  display: flex;
+  padding: calc(8 * var(--rs-cs) * 1px) calc(4 * var(--rs-cs) * 1px) 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: center;
-  gap: max(8px, calc(16 * var(--rs-cs) * 1px));
+  gap: 6px;
   font-family: 'Poppins', var(--font-tech), sans-serif;
-  font-size: max(11px, calc(12 * var(--rs-cs) * 1px));
-  color: #55546a;
+  font-size: clamp(9.5px, calc(10.8 * var(--rs-cs) * 1px), 11.5px);
+  color: #46485d;
 }
 
 .resume-card-specs span {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.resume-card-specs span em {
+  font-style: normal;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .resume-card-specs svg {
-  width: max(13px, calc(15 * var(--rs-cs) * 1px));
-  height: max(13px, calc(15 * var(--rs-cs) * 1px));
-  color: #9c9bb0;
+  width: 12px;
+  height: 12px;
+  color: #7c7e98;
   flex-shrink: 0;
+}
+
+/* 10. Scroll Guide HUD & Interactive Chapter Navigator */
+.resume-guide-hud {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 28;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px 10px;
+  border-radius: 14px;
+  background: rgba(6, 7, 14, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  max-width: min(92vw, 440px);
+}
+
+.resume-guide-chapters {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.resume-guide-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #cbd5e1;
+  font-family: var(--font-tech), 'Space Grotesk', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.resume-guide-step:hover,
+.resume-guide-step.is-active {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.65);
+  color: #ffffff;
+}
+
+.resume-guide-step.is-cv {
+  border-color: rgba(248, 250, 252, 0.34);
+  color: #f8fafc;
+}
+
+.resume-guide-hint-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-tech), 'Space Grotesk', sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f8fafc;
+  white-space: nowrap;
+}
+
+.resume-guide-bounce {
+  color: #ef4444;
+  animation: resumeGuideBounce 1.5s ease-in-out infinite;
+}
+
+.resume-guide-track {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.resume-guide-fill {
+  display: block;
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #ef4444, #f87171);
+  border-radius: 999px;
+}
+
+@keyframes resumeGuideBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+@media (max-width: 819px), (max-aspect-ratio: 87/100), (max-height: 515px) {
+  .resume-guide-hud {
+    padding: 6px 10px 8px;
+    bottom: 10px;
+    max-width: 94vw;
+  }
+
+  .resume-guide-hud.is-room {
+    top: calc(var(--rs-nav-b, 65px) + 6px);
+    bottom: auto;
+  }
+
+  .resume-guide-hint-row {
+    font-size: 8.5px;
+    letter-spacing: 0.08em;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resume-guide-bounce {
+    animation: none;
+  }
 }
 
 /* Below Sticky Stage: Complete Curriculum Vitae Dossier */
 .resume-dossier-section {
   position: relative;
-  z-index: 12;
+  z-index: 15;
   background: linear-gradient(180deg, #151f3f 0%, #0b1024 140px, #060709 360px, #060709 100%);
-  padding: clamp(56px, 8vh, 96px) clamp(18px, 4vw, 48px) clamp(84px, 10vh, 120px);
+  padding: clamp(98px, 12vh, 136px) clamp(18px, 4vw, 48px) clamp(84px, 10vh, 120px);
 }
 
 .resume-dossier-container {

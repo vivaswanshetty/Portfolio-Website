@@ -20,8 +20,8 @@ export const GLASS_W = 1004;
 export const GLASS_H = 773;
 export const STEPS_BOTTOM_Y = 860;
 
-// Inner-mullion pullback keyframes fitted to reference reel measurements (seconds -> ln S)
-export const PULLBACK_TIMES = [9.0, 9.2, 9.5, 9.8, 10.1, 10.4, 10.63, 10.8, 10.97, 11.1, 11.3];
+// Pullback curve from zoomed window glass down to full room wall (T = 8.4 .. 10.6), leaving generous card dwell
+export const PULLBACK_TIMES = [8.4, 8.65, 8.95, 9.25, 9.55, 9.85, 10.1, 10.3, 10.5, 10.65, 10.85];
 export const PULLBACK_LN_S = [1.93, 1.749, 1.526, 1.253, 0.956, 0.642, 0.358, 0.166, 0.058, 0, 0];
 
 export function clamp(v, lo, hi) {
@@ -183,8 +183,8 @@ export function computeStageLayout(W, H, navBottom = 76) {
         const gap = 10 * s;
         cardWidthPx = Math.min(266 * s * 0.9, (safeW - 32 * s - gap) / 2);
         cs = cardWidthPx / 266;
-        phRatio = 0.78;
-        const estCardH = Math.max(150 * cs * phRatio + 84 * Math.max(cs, 0.7), 165);
+        phRatio = 0.76;
+        const estCardH = Math.max(150 * cs * phRatio + 86 * Math.max(cs, 0.7), 165);
         const gridTop = safeH - 16 * s - (estCardH * 2 + gap);
         const startX = (safeW - (cardWidthPx * 2 + gap)) / 2;
 
@@ -195,17 +195,17 @@ export function computeStageLayout(W, H, navBottom = 76) {
             { x: startX + cardWidthPx + gap, y: gridTop + estCardH + gap, side: 'right', bottomRow: true, width: cardWidthPx },
         ];
 
-        const minCenterForNav = navBottom + 10 * s + (g.h * sEnd) / 2;
-        const maxCenterAboveCards = gridTop - 6 * s - (STEPS_BOTTOM_Y - GLASS_CY) * sc * sEnd;
+        const minCenterForNav = navBottom + 44 * s + (g.h * sEnd) / 2;
+        const maxCenterAboveCards = gridTop - 8 * s - (STEPS_BOTTOM_Y - GLASS_CY) * sc * sEnd;
         gyEnd = Math.max(minCenterForNav, Math.min(g.y, maxCenterAboveCards));
     } else {
         const topBound = Math.max(navBottom + 14 * s, 88);
-        const bottomBound = safeH - 12 * s;
+        const bottomBound = safeH - 58 * s; // leaves clear bottom guide HUD lane
         const rowGap = 12 * s;
-        const availH = bottomBound - topBound - rowGap;
+        const availH = Math.max(180, bottomBound - topBound - rowGap);
 
         const estimateCardH = (scale, pRatio) => {
-            const imgH = 150 * scale * pRatio;
+            const imgH = 148 * scale * pRatio;
             const textBlockH = scale < 0.8 ? 88 : 74 * scale + 28 * scale;
             return imgH + textBlockH;
         };
@@ -213,14 +213,14 @@ export function computeStageLayout(W, H, navBottom = 76) {
         while (cs > 0.5 && estimateCardH(cs, phRatio) * 2 > availH) {
             cs = Math.max(0.5, cs - 0.04);
         }
-        while (phRatio > 0.45 && estimateCardH(cs, phRatio) * 2 > availH) {
-            phRatio = Math.max(0.45, phRatio - 0.05);
+        while (phRatio > 0.48 && estimateCardH(cs, phRatio) * 2 > availH) {
+            phRatio = Math.max(0.48, phRatio - 0.05);
         }
 
         const estH = estimateCardH(cs, phRatio);
-        cardWidthPx = 266 * cs;
+        cardWidthPx = Math.max(202, 266 * cs);
 
-        if (estH * 2 + rowGap > bottomBound - topBound || safeH < 515) {
+        if (estH * 2 + rowGap > availH || safeH < 515) {
             // Landscape phone 1x4 horizontal bottom dock
             isLandscapeRow = true;
             phRatio = 0.5;
@@ -243,14 +243,14 @@ export function computeStageLayout(W, H, navBottom = 76) {
             });
             cardPositions = posByCardIdx;
         } else {
-            const topY = Math.min(Math.max(topBound, (safeH * 195) / 998), bottomBound - 2 * estH - rowGap);
-            const botY = Math.max(Math.min(bottomBound - estH, (safeH * 581) / 998), topY + estH + rowGap);
+            const topY = Math.min(Math.max(topBound, (safeH * 185) / 998), bottomBound - 2 * estH - rowGap);
+            const botY = Math.max(Math.min(bottomBound - estH, (safeH * 552) / 998), topY + estH + rowGap);
 
             cardPositions = [
-                { x: (safeW * 79) / 1418, y: topY, side: 'left', bottomRow: false, width: cardWidthPx },
-                { x: (safeW * (1351 - 12)) / 1418 - cardWidthPx, y: topY, side: 'right', bottomRow: false, width: cardWidthPx },
-                { x: (safeW * 212) / 1418, y: botY, side: 'left', bottomRow: true, width: cardWidthPx },
-                { x: (safeW * (1221 - 12)) / 1418 - cardWidthPx, y: botY, side: 'right', bottomRow: true, width: cardWidthPx },
+                { x: (safeW * 74) / 1418, y: topY, side: 'left', bottomRow: false, width: cardWidthPx },
+                { x: (safeW * (1356 - 12)) / 1418 - cardWidthPx, y: topY, side: 'right', bottomRow: false, width: cardWidthPx },
+                { x: (safeW * 182) / 1418, y: botY, side: 'left', bottomRow: true, width: cardWidthPx },
+                { x: (safeW * (1248 - 12)) / 1418 - cardWidthPx, y: botY, side: 'right', bottomRow: true, width: cardWidthPx },
             ];
         }
     }
@@ -273,15 +273,15 @@ export function computeStageLayout(W, H, navBottom = 76) {
         cardWidthPx,
         isLandscapeRow,
         cardPositions,
-        travel: 3.4 * safeH,
+        travel: 2.6 * safeH,
     };
 }
 
 /**
- * Evaluates Timeline 1 (Intro choreography, seconds since hero plate & fonts resolved).
+ * Evaluates Timeline 1 (Snappy 2.8s Intro choreography so skyline, typography & CTA reveal promptly).
  */
 export function evaluateIntroTimeline(I, H, s, reducedMotion = false) {
-    if (reducedMotion || I >= 6.0) {
+    if (reducedMotion || I >= 2.8) {
         return {
             panY: 0,
             panScale: 1,
@@ -293,44 +293,45 @@ export function evaluateIntroTimeline(I, H, s, reducedMotion = false) {
         };
     }
 
-    const panP = cubicBezier(0.45, 0.6, 0.65, 1, I / 2.6);
-    const panY = lerp(0.355 * H, 0, panP);
-    const panScale = lerp(1.13, 1, panP);
+    const panP = cubicBezier(0.22, 0.72, 0.36, 1, I / 1.35);
+    const panY = lerp(0.18 * H, 0, panP);
+    const panScale = lerp(1.08, 1, panP);
 
-    let skyOffsetH = 0.45;
-    if (I >= 1.15 && I < 2.2) {
-        const t1 = cubicBezier(0.08, 0.9, 0.45, 0.95, (I - 1.15) / (2.2 - 1.15));
-        skyOffsetH = lerp(0.45, -0.063, t1);
-    } else if (I >= 2.2 && I < 3.5) {
-        const t2 = cubicBezier(0.45, 0, 0.55, 1, (I - 2.2) / (3.5 - 2.2));
-        skyOffsetH = lerp(-0.063, 0, t2);
-    } else if (I >= 3.5) {
+    let skyOffsetH = 0.22;
+    if (I >= 0.25 && I < 1.05) {
+        const t1 = cubicBezier(0.1, 0.88, 0.38, 1, (I - 0.25) / 0.8);
+        skyOffsetH = lerp(0.22, -0.04, t1);
+    } else if (I >= 1.05 && I < 1.85) {
+        const t2 = cubicBezier(0.42, 0, 0.58, 1, (I - 1.05) / 0.8);
+        skyOffsetH = lerp(-0.04, 0, t2);
+    } else if (I >= 1.85) {
         skyOffsetH = 0;
     }
 
-    const headP = cubicBezier(0.3, 0.15, 0.2, 1, (I - 2.6) / (4.5 - 2.6));
-    const scriptP = cubicBezier(0.3, 0.15, 0.2, 1, (I - 2.75) / (4.65 - 2.75));
-    const metaP = cubicBezier(0.25, 0.75, 0.2, 1, (I - 5.2) / (6.0 - 5.2));
+    const headP = cubicBezier(0.22, 0.75, 0.2, 1, (I - 0.45) / 1.3);
+    const scriptP = cubicBezier(0.22, 0.75, 0.2, 1, (I - 0.6) / 1.35);
+    const metaP = cubicBezier(0.2, 0.8, 0.25, 1, (I - 1.45) / 1.15);
 
     return {
         panY,
         panScale,
         skyOffsetH,
-        headlineOffsetY: lerp(0.62 * H, 0, headP) + panY,
-        scriptOffsetY: lerp(0.62 * H, 0, scriptP) + panY,
+        headlineOffsetY: lerp(0.32 * H, 0, headP) + panY * 0.5,
+        scriptOffsetY: lerp(0.32 * H, 0, scriptP) + panY * 0.5,
         metaOpacity: metaP,
-        metaOffsetY: lerp(18 * s, 0, metaP),
+        metaOffsetY: lerp(14 * s, 0, metaP),
     };
 }
 
 /**
  * Evaluates Timeline 2 (Scroll choreography mapped onto reel seconds T in [6.8, 13.4]).
+ * Pullback completes cleanly by T=10.85, all 4 cards settle by T=12.0, leaving a steady dwell plateau (12.0..13.4).
  */
 export function evaluateScrollTimeline(pCur, layout, reducedMotion = false) {
     const { W, H, s, ox, oy, g, sEnd, gyEnd } = layout;
 
     if (reducedMotion) {
-        const settled = pCur >= 0.5;
+        const settled = pCur >= 0.45;
         const gy = settled ? gyEnd : g.y;
         const R = settled
             ? {
@@ -367,17 +368,17 @@ export function evaluateScrollTimeline(pCur, layout, reducedMotion = false) {
 
     const T = 6.8 + pCur * 6.6;
 
-    const scriptOutP = cubicBezier(0.5, 0, 0.75, 0.4, (T - 6.82) / (7.25 - 6.82));
-    const headOutP = cubicBezier(0.5, 0, 0.75, 0.4, (T - 7.0) / (7.42 - 7.0));
-    const metaOutP = cubicBezier(0.5, 0, 0.75, 0.4, (T - 6.85) / (7.35 - 6.85));
+    const scriptOutP = cubicBezier(0.5, 0, 0.75, 0.4, (T - 6.82) / 0.55);
+    const headOutP = cubicBezier(0.5, 0, 0.75, 0.4, (T - 6.95) / 0.6);
+    const metaOutP = cubicBezier(0.5, 0, 0.75, 0.4, (T - 6.85) / 0.55);
 
-    const pushInP = cubicBezier(0.45, 0, 0.55, 1, (T - 7.5) / (8.35 - 7.5));
-    const lnS = T <= 9.0 ? 1.93 : evaluatePullbackLnS(T);
+    const pushInP = cubicBezier(0.45, 0, 0.55, 1, (T - 7.3) / 0.95);
+    const lnS = T <= 8.4 ? 1.93 : evaluatePullbackLnS(T);
     const q = clamp(1 - lnS / 1.93, 0, 1);
     const S = Math.exp(lnS) * Math.pow(sEnd, q);
     const gy = lerp(g.y, gyEnd, q);
 
-    const pushPeak = 1 + 0.3 * pushInP;
+    const pushPeak = 1 + 0.28 * pushInP;
     const push = lerp(pushPeak, 1, q);
 
     const halfGW = (g.w * S) / 2;
@@ -388,20 +389,21 @@ export function evaluateScrollTimeline(pCur, layout, reducedMotion = false) {
     const ry1 = clamp(gy + halfGH, 0, H);
     const rw = Math.max(1, rx1 - rx0);
     const rh = Math.max(1, ry1 - ry0);
-    const kc = T < 8.98 ? 1 : Math.max(rw / W, rh / H);
-    const rcx = T < 8.98 ? W / 2 : (rx0 + rx1) / 2;
-    const rcy = T < 8.98 ? H / 2 : (ry0 + ry1) / 2;
-    const rBottom = T < 8.98 ? H : ry1;
+    const kc = T < 8.38 ? 1 : Math.max(rw / W, rh / H);
+    const rcx = T < 8.38 ? W / 2 : (rx0 + rx1) / 2;
+    const rcy = T < 8.38 ? H / 2 : (ry0 + ry1) / 2;
+    const rBottom = T < 8.38 ? H : ry1;
 
-    const topCardP = cubicBezier(0.25, 0.75, 0.2, 1, (T - 11.25) / (13.1 - 11.25));
-    const botCardP = cubicBezier(0.25, 0.75, 0.2, 1, (T - 11.55) / (13.3 - 11.55));
+    // Cards enter cleanly as pullback settles (T = 10.6..12.0), leaving 12.0..13.4 steady plateau
+    const topCardP = cubicBezier(0.22, 0.8, 0.2, 1, (T - 10.6) / 1.15);
+    const botCardP = cubicBezier(0.22, 0.8, 0.2, 1, (T - 10.85) / 1.15);
 
     return {
         T,
         q,
         S,
         gy,
-        roomVisible: T >= 8.98,
+        roomVisible: T >= 8.38,
         scriptOutOpacity: 1 - scriptOutP,
         scriptOutY: 25 * s * scriptOutP,
         headOutOpacity: 1 - headOutP,
