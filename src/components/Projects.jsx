@@ -10,6 +10,8 @@ import {
     computeCardDepthStyle,
     computeScrollDolly,
 } from '../utils/projectSphere';
+import { LiquidGlass } from './ui/LiquidGlass';
+import LiquidGlassDemo from './ui/LiquidGlassDemo';
 
 const HEADLINE_WORDS = ['I', 'Build', 'Systems', 'That', 'Scale'];
 const INTRO_FILM_URL = '/projects-eye-intro.mp4';
@@ -1042,9 +1044,17 @@ const Projects = () => {
                         </div>
                     ) : (
                         filteredOverviewProjects.map((project) => (
-                            <article
+                            <LiquidGlass
                                 key={project.slug}
+                                as="article"
                                 className="projects-overview-card"
+                                radius={20}
+                                bevelDepth={14}
+                                scale={26}
+                                aberration={3}
+                                frost={0.45}
+                                tint={0.04}
+                                tintRgb="13 15 23"
                                 onClick={(e) => {
                                     if (e.target.closest('a') || e.target.closest('button')) return;
                                     navigate(`/projects/${project.slug}`);
@@ -1128,10 +1138,13 @@ const Projects = () => {
                                         </Link>
                                     </div>
                                 </div>
-                            </article>
+                            </LiquidGlass>
                         ))
                     )}
                 </div>
+
+                {/* Interactive Liquid Glass Experiment Showcase inside Overview Mode */}
+                <LiquidGlassDemo />
             </section>
 
             {/* Liquid Glass Scrollable FLIP Lightbox (#lit) */}
@@ -1145,7 +1158,19 @@ const Projects = () => {
             >
                 <div className="scrim" onClick={closeLightbox} />
                 {litState && (
-                    <div ref={plateRef} className="plate">
+                    <LiquidGlass
+                        onNode={(node) => {
+                            plateRef.current = node;
+                        }}
+                        className="plate"
+                        radius={20}
+                        bevelDepth={18}
+                        scale={36}
+                        aberration={6}
+                        frost={0.5}
+                        tint={0.05}
+                        tintRgb="10 12 18"
+                    >
                         <div className="lit-topbar">
                             <span className="lit-kicker">
                                 {litState.item.projectTitle} · {litState.item.category}
@@ -1213,7 +1238,7 @@ const Projects = () => {
                                 {litState.item.note}
                             </p>
                         </div>
-                    </div>
+                    </LiquidGlass>
                 )}
             </div>
 

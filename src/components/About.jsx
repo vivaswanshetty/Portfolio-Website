@@ -6,6 +6,7 @@ import { portfolioData } from '../data/portfolioData';
 import portraitImg from '../assets/vivaswan_portrait.webp';
 import { NightValleyEngine } from '../utils/nightValleyEngine';
 import { useGlobalAudio } from '../context/useGlobalAudio';
+import { LiquidGlass } from './ui/LiquidGlass';
 
 const OPERATING_PILLARS = [
     {
@@ -283,10 +284,18 @@ const About = () => {
                                 <br />
                                 I learned everything myself—to build a legacy.
                             </p>
-                            <a
+                            <LiquidGlass
+                                as="a"
                                 href="#about-story"
                                 id="go"
                                 className="valley-go"
+                                radius={999}
+                                bevelDepth={14}
+                                scale={38}
+                                aberration={6}
+                                frost={0.35}
+                                tint={0.05}
+                                tintRgb="6 7 9"
                                 aria-label="Enter About story through vortex"
                                 onPointerEnter={handleEnterPointerEnter}
                                 onPointerLeave={handleEnterPointerLeave}
@@ -295,7 +304,7 @@ const About = () => {
                                 <svg viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M4 12h16M14 6l6 6-6 6" />
                                 </svg>
-                            </a>
+                            </LiquidGlass>
                         </div>
 
                         <div className="valley-corner">
@@ -322,14 +331,22 @@ const About = () => {
             {storyEntered && (
                 <div ref={storyRef} id="about-story" className="about-story-shell">
                 <div className="about-story-topbar">
-                    <button
+                    <LiquidGlass
+                        as="button"
                         type="button"
                         className="about-reenter-btn"
+                        radius={999}
+                        bevelDepth={10}
+                        scale={24}
+                        aberration={4}
+                        frost={0.35}
+                        tint={0.05}
+                        tintRgb="10 12 18"
                         onClick={handleReturnToValley}
                     >
                         <ArrowUp size={13} />
                         <span>Return To Night Valley</span>
-                    </button>
+                    </LiquidGlass>
                 </div>
                 {/* Chapter 1: Portrait & Identity Manifesto */}
                 <Motion.section
@@ -339,9 +356,18 @@ const About = () => {
                     viewport={{ once: true, margin: '-80px' }}
                     transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <div
-                        ref={portraitCardRef}
+                    <LiquidGlass
+                        onNode={(node) => {
+                            portraitCardRef.current = node;
+                        }}
                         className="about-glass-card about-portrait-panel"
+                        radius={22}
+                        bevelDepth={15}
+                        scale={30}
+                        aberration={4}
+                        frost={0.45}
+                        tint={0.04}
+                        tintRgb="10 12 18"
                         onMouseMove={handlePortraitMove}
                         onMouseLeave={handlePortraitLeave}
                     >
@@ -354,9 +380,18 @@ const About = () => {
                             <strong>Vivaswan Shetty</strong>
                             <span>Bengaluru, India · 20 y/o Builder</span>
                         </div>
-                    </div>
+                    </LiquidGlass>
 
-                    <div className="about-glass-card about-manifesto-panel">
+                    <LiquidGlass
+                        className="about-glass-card about-manifesto-panel"
+                        radius={22}
+                        bevelDepth={15}
+                        scale={28}
+                        aberration={3}
+                        frost={0.45}
+                        tint={0.04}
+                        tintRgb="10 12 18"
+                    >
                         <div className="about-kicker-row">
                             <span className="about-kicker">01 / IDENTITY &amp; CONVICTION</span>
                             <span className="about-rule" />
@@ -384,7 +419,7 @@ const About = () => {
                                 ))}
                             </div>
                         </div>
-                    </div>
+                    </LiquidGlass>
                 </Motion.section>
 
                 {/* Chapter 2: Animated Telemetry & Output Counters */}
@@ -402,13 +437,23 @@ const About = () => {
 
                     <div className="about-stats-bento">
                         {stats?.map((stat, idx) => (
-                            <div key={stat.label} className="about-glass-card about-stat-tile">
+                            <LiquidGlass
+                                key={stat.label}
+                                className="about-glass-card about-stat-tile"
+                                radius={22}
+                                bevelDepth={14}
+                                scale={28}
+                                aberration={4}
+                                frost={0.45}
+                                tint={0.04}
+                                tintRgb="10 12 18"
+                            >
                                 <span className="about-stat-index">0{idx + 1}</span>
                                 <div className="about-stat-value">
                                     <AnimatedCounter value={stat.value} />
                                 </div>
                                 <div className="about-stat-name">{stat.label}</div>
-                            </div>
+                            </LiquidGlass>
                         ))}
                     </div>
                 </Motion.section>
@@ -430,7 +475,18 @@ const About = () => {
                         {OPERATING_PILLARS.map((pillar) => {
                             const Icon = pillar.icon;
                             return (
-                                <article key={pillar.code} className="about-glass-card about-pillar-card">
+                                <LiquidGlass
+                                    key={pillar.code}
+                                    as="article"
+                                    className="about-glass-card about-pillar-card"
+                                    radius={22}
+                                    bevelDepth={14}
+                                    scale={28}
+                                    aberration={4}
+                                    frost={0.45}
+                                    tint={0.04}
+                                    tintRgb="10 12 18"
+                                >
                                     <div className="about-pillar-top">
                                         <span className="about-pillar-icon">
                                             <Icon size={18} />
@@ -440,7 +496,7 @@ const About = () => {
                                     <h4>{pillar.title}</h4>
                                     <p>{pillar.summary}</p>
                                     <span className="about-pillar-tag">{pillar.tag}</span>
-                                </article>
+                                </LiquidGlass>
                             );
                         })}
                     </div>
@@ -461,7 +517,17 @@ const About = () => {
 
                     <div className="about-trajectory-list">
                         {TRAJECTORY_STEPS.map((step) => (
-                            <div key={step.period} className="about-glass-card about-trajectory-item">
+                            <LiquidGlass
+                                key={step.period}
+                                className="about-glass-card about-trajectory-item"
+                                radius={22}
+                                bevelDepth={14}
+                                scale={26}
+                                aberration={3}
+                                frost={0.45}
+                                tint={0.04}
+                                tintRgb="10 12 18"
+                            >
                                 <div className="about-trajectory-meta">
                                     <span className="about-trajectory-period">{step.period}</span>
                                     <span className="about-trajectory-badge">{step.highlight}</span>
@@ -470,7 +536,7 @@ const About = () => {
                                     <h4>{step.title}</h4>
                                     <p>{step.detail}</p>
                                 </div>
-                            </div>
+                            </LiquidGlass>
                         ))}
                     </div>
                 </Motion.section>
@@ -483,7 +549,16 @@ const About = () => {
                     viewport={{ once: true, margin: '-60px' }}
                     transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <div className="about-glass-card about-cta-dock">
+                    <LiquidGlass
+                        className="about-glass-card about-cta-dock"
+                        radius={22}
+                        bevelDepth={15}
+                        scale={30}
+                        aberration={4}
+                        frost={0.45}
+                        tint={0.04}
+                        tintRgb="10 12 18"
+                    >
                         <div>
                             <span className="about-kicker">NEXT CHAPTER</span>
                             <h3>SEE THESE PRINCIPLES IN PRODUCTION.</h3>
@@ -497,7 +572,7 @@ const About = () => {
                                 <span>Let&apos;s Talk</span>
                             </Link>
                         </div>
-                    </div>
+                    </LiquidGlass>
                 </Motion.section>
                 </div>
             )}

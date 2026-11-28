@@ -6,6 +6,7 @@ import archiveBg from '../assets/archive_bg.webp';
 import { portfolioData } from '../data/portfolioData';
 import { projectScreenshots } from '../data/projectScreenshots';
 import { useIntro } from '../context/useIntro';
+import { LiquidGlass } from './ui/LiquidGlass';
 import {
     LineReveal,
     RuleDraw,
@@ -990,15 +991,23 @@ const Hero = () => {
                         </div>
                     </div>
 
-                    <button
+                    <LiquidGlass
+                        as="button"
                         type="button"
                         onClick={handleSkipIntro}
                         className="harbor-skip-btn"
+                        radius={999}
+                        bevelDepth={10}
+                        scale={24}
+                        aberration={4}
+                        frost={0.35}
+                        tint={0.05}
+                        tintRgb="13 10 34"
                         aria-label="Skip opening sequence"
                     >
                         <span>Skip Intro</span>
                         <FastForward size={12} />
-                    </button>
+                    </LiquidGlass>
                 </>
             )}
 
@@ -1009,37 +1018,73 @@ const Hero = () => {
                         <span>View Projects</span>
                         <ArrowRight size={14} />
                     </Link>
-                    <Link to="/contact" className="harbor-cta-glass">
+                    <LiquidGlass
+                        as={Link}
+                        to="/contact"
+                        className="harbor-cta-glass"
+                        radius={999}
+                        bevelDepth={11}
+                        scale={28}
+                        aberration={5}
+                        frost={0.35}
+                        tint={0.05}
+                        tintRgb="13 10 34"
+                    >
                         <span>Get In Touch</span>
-                    </Link>
+                    </LiquidGlass>
                 </div>
 
-                <button
+                <LiquidGlass
+                    as="button"
                     type="button"
                     onClick={scrollToCapabilities}
                     className="harbor-scroll-cue"
+                    radius={999}
+                    bevelDepth={10}
+                    scale={24}
+                    aberration={4}
+                    frost={0.35}
+                    tint={0.04}
+                    tintRgb="13 10 34"
                     aria-label="Scroll to Engineering Capabilities"
                 >
                     <span>Explore</span>
                     <ArrowDown size={13} />
-                </button>
+                </LiquidGlass>
 
                 <div className="harbor-right-meta">
-                    <div className="harbor-status-pill">
+                    <LiquidGlass
+                        className="harbor-status-pill"
+                        radius={999}
+                        bevelDepth={10}
+                        scale={26}
+                        aberration={4}
+                        frost={0.35}
+                        tint={0.05}
+                        tintRgb="13 10 34"
+                    >
                         <span className="editorial-status-beacon" aria-hidden="true" />
                         <span>Available · Bengaluru</span>
-                    </div>
+                    </LiquidGlass>
                     {!isIntroActive && (
-                        <button
+                        <LiquidGlass
+                            as="button"
                             type="button"
                             onClick={handleReplayIntro}
                             className="harbor-replay-btn"
+                            radius={999}
+                            bevelDepth={10}
+                            scale={24}
+                            aberration={4}
+                            frost={0.35}
+                            tint={0.05}
+                            tintRgb="255 255 255"
                             title="Replay cinematic entrance"
                             aria-label="Replay 3D opening animation"
                         >
                             <RotateCcw size={12} />
                             <span>Replay</span>
-                        </button>
+                        </LiquidGlass>
                     )}
                 </div>
             </div>
@@ -1449,7 +1494,18 @@ const QuickLinkCard = ({ link, idx, isInView }) => {
             style={{ height: '100%' }}
         >
             <MagnetContainer strength={8} className="home-quicklink-magnet">
-                <Link to={link.path} className="editorial-quicklink-card">
+                <LiquidGlass
+                    as={Link}
+                    to={link.path}
+                    className="editorial-quicklink-card"
+                    radius={20}
+                    bevelDepth={14}
+                    scale={28}
+                    aberration={4}
+                    frost={0.4}
+                    tint={0.05}
+                    tintRgb="13 15 23"
+                >
                     <div
                         style={{
                             display: 'flex',
@@ -1481,7 +1537,7 @@ const QuickLinkCard = ({ link, idx, isInView }) => {
                             {link.desc}
                         </span>
                     </div>
-                </Link>
+                </LiquidGlass>
             </MagnetContainer>
         </Motion.div>
     );

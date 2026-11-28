@@ -4,9 +4,13 @@ import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { Home, User, FolderGit2, FileText, Mail, Menu, X, Code, Volume2, VolumeX } from 'lucide-react';
 import { useIntro } from '../context/useIntro';
 import { useGlobalAudio } from '../context/useGlobalAudio';
+import { LiquidGlass } from './ui/LiquidGlass';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isMobileNav, setIsMobileNav] = useState(() =>
+        typeof window !== 'undefined' ? window.matchMedia('(max-width: 900px)').matches : false
+    );
     const location = useLocation();
     const { navVisible } = useIntro();
     const { isMuted, toggleMute } = useGlobalAudio();
@@ -15,6 +19,14 @@ const Navbar = () => {
     const firstNavLinkRef = useRef(null);
     const menuContainerRef = useRef(null);
     const prevIsOpenRef = useRef(false);
+
+    useEffect(() => {
+        const mq = window.matchMedia?.('(max-width: 900px)');
+        if (!mq) return undefined;
+        const sync = () => setIsMobileNav(mq.matches);
+        mq.addEventListener?.('change', sync);
+        return () => mq.removeEventListener?.('change', sync);
+    }, []);
 
     const navLinks = [
         { name: 'Home', path: '/', icon: Home },
@@ -105,6 +117,16 @@ const Navbar = () => {
                 }
                 className={navClassName}
             >
+                <LiquidGlass
+                    className="navbar-liquid-shell"
+                    radius={isMobileNav ? 0 : 999}
+                    bevelDepth={14}
+                    scale={34}
+                    aberration={5}
+                    frost={0.35}
+                    tint={0.05}
+                    tintRgb="10 14 24"
+                >
                 {/* Brand Logo */}
                 <NavLink
                     to="/"
@@ -194,6 +216,7 @@ const Navbar = () => {
                         </AnimatePresence>
                     </Motion.button>
                 </div>
+                </LiquidGlass>
             </Motion.nav>
 
             {/* Mobile Drawer Menu */}
