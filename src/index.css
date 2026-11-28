@@ -3864,18 +3864,21 @@ input:focus-visible {
 
 .harbor-kicker {
   position: relative;
-  font-family: 'InterHero', 'Inter', sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.04em;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.94);
+  font-family: var(--font-heading), 'Outfit', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  line-height: 1.05;
+  color: #ffffff;
   white-space: nowrap;
-  text-shadow: 0 2px 18px rgba(13, 8, 40, 0.78);
+  text-shadow:
+    0 2px 12px rgba(6, 7, 16, 0.92),
+    0 6px 26px rgba(13, 8, 40, 0.82);
   will-change: transform, opacity;
 }
 
 .harbor-word {
-  margin: 0;
+  margin: -0.105em 0 0;
   padding: 0;
   font-family: 'InterHero', 'Inter', sans-serif;
   font-weight: 700;

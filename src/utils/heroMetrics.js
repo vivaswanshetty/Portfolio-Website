@@ -18,9 +18,9 @@ export const HERO_VIDEOS = {
 };
 
 export const HERO_COPY = {
-    kicker: 'Building High-Impact',
+    kicker: 'Building High-Impact Systems',
     word: 'VIVASWAN',
-    ariaLabel: 'Building High-Impact Vivaswan',
+    ariaLabel: 'Building High-Impact Systems — Vivaswan',
 };
 
 export const INTRO_DURATION_MS = 7400;
