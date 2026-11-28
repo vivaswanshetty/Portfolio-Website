@@ -275,7 +275,9 @@ const About = () => {
                         }}
                     >
                         <div className="valley-hero">
-                            <h1>No teacher. Self-built.</h1>
+                            <h1>
+                                No teacher. Self-built<em className="valley-accent-dot">.</em>
+                            </h1>
                             <p className="valley-cap">
                                 No one ever showed me the way.
                                 <br />
