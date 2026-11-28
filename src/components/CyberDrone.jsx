@@ -481,6 +481,7 @@ const CyberDrone = () => {
             const b = document.body.classList;
             const hasOverlay =
                 b.contains('lit') ||
+                b.contains('skills-overlay-open') ||
                 b.contains('projects-splash') ||
                 b.contains('projects-intro') ||
                 b.contains('about-valley-locked') ||

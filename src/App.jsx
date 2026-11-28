@@ -32,13 +32,28 @@ import { useIntro } from './context/useIntro';
 import { ToastContainer } from './components/Toast';
 import { Analytics } from '@vercel/analytics/react';
 
-// Route transition loader: keeps /about and /contact seamless without flashing the cosmos backdrop
+// Route transition loader: keeps /about, /skills, and /contact seamless without flashing the cosmos backdrop
 const RouteLoader = ({ pathname }) => {
     if (pathname === '/about') {
         return (
             <div className="valley-loader" aria-hidden="true">
                 <span />
             </div>
+        );
+    }
+
+    if (pathname === '/skills') {
+        return (
+            <div
+                aria-hidden="true"
+                style={{
+                    position: 'fixed',
+                    inset: 0,
+                    background: '#060709',
+                    zIndex: 9998,
+                    pointerEvents: 'none',
+                }}
+            />
         );
     }
 
@@ -123,7 +138,11 @@ const AnimatedRoutes = () => {
     };
 
     const isProjectsSphere = location.pathname === '/projects';
-    const isSpatialScene = isProjectsSphere || location.pathname === '/about' || location.pathname === '/contact';
+    const isSpatialScene =
+        isProjectsSphere ||
+        location.pathname === '/about' ||
+        location.pathname === '/skills' ||
+        location.pathname === '/contact';
 
     const routeElement = (
         <Routes location={location} key={location.pathname}>
@@ -169,10 +188,11 @@ const AnimatedRoutes = () => {
 const AppLayout = () => {
     const location = useLocation();
     const isProjectsSphere = location.pathname === '/projects';
+    const isSkillsGallery = location.pathname === '/skills';
     const isCinemaContact = location.pathname === '/contact';
     const isAboutValley = location.pathname === '/about';
-    const hideChromeExtras = isProjectsSphere || isCinemaContact;
-    const hideStarfield = isAboutValley || isCinemaContact;
+    const hideChromeExtras = isProjectsSphere || isSkillsGallery || isCinemaContact;
+    const hideStarfield = isAboutValley || isSkillsGallery || isCinemaContact;
 
     return (
         <>

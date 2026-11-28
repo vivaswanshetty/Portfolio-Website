@@ -75,9 +75,9 @@ const DESKTOP_ROUTES = {
         { x: 0.78, y: 0.48, s: 0.70, yaw: 120, pitch: 6, roll: 2 },
     ],
     '/skills': [
-        { x: -0.79, y: 0.48, s: 0.84, yaw: 36, pitch: 6, roll: 5 },
-        { x: 0.79, y: 0.52, s: 0.84, yaw: 144, pitch: 5, roll: -4 },
-        { x: 0.80, y: -0.40, s: 0.80, yaw: 128, pitch: 4, roll: 0 },
+        { x: 0.79, y: 0.52, s: 0.78, yaw: 144, pitch: 5, roll: -4 },
+        { x: 0.80, y: 0.44, s: 0.76, yaw: 136, pitch: 4, roll: -2 },
+        { x: 0.78, y: 0.56, s: 0.76, yaw: 148, pitch: 5, roll: -4 },
     ],
     '/resume': [
         { x: 0.80, y: 0.50, s: 0.82, yaw: 145, pitch: 5, roll: -4 },
