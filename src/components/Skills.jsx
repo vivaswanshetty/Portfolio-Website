@@ -678,7 +678,7 @@ const Skills = () => {
             if (startedIntro || disposed) return;
             startedIntro = true;
 
-            // Redraw artwork sheet + museum labels once Google Fonts (Oswald, Newsreader, DM Mono) finish loading
+            // Redraw artwork sheet + museum labels once bundled/web fonts (Outfit, Inter, Space Grotesk) finish loading
             const refreshed = buildSkillsMasterSheet();
             sheetUrlRef.current = refreshed.dataUrl;
             setSheetUrl(refreshed.dataUrl);

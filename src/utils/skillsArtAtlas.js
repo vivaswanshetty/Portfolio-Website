@@ -34,7 +34,7 @@ function drawPosterFrame(ctx, w, h, { dark, accent, indexCode, kicker }) {
 
     // Top-left exhibition index + top-right crimson datum bar
     ctx.fillStyle = dark ? 'rgba(248, 250, 252, 0.72)' : 'rgba(15, 23, 42, 0.78)';
-    ctx.font = '600 18px "DM Mono", monospace';
+    ctx.font = '600 18px "Space Grotesk", sans-serif';
     ctx.fillText(indexCode, 40, 56);
 
     ctx.fillStyle = accent;
@@ -42,7 +42,7 @@ function drawPosterFrame(ctx, w, h, { dark, accent, indexCode, kicker }) {
 
     // Bottom museum stamp inside artwork margin
     ctx.fillStyle = dark ? 'rgba(248, 250, 252, 0.48)' : 'rgba(15, 23, 42, 0.56)';
-    ctx.font = '500 15px "DM Mono", monospace';
+    ctx.font = '600 15px "Space Grotesk", sans-serif';
     ctx.fillText(kicker, 40, h - 42);
 }
 
@@ -128,8 +128,8 @@ function renderCellArtwork(ctx, idx, w, h) {
         ctx.fill();
 
         ctx.fillStyle = '#F6F0E6';
-        ctx.font = '700 108px "Oswald", sans-serif';
-        ctx.fillText('TS', 118, 360);
+        ctx.font = '800 104px "Outfit", sans-serif';
+        ctx.fillText('TS', 114, 356);
 
         ctx.fillStyle = '#111622';
         ctx.fillRect(88, 480, w - 176, 8);
@@ -578,18 +578,18 @@ export function createPlaqueCanvas(skill) {
 
     // Domain subtitle
     ctx.fillStyle = '#CBD5E1';
-    ctx.font = '500 44px "Newsreader", Georgia, serif';
-    ctx.fillText(skill.subtitle, 34, 88);
+    ctx.font = '500 32px "Inter", sans-serif';
+    ctx.fillText(skill.subtitle, 34, 86, 566);
 
-    // Skill Title (italic serif)
+    // Skill Title
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = 'italic 400 48px "Newsreader", Georgia, serif';
-    ctx.fillText(skill.title, 34, 152);
+    ctx.font = '800 40px "Outfit", sans-serif';
+    ctx.fillText(skill.title, 34, 148, 566);
 
-    // Meta line in DM Mono
-    ctx.fillStyle = 'rgba(248, 113, 113, 0.92)';
-    ctx.font = '400 28px "DM Mono", monospace';
-    ctx.fillText(`${skill.years}  ·  ${skill.proficiency}% CORE`, 34, 212);
+    // Meta line in Space Grotesk
+    ctx.fillStyle = 'rgba(248, 113, 113, 0.96)';
+    ctx.font = '600 25px "Space Grotesk", sans-serif';
+    ctx.fillText(`${skill.years}  ·  ${skill.proficiency}% CORE`, 34, 208, 566);
 
     return c;
 }

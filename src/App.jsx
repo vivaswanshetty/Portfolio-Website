@@ -57,6 +57,21 @@ const RouteLoader = ({ pathname }) => {
         );
     }
 
+    if (pathname === '/resume') {
+        return (
+            <div
+                aria-hidden="true"
+                style={{
+                    position: 'fixed',
+                    inset: 0,
+                    background: '#151f3f',
+                    zIndex: 9998,
+                    pointerEvents: 'none',
+                }}
+            />
+        );
+    }
+
     if (pathname === '/contact') {
         return (
             <div
@@ -142,6 +157,7 @@ const AnimatedRoutes = () => {
         isProjectsSphere ||
         location.pathname === '/about' ||
         location.pathname === '/skills' ||
+        location.pathname === '/resume' ||
         location.pathname === '/contact';
 
     const routeElement = (
@@ -189,10 +205,11 @@ const AppLayout = () => {
     const location = useLocation();
     const isProjectsSphere = location.pathname === '/projects';
     const isSkillsGallery = location.pathname === '/skills';
+    const isResumeSkyline = location.pathname === '/resume';
     const isCinemaContact = location.pathname === '/contact';
     const isAboutValley = location.pathname === '/about';
     const hideChromeExtras = isProjectsSphere || isSkillsGallery || isCinemaContact;
-    const hideStarfield = isAboutValley || isSkillsGallery || isCinemaContact;
+    const hideStarfield = isAboutValley || isSkillsGallery || isResumeSkyline || isCinemaContact;
 
     return (
         <>
